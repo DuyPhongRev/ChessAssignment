@@ -19,13 +19,19 @@ public:
 
 	void PieceMove(std::pair<int, int> pos);
 
-	std::pair<int, int> mPos;
+    void cleanUp();
+
+    bool ExitPiece();
+
+    bool isDead;
+
 protected:
+    PieceType mType;
     SDL_Rect srcRect;
     SDL_Surface *mSurface = NULL;
     SDL_Texture *mTexture = NULL;
     SDL_Rect desRect;
-    SDL_Renderer *mRenderer ;
+    SDL_Renderer *mRenderer;
 };
 
 #endif // PIECE_H

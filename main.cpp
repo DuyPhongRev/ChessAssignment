@@ -12,8 +12,6 @@
 #define WINDOW_HEIGHT 800
 #define WINDOW_WIDTH 800
 
-int i = 2;
-
 using namespace std;
 
 bool gRunning = true;
@@ -54,6 +52,11 @@ Knight *kb2 = new Knight(Knight::BLACK, std::pair<int, int>(6,0));
 Bishop *bb1 = new Bishop(Bishop::BLACK, std::pair<int, int>(2,0));
 Bishop *bb2 = new Bishop(Bishop::BLACK, std::pair<int, int>(5,0));
 
+int xStart = -1;
+int yStart = -1;
+int xEnd = -1;
+int yEnd = -1;
+
 class GamePlay{
 public:
 
@@ -72,7 +75,6 @@ private:
     SDL_Window *window = NULL;
     SDL_Event event;
     Piece* field[8][8];
-    SDL_Point mPosition;
 };
 
 bool GamePlay::initWindow(){
@@ -123,7 +125,6 @@ void GamePlay::renderBoard(){
         }
         white = !white;
     }
-    SDL_RenderPresent(renderer);
 }
 
 void GamePlay::startPos(){
@@ -160,11 +161,11 @@ void GamePlay::startPos(){
     field[6][7] = kw2;
     field[7][7] = rw2;
 
-    for (int i = 2; i < 6; i++)
+    for (int y = 2; y < 6; y++)
     {
-        for (int j = 0; j < 8; j++)
+        for (int x = 0; x < 8; x++)
         {
-            field[i][j] = NULL;
+            field[x][y] = NULL;
         }
     }
 }
@@ -177,11 +178,35 @@ void GamePlay::handle(){
     }
     if(event.type == SDL_MOUSEBUTTONDOWN)
     {
-        int x, y;
-        SDL_GetMouseState(&x, &y);
-        x = x / 100;
-        y = y / 100;
-        field[x][y].
+        SDL_GetMouseState(&xStart, &yStart);
+        xStart /= 100;
+        yStart /= 100;
+
+        cout << xStart << " " << yStart << endl;
+    }
+    if(event.type == SDL_MOUSEBUTTONUP)
+    {
+        SDL_GetMouseState(&xEnd, &yEnd);
+        cout << xEnd << " " << yEnd << endl;
+        xEnd /= 100;
+        yEnd /= 100;
+        if(field[xStart][yStart] != NULL)
+        {
+            field[xStart][yStart]->PieceMove(std::pair<int, int>(xEnd, yEnd));
+            if(field[xEnd][yEnd] != NULL && xStart != xEnd && yStart != yEnd)
+            {
+                field[xEnd][yEnd]->isDead = true;
+            }
+            field[xEnd][yEnd] = field[xStart][yStart];
+            if(xStart != xEnd && yStart != yEnd)
+            {
+                field[xStart][yStart] = NULL;
+            }
+            xStart = -1;
+            yStart = -1;
+            xEnd = -1;
+            yEnd = -1;
+        }
     }
 }
 
@@ -190,6 +215,8 @@ void GamePlay::update(){
 }
 
 void GamePlay::render(){
+    SDL_RenderClear(renderer);
+    renderBoard();
     pw1->render(renderer);
     pw2->render(renderer);
     pw3->render(renderer);
@@ -246,11 +273,10 @@ int main(int argc, char* argv[])
 
     if(chess->initWindow())
     {
-        chess->renderBoard();
+        //chess->renderBoard();
         chess->startPos();
         while(gRunning)
         {
-            //chess->renderBoard();
             chess->handle();
             chess->update();
             chess->render();
