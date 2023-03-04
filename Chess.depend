@@ -1,0 +1,58 @@
+# depslib dependency file v1.0
+1677903407 source:c:\newchess\chess\main.cpp
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+	"Piece.h"
+	"Pawn.h"
+	"Rook.h"
+	"Knight.h"
+	"Bishop.h"
+	"Queen.h"
+	"King.h"
+
+1677903398 source:c:\newchess\chess\piece.cpp
+	"Piece.h"
+	<iostream>
+
+1677902567 c:\newchess\chess\piece.h
+	"SDL.h"
+	"SDL_image.h"
+	<utility>
+
+1677897302 c:\newchess\chess\pawn.h
+	"Piece.h"
+
+1677897592 source:c:\newchess\chess\pawn.cpp
+	"Pawn.h"
+
+1677898283 source:c:\newchess\chess\rook.cpp
+	"Rook.h"
+
+1677898241 c:\newchess\chess\rook.h
+	"Piece.h"
+
+1677898528 source:c:\newchess\chess\knight.cpp
+	"Knight.h"
+
+1677898528 c:\newchess\chess\knight.h
+	"Piece.h"
+
+1677899122 source:c:\newchess\chess\king.cpp
+	"King.h"
+
+1677898976 c:\newchess\chess\king.h
+	"Piece.h"
+
+1677898928 source:c:\newchess\chess\queen.cpp
+	"Queen.h"
+
+1677898976 c:\newchess\chess\queen.h
+	"Piece.h"
+
+1677898853 source:c:\newchess\chess\bishop.cpp
+	"Bishop.h"
+
+1677898853 c:\newchess\chess\bishop.h
+	"Piece.h"
+
