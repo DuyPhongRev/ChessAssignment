@@ -143,7 +143,7 @@ void GamePlay::renderBoard(){
 }
 
 void GamePlay::initMoveTurn(){
-    MoveTurn = Piece::WHITE;
+    MoveTurn = Piece::BLACK;
 }
 
 void  GamePlay::changeMoveTurn(){
@@ -211,23 +211,20 @@ void GamePlay::handle(){
         SDL_GetMouseState(&xEnd, &yEnd);
         xEnd /= 100;
         yEnd /= 100;
-        if(field[xStart][yStart] != NULL)
+        field[xStart][yStart]->calcPossibleMoves(field, false);
+        if(field[xStart][yStart]->isValidMove(xEnd, yEnd))
         {
-            field[xStart][yStart]->calcPossibleMoves(field, false);
-            if(field[xStart][yStart]->isValidMove(xEnd, yEnd))
-            {
-                field[xStart][yStart]->PieceMove(std::pair<int, int>(xEnd, yEnd));
+            field[xStart][yStart]->PieceMove(std::pair<int, int>(xEnd, yEnd));
             if(field[xEnd][yEnd] != NULL && field[xEnd][yEnd]->getTeam() != field[xStart][yStart]->getTeam())
             {
                 field[xEnd][yEnd]->isDead = true;
                 //field[xEnd][yEnd]->cleanUp();
             }
-            field[xEnd][yEnd] = field[xStart][yStart];
             if(!(xStart == xEnd && yStart == yEnd))
             {
+                field[xEnd][yEnd] = field[xStart][yStart];
                 field[xStart][yStart] = NULL;
                 Movement = true;
-            }
             }
         }
     }
@@ -330,7 +327,7 @@ int main(int argc, char* argv[])
         while(gRunning)
         {
             chess->handle();
-            chess->update();
+            //chess->update();
             chess->render();
         }
     }

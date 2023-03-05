@@ -75,7 +75,7 @@ King* Piece::getOwnKing(Piece *field[8][8])
 
 bool Piece::isValidMove(int xStart, int yStart)
 {
-    for (int i = 0; i < mPossibleMove.size(); i++)
+    for (int i = 0; i < (int)mPossibleMove.size(); i++)
     {
 
         if (get<0>(mPossibleMove[i]) == xStart && get<1>(mPossibleMove[i]) == yStart)

@@ -19,7 +19,7 @@ public:
 
 	enum PieceType { PAWN, ROOK, KNIGHT, BISHOP, KING, QUEEN, EMPTY };
 
-	enum MoveType { NORMAL, CASTLE, ENPASSANT, NEWPIECE, INIT };
+	enum MoveType { NORMAL, CASTLE, ENPASSANT, NEWPIECE };
 
 	Piece(Team team, PieceType piecetype, pair<int, int> pos);
 
@@ -38,8 +38,6 @@ public:
     virtual void calcPossibleMoves(Piece* field[8][8], bool checkCheck) = 0;
 
     vector<tuple<int, int, Piece::MoveType>> pushMove(vector<tuple<int, int, Piece::MoveType>> moveList, tuple<int, int, Piece::MoveType> singleMove, King *king, Piece *field[8][8], bool checkCheck);
-
-    vector<tuple<int, int, Piece::MoveType>> getpossibleMove();
 
     bool isValidMove(int x, int y);
 
