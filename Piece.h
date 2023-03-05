@@ -31,10 +31,12 @@ public:
 
     void cleanUp();
 
-    Team getTeam(){return mTeam;};
+    Team getTeam();
 
-    PieceType getType(){return mType;};
-    ////////
+    PieceType getType();
+
+    pair<int, int> getPossition();
+
     virtual void calcPossibleMoves(Piece* field[8][8], bool checkCheck) = 0;
 
     vector<tuple<int, int, Piece::MoveType>> pushMove(vector<tuple<int, int, Piece::MoveType>> moveList, tuple<int, int, Piece::MoveType> singleMove, King *king, Piece *field[8][8], bool checkCheck);
@@ -42,6 +44,9 @@ public:
     bool isValidMove(int x, int y);
 
     King* getOwnKing(Piece *field[8][8]);
+
+    vector<tuple<int, int, Piece::MoveType>> getPossibleMove();
+
 protected:
     Team mTeam;
     PieceType mType;

@@ -125,10 +125,10 @@ void GamePlay::renderBoard(){
         {
             if(white)
             {
-                SDL_SetRenderDrawColor(renderer, 150, 162, 179, 255);
+                SDL_SetRenderDrawColor(renderer, 177, 212, 182, 1);
             }else
             {
-                SDL_SetRenderDrawColor(renderer, 89, 96, 112, 255);
+                SDL_SetRenderDrawColor(renderer, 74, 118, 103, 1);
             }
             SDL_Rect site;
             site.h = WINDOW_HEIGHT / 8;
@@ -327,7 +327,7 @@ int main(int argc, char* argv[])
         while(gRunning)
         {
             chess->handle();
-            //chess->update();
+            chess->update();
             chess->render();
         }
     }

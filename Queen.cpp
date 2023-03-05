@@ -107,11 +107,12 @@ void Queen::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
         }else break;
     }
 
-            if(field[mPos.first - dx
+
     for (int dx = 1; dx <= 7; dx++)
     {
         if(mPos.first - dx <= 7 && mPos.first - dx >= 0 && mPos.second - dx <= 7 && mPos.second - dx >= 0)
-        {][mPos.second - dx] == NULL)
+        {
+            if(field[mPos.first - dx][mPos.second - dx] == NULL)
             {
                 moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second - dx, NORMAL), getOwnKing(field), field, checkCheck);
             }else if(field[mPos.first - dx][mPos.second - dx]->getTeam() == mTeam)

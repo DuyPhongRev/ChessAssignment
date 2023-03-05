@@ -54,8 +54,23 @@ vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, 
     return moveList;
 }
 
-King* Piece::getOwnKing(Piece *field[8][8])
-{
+vector<tuple<int, int, Piece::MoveType>> Piece::getPossibleMove(){
+    return mPossibleMove;
+}
+
+pair<int, int> Piece::getPossition(){
+    return mPos;
+}
+
+Piece::PieceType Piece::getType(){
+    return mType;
+}
+
+Piece::Team Piece::getTeam(){
+    return mTeam;
+}
+
+King* Piece::getOwnKing(Piece *field[8][8]){
     for(int x = 0; x < 8; x++)
     {
         for (int y = 0; y < 8; y++)
