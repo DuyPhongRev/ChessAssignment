@@ -30,6 +30,7 @@ void Piece::render(SDL_Renderer* renderer){
 }
 
 void Piece::PieceMove(std::pair<int, int> pos){
+    mPos = pos;
     desRect.x = pos.first * WINDOW_WIDTH / 8 + 6;
     desRect.y = pos.second * WINDOW_HEIGHT / 8 + 6;
 }
@@ -42,7 +43,7 @@ void Piece::cleanUp(){
     SDL_FreeSurface(mSurface);
 }
 
-void Piece::pushMove(vector<tuple<int, int, Piece::MoveType>> moveList, tuple<int, int, Piece::MoveType> singleMove, King *king, Piece *field[8][8], bool checkCheck){
+vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, Piece::MoveType>> moveList, tuple<int, int, Piece::MoveType> singleMove, King *king, Piece *field[8][8], bool checkCheck){
     if(!checkCheck)
     {
         moveList.push_back(singleMove);
@@ -50,10 +51,41 @@ void Piece::pushMove(vector<tuple<int, int, Piece::MoveType>> moveList, tuple<in
     {
 
     }
+    return moveList;
 }
 
+King* Piece::getOwnKing(Piece *field[8][8])
+{
+    for(int x = 0; x < 8; x++)
+    {
+        for (int y = 0; y < 8; y++)
+        {
+            if(field[x][y] != NULL)
+            {
+                if(field[x][y]->getType() == KING && field[x][y]->getTeam() == mTeam)
+                {
+                    King *king = static_cast<King*>(field[x][y]);
+                    return king;
+                }
+            }
+        }
+    }
+    return NULL;
+}
 
+bool Piece::isValidMove(int xStart, int yStart)
+{
+    for (int i = 0; i < mPossibleMove.size(); i++)
+    {
 
+        if (get<0>(mPossibleMove[i]) == xStart && get<1>(mPossibleMove[i]) == yStart)
+        {
+            mPossibleMove.clear();
+            return true;
+        }
+    }
+    return false;
+}
 
 
 

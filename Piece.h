@@ -34,19 +34,24 @@ public:
     Team getTeam(){return mTeam;};
 
     PieceType getType(){return mType;};
-
+    ////////
     virtual void calcPossibleMoves(Piece* field[8][8], bool checkCheck) = 0;
 
-    void pushMove(vector<tuple<int, int, Piece::MoveType>> moveList, tuple<int, int, Piece::MoveType> singleMove, King *king, Piece *field[8][8], bool checkCheck);
+    vector<tuple<int, int, Piece::MoveType>> pushMove(vector<tuple<int, int, Piece::MoveType>> moveList, tuple<int, int, Piece::MoveType> singleMove, King *king, Piece *field[8][8], bool checkCheck);
 
+    vector<tuple<int, int, Piece::MoveType>> getpossibleMove();
+
+    bool isValidMove(int x, int y);
+
+    King* getOwnKing(Piece *field[8][8]);
 protected:
     Team mTeam;
     PieceType mType;
     pair<int, int> mPos;
     SDL_Rect srcRect;
+    SDL_Rect desRect;
     SDL_Surface *mSurface = NULL;
     SDL_Texture *mTexture = NULL;
-    SDL_Rect desRect;
     vector<tuple<int, int, Piece::MoveType>> mPossibleMove;
 };
 

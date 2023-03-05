@@ -76,8 +76,6 @@ public:
 
     void generatePiece();
 
-    void pieceLocation();
-
     void startPos();
 
     void initMoveTurn();
@@ -89,9 +87,9 @@ private:
     SDL_Renderer *renderer = NULL;
     SDL_Window *window = NULL;
     SDL_Event event;
-    Piece* field[8][8];
     bool Movement;
     Piece::Team MoveTurn;
+    Piece *field[8][8];
 };
 
 bool GamePlay::initWindow(){
@@ -208,14 +206,17 @@ void GamePlay::handle(){
         xStart /= 100;
         yStart /= 100;
     }
-    if(event.type == SDL_MOUSEBUTTONUP && field[xStart][yStart]->getTeam() == MoveTurn)
+    if(event.type == SDL_MOUSEBUTTONUP && field[xStart][yStart] != NULL && field[xStart][yStart]->getTeam() == MoveTurn)
     {
         SDL_GetMouseState(&xEnd, &yEnd);
         xEnd /= 100;
         yEnd /= 100;
         if(field[xStart][yStart] != NULL)
         {
-            field[xStart][yStart]->PieceMove(std::pair<int, int>(xEnd, yEnd));
+            field[xStart][yStart]->calcPossibleMoves(field, false);
+            if(field[xStart][yStart]->isValidMove(xEnd, yEnd))
+            {
+                field[xStart][yStart]->PieceMove(std::pair<int, int>(xEnd, yEnd));
             if(field[xEnd][yEnd] != NULL && field[xEnd][yEnd]->getTeam() != field[xStart][yStart]->getTeam())
             {
                 field[xEnd][yEnd]->isDead = true;
@@ -226,6 +227,7 @@ void GamePlay::handle(){
             {
                 field[xStart][yStart] = NULL;
                 Movement = true;
+            }
             }
         }
     }
@@ -315,10 +317,6 @@ void GamePlay::clean(){
     SDL_DestroyWindow(window);
     SDL_Quit();
     cout << "GAME CLEANED!" << endl;
-}
-
-void pieceLocation(){
-
 }
 
 int main(int argc, char* argv[])

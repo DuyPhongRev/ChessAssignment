@@ -1,5 +1,7 @@
 #include "Knight.h"
 #include <tuple>
+#include <iostream>
+#include <vector>
 
 Knight::Knight(Team team, std::pair<int, int> pos)
     :Piece(team, KNIGHT, pos)
@@ -16,7 +18,7 @@ Knight::Knight(Team team, std::pair<int, int> pos)
 void Knight::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
 {
     vector<tuple<int, int, Piece::MoveType>> moves;
-
+    //std::cout << "prepare" << std::endl;
     for(int dx = -2; dx <= 2; dx += 4)
     {
         for (int dy = -1; dy <= 1; dy += 2)
@@ -25,15 +27,19 @@ void Knight::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
             {
                 if(field[mPos.first + dx][mPos.second + dy] == NULL)
                 {
-
+                    std::cout << mPos.first + dx << "  " << mPos.second + dy<< std::endl;
+                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field, checkCheck);
                 }else if(field[mPos.first + dx][mPos.second + dy]->getTeam() != mTeam)
                 {
-
+                    std::cout << mPos.first + dx << "  " << mPos.second + dy<< std::endl;
+                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field, checkCheck);
                 }
+
             }
         }
     }
 
+    std::cout << "vertical" << std::endl;
     for(int dy = -2; dy <= 2; dy += 4)
     {
         for (int dx = -1; dx <= 1; dx += 2)
@@ -42,13 +48,16 @@ void Knight::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
             {
                 if(field[mPos.first + dx][mPos.second + dy] == NULL)
                 {
-
+                    std::cout << mPos.first + dx << "  " << mPos.second + dy<< std::endl;
+                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field, checkCheck);
                 }else if(field[mPos.first + dx][mPos.second + dy]->getTeam() != mTeam)
                 {
-
+                    std::cout << mPos.first + dx << "  " << mPos.second + dy<< std::endl;
+                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field, checkCheck);
                 }
             }
         }
     }
+    std::cout << "done" << std::endl;
     mPossibleMove = moves;
 }
