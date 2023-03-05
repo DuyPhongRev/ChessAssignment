@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1678012322 source:c:\newchess\chess\main.cpp
+1678021477 source:c:\newchess\chess\main.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -30,10 +30,11 @@
 	"Pawn.h"
 	<iostream>
 
-1677898283 source:c:\newchess\chess\rook.cpp
+1678022484 source:c:\newchess\chess\rook.cpp
 	"Rook.h"
+	<iostream>
 
-1677982123 c:\newchess\chess\rook.h
+1678021453 c:\newchess\chess\rook.h
 	"Piece.h"
 
 1678007992 source:c:\newchess\chess\knight.cpp
@@ -52,10 +53,10 @@
 1677982137 c:\newchess\chess\king.h
 	"Piece.h"
 
-1677898928 source:c:\newchess\chess\queen.cpp
+1678022616 source:c:\newchess\chess\queen.cpp
 	"Queen.h"
 
-1677982123 c:\newchess\chess\queen.h
+1678022616 c:\newchess\chess\queen.h
 	"Piece.h"
 
 1678010383 source:c:\newchess\chess\bishop.cpp

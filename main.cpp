@@ -143,7 +143,7 @@ void GamePlay::renderBoard(){
 }
 
 void GamePlay::initMoveTurn(){
-    MoveTurn = Piece::BLACK;
+    MoveTurn = Piece::WHITE;
 }
 
 void  GamePlay::changeMoveTurn(){
