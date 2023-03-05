@@ -61,20 +61,37 @@ class GamePlay{
 public:
 
     bool initWindow();
+
     void renderBoard();
+
     void handle();
+
     void update();
+
     void render();
+
     bool isRunning();
+
     void clean();
+
     void generatePiece();
+
     void pieceLocation();
+
     void startPos();
+
+    void initMoveTurn();
+
+    void getMoveturn();
+
+    void  changeMoveTurn();
 private:
     SDL_Renderer *renderer = NULL;
     SDL_Window *window = NULL;
     SDL_Event event;
     Piece* field[8][8];
+    bool Movement;
+    Piece::Team MoveTurn;
 };
 
 bool GamePlay::initWindow(){
@@ -127,6 +144,15 @@ void GamePlay::renderBoard(){
     }
 }
 
+void GamePlay::initMoveTurn(){
+    MoveTurn = Piece::WHITE;
+}
+
+void  GamePlay::changeMoveTurn(){
+    if(MoveTurn == Piece::BLACK) MoveTurn = Piece::WHITE;
+    else MoveTurn = Piece::BLACK;
+}
+
 void GamePlay::startPos(){
     field[0][1] = pb1;
     field[1][1] = pb2;
@@ -171,7 +197,7 @@ void GamePlay::startPos(){
 }
 
 void GamePlay::handle(){
-    SDL_PollEvent(&event);
+    SDL_WaitEvent(&event);
     if(event.type == SDL_QUIT)
     {
         gRunning = false;
@@ -181,77 +207,105 @@ void GamePlay::handle(){
         SDL_GetMouseState(&xStart, &yStart);
         xStart /= 100;
         yStart /= 100;
-
-        cout << xStart << " " << yStart << endl;
     }
-    if(event.type == SDL_MOUSEBUTTONUP)
+    if(event.type == SDL_MOUSEBUTTONUP && field[xStart][yStart]->getTeam() == MoveTurn)
     {
         SDL_GetMouseState(&xEnd, &yEnd);
-        cout << xEnd << " " << yEnd << endl;
         xEnd /= 100;
         yEnd /= 100;
         if(field[xStart][yStart] != NULL)
         {
             field[xStart][yStart]->PieceMove(std::pair<int, int>(xEnd, yEnd));
-            if(field[xEnd][yEnd] != NULL && xStart != xEnd && yStart != yEnd)
+            if(field[xEnd][yEnd] != NULL && field[xEnd][yEnd]->getTeam() != field[xStart][yStart]->getTeam())
             {
                 field[xEnd][yEnd]->isDead = true;
+                //field[xEnd][yEnd]->cleanUp();
             }
             field[xEnd][yEnd] = field[xStart][yStart];
-            if(xStart != xEnd && yStart != yEnd)
+            if(!(xStart == xEnd && yStart == yEnd))
             {
                 field[xStart][yStart] = NULL;
+                Movement = true;
             }
-            xStart = -1;
-            yStart = -1;
-            xEnd = -1;
-            yEnd = -1;
         }
     }
 }
 
 void GamePlay::update(){
-
+    if(Movement)
+    {
+        switch(xEnd)
+        {
+            case 0:
+                cout << " A-" << 8 - yEnd << "   ";
+                break;
+            case 1:
+                cout << " B-" << 8 - yEnd << "   ";
+                break;
+            case 2:
+                cout << " C-" << 8 - yEnd << "   ";
+                break;
+            case 3:
+                cout << " D-" << 8 - yEnd << "   ";
+                break;
+            case 4:
+                cout << " E-" << 8 - yEnd << "   ";
+                break;
+            case 5:
+                cout << " F-" << 8 - yEnd << "   ";
+                break;
+            case 6:
+                cout << " G-" << 8 - yEnd << "   ";
+                break;
+            case 7:
+                cout << " H-" << 8 - yEnd << "   ";
+                break;
+        }
+        if (MoveTurn == Piece::BLACK) cout << endl;
+        changeMoveTurn();
+        Movement = false;
+    }
 }
 
 void GamePlay::render(){
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
     renderBoard();
-    pw1->render(renderer);
-    pw2->render(renderer);
-    pw3->render(renderer);
-    pw4->render(renderer);
-    pw5->render(renderer);
-    pw6->render(renderer);
-    pw7->render(renderer);
-    pw8->render(renderer);
+    if(!pw1->DeadPiece()) pw1->render(renderer);
+    if(!pw2->DeadPiece()) pw2->render(renderer);
+    if(!pw3->DeadPiece()) pw3->render(renderer);
+    if(!pw4->DeadPiece()) pw4->render(renderer);
+    if(!pw5->DeadPiece()) pw5->render(renderer);
+    if(!pw6->DeadPiece()) pw6->render(renderer);
+    if(!pw7->DeadPiece()) pw7->render(renderer);
+    if(!pw8->DeadPiece()) pw8->render(renderer);
 
-    rw1->render(renderer);
-    rw2->render(renderer);
-    kw1->render(renderer);
-    kw2->render(renderer);
-    bw1->render(renderer);
-    bw2->render(renderer);
-    kw->render(renderer);
-    qw->render(renderer);
+    if(!rw1->DeadPiece()) rw1->render(renderer);
+    if(!rw2->DeadPiece()) rw2->render(renderer);
+    if(!kw1->DeadPiece()) kw1->render(renderer);
+    if(!kw2->DeadPiece()) kw2->render(renderer);
+    if(!bw1->DeadPiece()) bw1->render(renderer);
+    if(!bw2->DeadPiece()) bw2->render(renderer);
+    if(!kw->DeadPiece()) kw->render(renderer);
+    if(!qw->DeadPiece()) qw->render(renderer);
 
-    pb1->render(renderer);
-    pb2->render(renderer);
-    pb3->render(renderer);
-    pb4->render(renderer);
-    pb5->render(renderer);
-    pb6->render(renderer);
-    pb7->render(renderer);
-    pb8->render(renderer);
+    if(!pb1->DeadPiece()) pb1->render(renderer);
+    if(!pb2->DeadPiece()) pb2->render(renderer);
+    if(!pb3->DeadPiece()) pb3->render(renderer);
+    if(!pb4->DeadPiece()) pb4->render(renderer);
+    if(!pb5->DeadPiece()) pb5->render(renderer);
+    if(!pb6->DeadPiece()) pb6->render(renderer);
+    if(!pb7->DeadPiece()) pb7->render(renderer);
+    if(!pb8->DeadPiece()) pb8->render(renderer);
 
-    rb1->render(renderer);
-    rb2->render(renderer);
-    kb1->render(renderer);
-    kb2->render(renderer);
-    bb1->render(renderer);
-    bb2->render(renderer);
-    kb->render(renderer);
-    qb->render(renderer);
+    if(!rb1->DeadPiece()) rb1->render(renderer);
+    if(!rb2->DeadPiece()) rb2->render(renderer);
+    if(!kb1->DeadPiece()) kb1->render(renderer);
+    if(!kb2->DeadPiece()) kb2->render(renderer);
+    if(!bb1->DeadPiece()) bb1->render(renderer);
+    if(!bb2->DeadPiece()) bb2->render(renderer);
+    if(!kb->DeadPiece()) kb->render(renderer);
+    if(!qb->DeadPiece()) qb->render(renderer);
 
     SDL_RenderPresent(renderer);
 }
@@ -273,8 +327,8 @@ int main(int argc, char* argv[])
 
     if(chess->initWindow())
     {
-        //chess->renderBoard();
         chess->startPos();
+        chess->initMoveTurn();
         while(gRunning)
         {
             chess->handle();

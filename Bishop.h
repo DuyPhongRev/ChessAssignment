@@ -6,11 +6,8 @@ class Bishop : public Piece
 {
     public:
         Bishop(Team team, std::pair<int, int> pos);
-        virtual ~Bishop();
 
-    protected:
-
-    private:
+        void calcPossibleMoves(Piece* field[8][8], bool checkCheck){};
 };
 
 #endif // BISHOP_H

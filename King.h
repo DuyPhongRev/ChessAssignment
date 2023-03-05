@@ -7,7 +7,7 @@ class King : public Piece
     public:
         King(Team team, std::pair<int, int> pos);
         virtual ~King();
-
+        void calcPossibleMoves(Piece* field[8][8], bool checkCheck){};
     protected:
 
     private:

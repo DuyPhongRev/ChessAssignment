@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1677933610 source:c:\newchess\chess\main.cpp
+1677985562 source:c:\newchess\chess\main.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -11,16 +11,19 @@
 	"Queen.h"
 	"King.h"
 
-1677933386 source:c:\newchess\chess\piece.cpp
+1677982985 source:c:\newchess\chess\piece.cpp
 	"Piece.h"
 	<iostream>
+	"King.h"
 
-1677933361 c:\newchess\chess\piece.h
+1677985332 c:\newchess\chess\piece.h
 	"SDL.h"
 	"SDL_image.h"
 	<utility>
+	<vector>
+	<tuple>
 
-1677897302 c:\newchess\chess\pawn.h
+1677982123 c:\newchess\chess\pawn.h
 	"Piece.h"
 
 1677897592 source:c:\newchess\chess\pawn.cpp
@@ -29,30 +32,32 @@
 1677898283 source:c:\newchess\chess\rook.cpp
 	"Rook.h"
 
-1677898241 c:\newchess\chess\rook.h
+1677982123 c:\newchess\chess\rook.h
 	"Piece.h"
 
-1677898528 source:c:\newchess\chess\knight.cpp
+1677982942 source:c:\newchess\chess\knight.cpp
 	"Knight.h"
+	<tuple>
 
-1677898528 c:\newchess\chess\knight.h
+1677981939 c:\newchess\chess\knight.h
 	"Piece.h"
+	<tuple>
 
 1677899122 source:c:\newchess\chess\king.cpp
 	"King.h"
 
-1677898976 c:\newchess\chess\king.h
+1677982137 c:\newchess\chess\king.h
 	"Piece.h"
 
 1677898928 source:c:\newchess\chess\queen.cpp
 	"Queen.h"
 
-1677898976 c:\newchess\chess\queen.h
+1677982123 c:\newchess\chess\queen.h
 	"Piece.h"
 
-1677898853 source:c:\newchess\chess\bishop.cpp
+1677982195 source:c:\newchess\chess\bishop.cpp
 	"Bishop.h"
 
-1677898853 c:\newchess\chess\bishop.h
+1677982195 c:\newchess\chess\bishop.h
 	"Piece.h"
 

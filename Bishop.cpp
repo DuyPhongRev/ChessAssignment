@@ -12,7 +12,3 @@ Bishop::Bishop(Team team, std::pair<int, int> pos)
     }
 }
 
-Bishop::~Bishop()
-{
-    //dtor
-}

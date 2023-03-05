@@ -1,16 +1,14 @@
 #ifndef KNIGHT_H
 #define KNIGHT_H
 #include "Piece.h"
+#include <tuple>
 
 class Knight : public Piece
 {
     public:
         Knight(Team team, std::pair<int, int> pos);
-        virtual ~Knight();
 
-    protected:
-
-    private:
+        void calcPossibleMoves(Piece* field[8][8], bool checkCheck);
 };
 
 #endif // KNIGHT_H
