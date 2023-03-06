@@ -5,10 +5,10 @@ Queen::Queen(Team team, std::pair<int, int> pos)
 {
     if(team == WHITE)
     {
-        Piece::mSurface = IMG_Load("src/queen.png");
+        Piece::mSurface = IMG_Load("src/qw.png");
     }else
     {
-        Piece::mSurface = IMG_Load("src/queen1.png");
+        Piece::mSurface = IMG_Load("src/qb.png");
     }
 }
 

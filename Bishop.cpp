@@ -5,10 +5,10 @@ Bishop::Bishop(Team team, std::pair<int, int> pos)
 {
     if(team == WHITE)
     {
-        Piece::mSurface = IMG_Load("src/bishop.png");
+        Piece::mSurface = IMG_Load("src/bw.png");
     }else
     {
-        Piece::mSurface = IMG_Load("src/bishop1.png");
+        Piece::mSurface = IMG_Load("src/bb.png");
     }
 }
 

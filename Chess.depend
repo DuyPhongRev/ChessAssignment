@@ -67,3 +67,71 @@
 1678005384 c:\newchess\chess\bishop.h
 	"Piece.h"
 
+1678086082 source:c:\a_newchess\chess\bishop.cpp
+	"Bishop.h"
+
+1678005384 c:\a_newchess\chess\bishop.h
+	"Piece.h"
+
+1678036048 c:\a_newchess\chess\piece.h
+	"SDL.h"
+	"SDL_image.h"
+	<utility>
+	<vector>
+	<tuple>
+
+1678086082 source:c:\a_newchess\chess\king.cpp
+	"King.h"
+
+1678035426 c:\a_newchess\chess\king.h
+	"Piece.h"
+	<utility>
+	<cmath>
+
+1678086082 source:c:\a_newchess\chess\knight.cpp
+	"Knight.h"
+	<tuple>
+	<iostream>
+	<vector>
+
+1677981939 c:\a_newchess\chess\knight.h
+	"Piece.h"
+	<tuple>
+
+1678089187 source:c:\a_newchess\chess\main.cpp
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+	"Piece.h"
+	"Pawn.h"
+	"Rook.h"
+	"Knight.h"
+	"Bishop.h"
+	"Queen.h"
+	"King.h"
+
+1678009425 c:\a_newchess\chess\pawn.h
+	"Piece.h"
+
+1678021453 c:\a_newchess\chess\rook.h
+	"Piece.h"
+
+1678022616 c:\a_newchess\chess\queen.h
+	"Piece.h"
+
+1678089216 source:c:\a_newchess\chess\piece.cpp
+	"Piece.h"
+	<iostream>
+	"King.h"
+
+1678086082 source:c:\a_newchess\chess\queen.cpp
+	"Queen.h"
+
+1678086082 source:c:\a_newchess\chess\rook.cpp
+	"Rook.h"
+	<iostream>
+
+1678039921 source:c:\a_newchess\chess\pawn.cpp
+	"Pawn.h"
+	<iostream>
+

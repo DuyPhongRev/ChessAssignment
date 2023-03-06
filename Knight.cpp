@@ -8,10 +8,10 @@ Knight::Knight(Team team, std::pair<int, int> pos)
 {
     if(team == WHITE)
     {
-        Piece::mSurface = IMG_Load("src/knight.png");
+        Piece::mSurface = IMG_Load("src/kw.png");
     }else
     {
-        Piece::mSurface = IMG_Load("src/knight1.png");
+        Piece::mSurface = IMG_Load("src/kb.png");
     }
 }
 

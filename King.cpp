@@ -8,10 +8,10 @@ King::King(Team team, std::pair<int, int> pos)
     movement = false;
     if(team == WHITE)
     {
-        Piece::mSurface = IMG_Load("src/king.png");
+        Piece::mSurface = IMG_Load("src/kgw.png");
     }else
     {
-        Piece::mSurface = IMG_Load("src/king1.png");
+        Piece::mSurface = IMG_Load("src/kgb.png");
     }
 }
 

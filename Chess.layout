@@ -2,39 +2,14 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="Pawn.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="Piece.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1480" topLine="20" />
+			<Cursor1 position="11" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="Bishop.h" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="Pawn.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="254" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Bishop.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="804" topLine="15" />
-		</Cursor>
-	</File>
-	<File name="Queen.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4529" topLine="102" />
-		</Cursor>
-	</File>
-	<File name="Knight.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1587" topLine="2" />
-		</Cursor>
-	</File>
-	<File name="King.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="80" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Piece.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="991" topLine="29" />
+			<Cursor1 position="364" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="Rook.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -42,9 +17,64 @@
 			<Cursor1 position="217" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="Pawn.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="Bishop.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="250" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Piece.cpp" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="445" topLine="3" />
+		</Cursor>
+		<Folding>
+			<Collapse line="56" />
+			<Collapse line="60" />
+			<Collapse line="72" />
+		</Folding>
+	</File>
+	<File name="Pawn.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="227" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Queen.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="246" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="King.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="80" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Knight.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="226" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="King.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="291" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="main.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="6762" topLine="185" />
+		</Cursor>
+		<Folding>
+			<Collapse line="94" />
+			<Collapse line="268" />
+			<Collapse line="311" />
+		</Folding>
+	</File>
+	<File name="Bishop.h" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="254" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Rook.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1120" topLine="9" />
 		</Cursor>
 	</File>
 	<File name="Queen.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -52,48 +82,9 @@
 			<Cursor1 position="224" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
+	<File name="Knight.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="9890" topLine="130" />
-		</Cursor>
-		<Folding>
-			<Collapse line="94" />
-			<Collapse line="144" />
-			<Collapse line="148" />
-			<Collapse line="153" />
-			<Collapse line="196" />
-			<Collapse line="232" />
-			<Collapse line="268" />
-			<Collapse line="311" />
-		</Folding>
-	</File>
-	<File name="Piece.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1310" topLine="18" />
-		</Cursor>
-		<Folding>
-			<Collapse line="25" />
-			<Collapse line="31" />
-			<Collapse line="37" />
-			<Collapse line="41" />
-			<Collapse line="56" />
-			<Collapse line="60" />
-			<Collapse line="72" />
-		</Folding>
-	</File>
-	<File name="Rook.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3272" topLine="65" />
-		</Cursor>
-	</File>
-	<File name="King.cpp" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3138" topLine="63" />
-		</Cursor>
-	</File>
-	<File name="Knight.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="226" topLine="0" />
+			<Cursor1 position="308" topLine="2" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

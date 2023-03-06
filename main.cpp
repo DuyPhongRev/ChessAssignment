@@ -119,9 +119,9 @@ bool GamePlay::initWindow(){
 
 void GamePlay::renderBoard(){
     bool white = true;
-    for (int i = 0; i < 8; i++)
+    for (int x = 0; x < 8; x++)
     {
-        for (int j = 0; j < 8; j++)
+        for (int y = 0; y < 8; y++)
         {
             if(white)
             {
@@ -133,8 +133,8 @@ void GamePlay::renderBoard(){
             SDL_Rect site;
             site.h = WINDOW_HEIGHT / 8;
             site.w = WINDOW_WIDTH / 8;
-            site.x = i * WINDOW_WIDTH / 8;
-            site.y = j * WINDOW_HEIGHT / 8;
+            site.x = x * WINDOW_WIDTH / 8;
+            site.y = y * WINDOW_HEIGHT / 8;
             white = !white;
             SDL_RenderFillRect(renderer, &site);
         }

@@ -6,12 +6,12 @@ Pawn::Pawn(Team team, std::pair<int, int> pos)
 {
     if(team == WHITE)
     {
-        Piece::mSurface = IMG_Load("src/pawn.png");
+        Piece::mSurface = IMG_Load("src/pw.png");
         dy = - 1;
         Default = 6;
     }else
     {
-        Piece::mSurface = IMG_Load("src/pawn1.png");
+        Piece::mSurface = IMG_Load("src/pb.png");
         dy = + 1;
         Default = 1;
     }
