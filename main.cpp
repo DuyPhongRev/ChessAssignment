@@ -225,11 +225,6 @@ void GamePlay::handle(){
         SDL_GetMouseState(&xEnd, &yEnd);
         xEnd /= 100;
         yEnd /= 100;
-        if(xStart == xEnd && yStart == yEnd)
-        {
-            clickedOn->clearPossibleMove();
-            clickedOn = NULL;
-        }
         if(field[xStart][yStart]->isValidMove(xEnd, yEnd))
         {
             field[xStart][yStart]->PieceMove(std::pair<int, int>(xEnd, yEnd));
@@ -245,6 +240,10 @@ void GamePlay::handle(){
                 clickedOn->clearPossibleMove();
                 clickedOn = NULL;
             }
+        }else
+        {
+            clickedOn->clearPossibleMove();
+            clickedOn = NULL;
         }
     }
 }
