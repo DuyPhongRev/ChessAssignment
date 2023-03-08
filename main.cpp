@@ -90,6 +90,7 @@ private:
     bool Movement;
     Piece::Team MoveTurn;
     Piece *field[8][8];
+    Piece * clickedOn;
 };
 
 bool GamePlay::initWindow(){
@@ -118,27 +119,26 @@ bool GamePlay::initWindow(){
 }
 
 void GamePlay::renderBoard(){
-    bool white = true;
     for (int x = 0; x < 8; x++)
     {
         for (int y = 0; y < 8; y++)
         {
-            if(white)
+            if((x + y) % 2 == 0)
             {
-                SDL_SetRenderDrawColor(renderer, 177, 212, 182, 1);
+                if(clickedOn != NULL && clickedOn->isValidMove(x, y)) SDL_SetRenderDrawColor(renderer, 100, 196, 126, 1);
+                else SDL_SetRenderDrawColor(renderer, 177, 212, 182, 1);
             }else
             {
-                SDL_SetRenderDrawColor(renderer, 74, 118, 103, 1);
+                if(clickedOn != NULL && clickedOn->isValidMove(x, y)) SDL_SetRenderDrawColor(renderer, 0, 111, 95, 1);
+                else SDL_SetRenderDrawColor(renderer, 74, 118, 103, 1);
             }
             SDL_Rect site;
             site.h = WINDOW_HEIGHT / 8;
             site.w = WINDOW_WIDTH / 8;
             site.x = x * WINDOW_WIDTH / 8;
             site.y = y * WINDOW_HEIGHT / 8;
-            white = !white;
             SDL_RenderFillRect(renderer, &site);
         }
-        white = !white;
     }
 }
 
@@ -205,26 +205,45 @@ void GamePlay::handle(){
         SDL_GetMouseState(&xStart, &yStart);
         xStart /= 100;
         yStart /= 100;
+        if (field[xStart][yStart] != NULL && field[xStart][yStart]->getTeam() == MoveTurn)
+        {
+            clickedOn = field[xStart][yStart];
+            if(MoveTurn == Piece::WHITE)
+            {
+                kw->setCheck(field, kw->getPossition().first, kw->getPossition().second);
+                field[xStart][yStart]->calcPossibleMoves(field, kw->getCheck());
+            }
+            else
+            {
+                kb->setCheck(field, kb->getPossition().first, kb->getPossition().second);
+                field[xStart][yStart]->calcPossibleMoves(field, kb->getCheck());
+            }
+        }
     }
     if(event.type == SDL_MOUSEBUTTONUP && field[xStart][yStart] != NULL && field[xStart][yStart]->getTeam() == MoveTurn)
     {
         SDL_GetMouseState(&xEnd, &yEnd);
         xEnd /= 100;
         yEnd /= 100;
-        field[xStart][yStart]->calcPossibleMoves(field, false);
+        if(xStart == xEnd && yStart == yEnd)
+        {
+            clickedOn->clearPossibleMove();
+            clickedOn = NULL;
+        }
         if(field[xStart][yStart]->isValidMove(xEnd, yEnd))
         {
             field[xStart][yStart]->PieceMove(std::pair<int, int>(xEnd, yEnd));
             if(field[xEnd][yEnd] != NULL && field[xEnd][yEnd]->getTeam() != field[xStart][yStart]->getTeam())
             {
                 field[xEnd][yEnd]->isDead = true;
-                //field[xEnd][yEnd]->cleanUp();
             }
-            if(!(xStart == xEnd && yStart == yEnd))
+            if(xStart != xEnd || yStart != yEnd)
             {
                 field[xEnd][yEnd] = field[xStart][yStart];
                 field[xStart][yStart] = NULL;
                 Movement = true;
+                clickedOn->clearPossibleMove();
+                clickedOn = NULL;
             }
         }
     }
@@ -267,8 +286,6 @@ void GamePlay::update(){
 }
 
 void GamePlay::render(){
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-    SDL_RenderClear(renderer);
     renderBoard();
     if(!pw1->DeadPiece()) pw1->render(renderer);
     if(!pw2->DeadPiece()) pw2->render(renderer);

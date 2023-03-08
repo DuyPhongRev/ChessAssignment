@@ -1,4 +1,5 @@
 #include "King.h"
+#include <iostream>
 
 using namespace std;
 
@@ -44,38 +45,35 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing)
     {
         for (int y = 0; y < 8; y++)
         {
-            if(field[x][y] != NULL && field[x][y]->getTeam() != mTeam)
+            if(field[x][y] != NULL)
             {
-                if(field[x][y]->getType() == KING)
+                if (field[x][y]->getTeam() != mTeam)
                 {
-                    if(abs(field[x][y]->getPossition().first - xKing) <= 1 || abs(field[x][y]->getPossition().second - yKing) <= 1)
+                    if (field[x][y]->getType() == PAWN)
                     {
-                        check = true;
-                    }
-                } else if (field[x][y]->getType() == PAWN)
-                {
-                    if(field[x][y]->getTeam() == BLACK)
-                    {
-                        if((field[x][y]->getPossition().first + 1 == xKing || field[x][y]->getPossition().first - 1 == xKing) && field[x][y]->getPossition().second + 1 == yKing)
+                        if(field[x][y]->getTeam() == BLACK)
                         {
-                            check = true;
+                            if((field[x][y]->getPossition().first + 1 == xKing || field[x][y]->getPossition().first - 1 == xKing) && field[x][y]->getPossition().second + 1 == yKing)
+                            {
+                                check = true;
+                            }
+                        }else
+                        {
+                            if((field[x][y]->getPossition().first + 1 == xKing || field[x][y]->getPossition().first - 1 == xKing) && field[x][y]->getPossition().second - 1 == yKing)
+                            {
+                                check = true;
+                            }
                         }
                     }else
                     {
-                        if((field[x][y]->getPossition().first + 1 == xKing || field[x][y]->getPossition().first - 1 == xKing) && field[x][y]->getPossition().second - 1 == yKing)
+                        field[x][y]->calcPossibleMoves(field, false);
+                        vector<tuple<int, int, Piece::MoveType>> checkList = field[x][y]->getPossibleMove();
+                        for (int i = 0; i < (int)checkList.size(); i++)
                         {
-                            check = true;
-                        }
-                    }
-                }else
-                {
-                    field[x][y]->calcPossibleMoves(field, false);
-                    vector<tuple<int, int, Piece::MoveType>> checkList = field[x][y]->getPossibleMove();
-                    for (int i = 0; i < checkList.size(); i++)
-                    {
-                        if (get<0>(checkList[i]) == xKing && get<1>(checkList[i]) == yKing)
-                        {
-                            check = true;
+                            if (get<0>(checkList[i]) == xKing && get<1>(checkList[i]) == yKing)
+                            {
+                                check = true;
+                            }
                         }
                     }
                 }

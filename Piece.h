@@ -47,6 +47,8 @@ public:
 
     vector<tuple<int, int, Piece::MoveType>> getPossibleMove();
 
+    void clearPossibleMove();
+
 protected:
     Team mTeam;
     PieceType mType;

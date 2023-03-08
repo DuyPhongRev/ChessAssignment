@@ -20,7 +20,6 @@ Pawn::Pawn(Team team, std::pair<int, int> pos)
 void Pawn::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
 {
     vector<tuple<int, int, Piece::MoveType>> moves;
-
     if(mPos.second + dy >= 0 && mPos.second + dy <= 7 && field[mPos.first][mPos.second + dy] == NULL)
     {
         moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, NORMAL), getOwnKing(field), field, checkCheck);

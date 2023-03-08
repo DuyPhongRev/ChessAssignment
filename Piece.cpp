@@ -47,9 +47,30 @@ vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, 
     if(!checkCheck)
     {
         moveList.push_back(singleMove);
-    }else
+    } else
     {
+        Piece *tmpField[8][8];
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+                tmpField[x][y] = field[x][y];
+        }
+        tmpField[get<0>(singleMove)][get<1>(singleMove)] = tmpField[mPos.first][mPos.second];
 
+        tmpField[mPos.first][mPos.second] = NULL;
+
+        if(king->getPossition().first == mPos.first && king->getPossition().second == mPos.second)
+        {
+            king->setCheck(tmpField, get<0>(singleMove), get<1>(singleMove));
+        }else
+        {
+            king->setCheck(tmpField, king->getPossition().first, king->getPossition().second);
+        }
+
+        if(!king->getCheck())
+        {
+            moveList.push_back(singleMove);
+        }
     }
     return moveList;
 }
@@ -88,18 +109,24 @@ King* Piece::getOwnKing(Piece *field[8][8]){
     return NULL;
 }
 
-bool Piece::isValidMove(int xStart, int yStart)
+bool Piece::isValidMove(int xEnd, int yEnd)
 {
+
     for (int i = 0; i < (int)mPossibleMove.size(); i++)
     {
 
-        if (get<0>(mPossibleMove[i]) == xStart && get<1>(mPossibleMove[i]) == yStart)
+        if (get<0>(mPossibleMove[i]) == xEnd && get<1>(mPossibleMove[i]) == yEnd)
         {
-            mPossibleMove.clear();
+            //mPossibleMove.clear();
             return true;
         }
     }
     return false;
+}
+
+void Piece::clearPossibleMove()
+{
+    mPossibleMove.clear();
 }
 
 
