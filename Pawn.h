@@ -9,7 +9,6 @@ public:
     void calcPossibleMoves(Piece* field[8][8]);
 private:
     int dy;
-    int Default;
 };
 
 #endif // PAWN_H

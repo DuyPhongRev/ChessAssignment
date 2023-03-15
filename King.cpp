@@ -1,5 +1,6 @@
 #include "King.h"
 #include <iostream>
+#include "Rook.h"
 
 using namespace std;
 
@@ -35,11 +36,26 @@ void King::calcPossibleMoves(Piece* field[8][8])
             }
         }
     }
+    if(mNotMove && field[mPos.first + 1][mPos.second] == NULL && field[mPos.first + 2][mPos.second] == NULL && field[mPos.first + 3][mPos.second] != NULL && field[mPos.first + 3][mPos.second]->getType() == ROOK && field[mPos.first + 3][mPos.second]->getNotMove())
+    {
+        for(int i = 0; i < (int)moves.size(); i++)
+        {
+            if(get<0>(moves[i]) == mPos.first + 1 && get<1>(moves[i]) == mPos.second)
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + 2, mPos.second, CASTLE), getOwnKing(field), field);
+        }
+    }
+    if(mNotMove && field[mPos.first - 1][mPos.second] == NULL && field[mPos.first - 2][mPos.second] == NULL && field[mPos.first - 3][mPos.second] == NULL && field[mPos.first - 4][mPos.second] != NULL && field[mPos.first - 4][mPos.second]->getType() == ROOK && field[mPos.first -4][mPos.second]->getNotMove())
+    {
+        for(int i = 0; i < (int)moves.size(); i++)
+        {
+            if(get<0>(moves[i]) == mPos.first - 1 && get<1>(moves[i]) == mPos.second)
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - 2, mPos.second, CASTLE), getOwnKing(field), field);
+        }
+    }
     mPossibleMove = moves;
 }
 
-void King::setCheck(Piece *field[8][8], int xKing, int yKing)
-{
+void King::setCheck(Piece *field[8][8], int xKing, int yKing){
     bool check = false;
 
     for(int dx = 1; dx < 8; dx++)
@@ -302,7 +318,6 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing)
     mCheck = check;
 }
 
-bool King::getCheck()
-{
+bool King::getCheck(){
     return mCheck;
 }
