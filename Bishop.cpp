@@ -12,7 +12,7 @@ Bishop::Bishop(Team team, std::pair<int, int> pos)
     }
 }
 
-void Bishop::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
+void Bishop::calcPossibleMoves(Piece* field[8][8])
 {
     vector<tuple<int, int, Piece::MoveType>> moves;
     for (int dx = 1; dx <= 7; dx++)
@@ -21,13 +21,13 @@ void Bishop::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
         {
             if(field[mPos.first + dx][mPos.second + dx] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dx, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dx, NORMAL), getOwnKing(field), field);
             }else if(field[mPos.first + dx][mPos.second + dx]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dx, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dx, NORMAL), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -39,13 +39,13 @@ void Bishop::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
         {
             if(field[mPos.first - dx][mPos.second - dx] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second - dx, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second - dx, NORMAL), getOwnKing(field), field);
             }else if(field[mPos.first - dx][mPos.second - dx]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second -dx, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second -dx, NORMAL), getOwnKing(field), field);
                 break;
             }
         }
@@ -57,13 +57,13 @@ void Bishop::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
         {
             if(field[mPos.first + dx][mPos.second - dx] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second - dx, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second - dx, NORMAL), getOwnKing(field), field);
             }else if(field[mPos.first + dx][mPos.second - dx]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second - dx, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second - dx, NORMAL), getOwnKing(field), field);
                 break;
             }
         }
@@ -75,13 +75,13 @@ void Bishop::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
         {
             if(field[mPos.first - dx][mPos.second + dx] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second + dx, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second + dx, NORMAL), getOwnKing(field), field);
             }else if(field[mPos.first - dx][mPos.second + dx] != NULL && field[mPos.first - dx][mPos.second + dx]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second + dx, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second + dx, NORMAL), getOwnKing(field), field);
                 break;
             }
         }

@@ -15,10 +15,9 @@ Knight::Knight(Team team, std::pair<int, int> pos)
     }
 }
 
-void Knight::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
+void Knight::calcPossibleMoves(Piece* field[8][8])
 {
     vector<tuple<int, int, Piece::MoveType>> moves;
-    //std::cout << "prepare" << std::endl;
     for(int dx = -2; dx <= 2; dx += 4)
     {
         for (int dy = -1; dy <= 1; dy += 2)
@@ -27,14 +26,11 @@ void Knight::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
             {
                 if(field[mPos.first + dx][mPos.second + dy] == NULL)
                 {
-                    //std::cout << mPos.first + dx << "  " << mPos.second + dy<< std::endl;
-                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field, checkCheck);
+                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field);
                 }else if(field[mPos.first + dx][mPos.second + dy]->getTeam() != mTeam)
                 {
-                    //std::cout << mPos.first + dx << "  " << mPos.second + dy<< std::endl;
-                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field, checkCheck);
+                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field);
                 }
-
             }
         }
     }
@@ -47,12 +43,10 @@ void Knight::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
             {
                 if(field[mPos.first + dx][mPos.second + dy] == NULL)
                 {
-                    //std::cout << mPos.first + dx << "  " << mPos.second + dy<< std::endl;
-                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field, checkCheck);
+                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field);
                 }else if(field[mPos.first + dx][mPos.second + dy]->getTeam() != mTeam)
                 {
-                    //std::cout << mPos.first + dx << "  " << mPos.second + dy<< std::endl;
-                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field, checkCheck);
+                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field);
                 }
             }
         }

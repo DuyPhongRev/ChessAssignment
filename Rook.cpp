@@ -13,7 +13,7 @@ Rook::Rook(Team team, std::pair<int, int> pos)
     }
 }
 
-void Rook::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
+void Rook::calcPossibleMoves(Piece* field[8][8])
 {
     vector<tuple<int, int, Piece::MoveType>> moves;
     for (int dx = 1; dx <= 7; dx++)
@@ -22,13 +22,13 @@ void Rook::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
         {
             if(field[mPos.first + dx][mPos.second] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second, NORMAL), getOwnKing(field), field);
             }else if(field[mPos.first + dx][mPos.second]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second, NORMAL), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -40,13 +40,13 @@ void Rook::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
         {
             if(field[mPos.first - dx][mPos.second] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second, NORMAL), getOwnKing(field), field);
             }else if(field[mPos.first - dx][mPos.second]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second, NORMAL), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -58,13 +58,13 @@ void Rook::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
         {
             if(field[mPos.first][mPos.second + dy] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, NORMAL), getOwnKing(field), field);
             }else if(field[mPos.first][mPos.second + dy]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, NORMAL), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -76,13 +76,13 @@ void Rook::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
         {
             if(field[mPos.first][mPos.second - dy] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second - dy, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second - dy, NORMAL), getOwnKing(field), field);
             }else if(field[mPos.first][mPos.second - dy]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second - dy, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second - dy, NORMAL), getOwnKing(field), field);
                 break;
             }
         }else break;

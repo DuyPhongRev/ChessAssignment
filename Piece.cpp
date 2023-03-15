@@ -43,7 +43,7 @@ void Piece::cleanUp(){
     SDL_FreeSurface(mSurface);
 }
 
-vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, Piece::MoveType>> moveList, tuple<int, int, Piece::MoveType> singleMove, King *king, Piece *field[8][8], bool checkCheck){
+vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, Piece::MoveType>> moveList, tuple<int, int, Piece::MoveType> singleMove, King *king, Piece *field[8][8]){
         Piece *tmpField[8][8];
         for (int x = 0; x < 8; x++)
         {

@@ -12,7 +12,7 @@ Queen::Queen(Team team, std::pair<int, int> pos)
     }
 }
 
-void Queen::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
+void Queen::calcPossibleMoves(Piece* field[8][8])
 {
     vector<tuple<int, int, Piece::MoveType>> moves;
     for (int dx = 1; dx <= 7; dx++)
@@ -21,13 +21,13 @@ void Queen::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
         {
             if(field[mPos.first + dx][mPos.second] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second, NORMAL), getOwnKing(field), field);
             }else if(field[mPos.first + dx][mPos.second]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second, NORMAL), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -39,13 +39,13 @@ void Queen::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
         {
             if(field[mPos.first - dx][mPos.second] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second, NORMAL), getOwnKing(field), field);
             }else if(field[mPos.first - dx][mPos.second]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second, NORMAL), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -57,13 +57,13 @@ void Queen::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
         {
             if(field[mPos.first][mPos.second + dy] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, NORMAL), getOwnKing(field), field);
             }else if(field[mPos.first][mPos.second + dy]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, NORMAL), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -75,13 +75,13 @@ void Queen::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
         {
             if(field[mPos.first][mPos.second - dy] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second - dy, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second - dy, NORMAL), getOwnKing(field), field);
             }else if(field[mPos.first][mPos.second - dy]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second - dy, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second - dy, NORMAL), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -95,13 +95,13 @@ void Queen::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
         {
             if(field[mPos.first + dx][mPos.second + dx] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dx, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dx, NORMAL), getOwnKing(field), field);
             }else if(field[mPos.first + dx][mPos.second + dx]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dx, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dx, NORMAL), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -114,13 +114,13 @@ void Queen::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
         {
             if(field[mPos.first - dx][mPos.second - dx] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second - dx, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second - dx, NORMAL), getOwnKing(field), field);
             }else if(field[mPos.first - dx][mPos.second - dx]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second -dx, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second -dx, NORMAL), getOwnKing(field), field);
                 break;
             }
         }
@@ -132,13 +132,13 @@ void Queen::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
         {
             if(field[mPos.first + dx][mPos.second - dx] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second - dx, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second - dx, NORMAL), getOwnKing(field), field);
             }else if(field[mPos.first + dx][mPos.second - dx]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second - dx, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second - dx, NORMAL), getOwnKing(field), field);
                 break;
             }
         }
@@ -150,13 +150,13 @@ void Queen::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
         {
             if(field[mPos.first - dx][mPos.second + dx] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second + dx, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second + dx, NORMAL), getOwnKing(field), field);
             }else if(field[mPos.first - dx][mPos.second + dx] != NULL && field[mPos.first - dx][mPos.second + dx]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second + dx, NORMAL), getOwnKing(field), field, checkCheck);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second + dx, NORMAL), getOwnKing(field), field);
                 break;
             }
         }

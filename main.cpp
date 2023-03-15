@@ -210,11 +210,11 @@ void GamePlay::handle(){
             clickedOn = field[xStart][yStart];
             if(MoveTurn == Piece::WHITE)
             {
-                field[xStart][yStart]->calcPossibleMoves(field, true);
+                field[xStart][yStart]->calcPossibleMoves(field);
             }
             else
             {
-                field[xStart][yStart]->calcPossibleMoves(field, true);
+                field[xStart][yStart]->calcPossibleMoves(field);
             }
         }
     }

@@ -67,39 +67,39 @@
 1678005384 c:\newchess\chess\bishop.h
 	"Piece.h"
 
-1678206415 source:c:\a_newchess\chess\bishop.cpp
+1678871392 source:c:\a_newchess\chess\bishop.cpp
 	"Bishop.h"
 
-1678206415 c:\a_newchess\chess\bishop.h
+1678871253 c:\a_newchess\chess\bishop.h
 	"Piece.h"
 
-1678354067 c:\a_newchess\chess\piece.h
+1678871423 c:\a_newchess\chess\piece.h
 	"SDL.h"
 	"SDL_image.h"
 	<utility>
 	<vector>
 	<tuple>
 
-1678870601 source:c:\a_newchess\chess\king.cpp
+1678871449 source:c:\a_newchess\chess\king.cpp
 	"King.h"
 	<iostream>
 
-1678206415 c:\a_newchess\chess\king.h
+1678871252 c:\a_newchess\chess\king.h
 	"Piece.h"
 	<utility>
 	<cmath>
 
-1678206415 source:c:\a_newchess\chess\knight.cpp
+1678871449 source:c:\a_newchess\chess\knight.cpp
 	"Knight.h"
 	<tuple>
 	<iostream>
 	<vector>
 
-1678206415 c:\a_newchess\chess\knight.h
+1678871253 c:\a_newchess\chess\knight.h
 	"Piece.h"
 	<tuple>
 
-1678354049 source:c:\a_newchess\chess\main.cpp
+1678871253 source:c:\a_newchess\chess\main.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -111,28 +111,28 @@
 	"Queen.h"
 	"King.h"
 
-1678206415 c:\a_newchess\chess\pawn.h
+1678871253 c:\a_newchess\chess\pawn.h
 	"Piece.h"
 
-1678206415 c:\a_newchess\chess\rook.h
+1678871253 c:\a_newchess\chess\rook.h
 	"Piece.h"
 
-1678206415 c:\a_newchess\chess\queen.h
+1678871253 c:\a_newchess\chess\queen.h
 	"Piece.h"
 
-1678870057 source:c:\a_newchess\chess\piece.cpp
+1678871475 source:c:\a_newchess\chess\piece.cpp
 	"Piece.h"
 	<iostream>
 	"King.h"
 
-1678206415 source:c:\a_newchess\chess\queen.cpp
+1678871449 source:c:\a_newchess\chess\queen.cpp
 	"Queen.h"
 
-1678206415 source:c:\a_newchess\chess\rook.cpp
+1678871449 source:c:\a_newchess\chess\rook.cpp
 	"Rook.h"
 	<iostream>
 
-1678214839 source:c:\a_newchess\chess\pawn.cpp
+1678871449 source:c:\a_newchess\chess\pawn.cpp
 	"Pawn.h"
 	<iostream>
 

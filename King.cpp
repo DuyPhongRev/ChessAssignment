@@ -16,7 +16,7 @@ King::King(Team team, std::pair<int, int> pos)
     }
 }
 
-void King::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
+void King::calcPossibleMoves(Piece* field[8][8])
 {
     vector<tuple<int, int, Piece::MoveType>> moves;
     for(int dx = -1; dx <= 1; dx ++)
@@ -27,10 +27,10 @@ void King::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
             {
                 if(field[mPos.first + dx][mPos.second + dy] == NULL)
                 {
-                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field, checkCheck);
+                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field);
                 }else if(field[mPos.first + dx][mPos.second + dy]->getTeam() != mTeam)
                 {
-                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field, checkCheck);
+                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field);
                 }
             }
         }
