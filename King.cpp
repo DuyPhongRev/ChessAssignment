@@ -41,45 +41,264 @@ void King::calcPossibleMoves(Piece* field[8][8], bool checkCheck)
 void King::setCheck(Piece *field[8][8], int xKing, int yKing)
 {
     bool check = false;
-    for (int x = 0; x < 8; x++)
+
+    for(int dx = 1; dx < 8; dx++)
     {
-        for (int y = 0; y < 8; y++)
+        if(dx + xKing <= 7)
         {
-            if(field[x][y] != NULL)
+            if(field[dx + xKing][yKing] != NULL)
             {
-                if (field[x][y]->getTeam() != mTeam)
+                if(field[dx + xKing][yKing]->getTeam() != field[xKing][yKing]->getTeam())
                 {
-                    if (field[x][y]->getType() == PAWN)
+
+                    if(field[dx + xKing][yKing]->getType() == QUEEN || field[dx + xKing][yKing]->getType() == ROOK)
                     {
-                        if(field[x][y]->getTeam() == BLACK)
-                        {
-                            if((field[x][y]->getPossition().first + 1 == xKing || field[x][y]->getPossition().first - 1 == xKing) && field[x][y]->getPossition().second + 1 == yKing)
-                            {
-                                check = true;
-                            }
-                        }else
-                        {
-                            if((field[x][y]->getPossition().first + 1 == xKing || field[x][y]->getPossition().first - 1 == xKing) && field[x][y]->getPossition().second - 1 == yKing)
-                            {
-                                check = true;
-                            }
-                        }
-                    }else
+                        check = true;
+                    }else if(field[dx + xKing][yKing]->getType() == KING)
                     {
-                        field[x][y]->calcPossibleMoves(field, false);
-                        vector<tuple<int, int, Piece::MoveType>> checkList = field[x][y]->getPossibleMove();
-                        for (int i = 0; i < (int)checkList.size(); i++)
+                        if(dx == 1)
                         {
-                            if (get<0>(checkList[i]) == xKing && get<1>(checkList[i]) == yKing)
-                            {
-                                check = true;
-                            }
+                            cout << 1 << endl;
+                            check = true;
                         }
+                        else break;
+                    }
+                    else break;
+                }else
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    for(int dx = 1; dx < 8; dx++)
+    {
+        if(- dx + xKing >= 0)
+        {
+            if(field[- dx + xKing][yKing] != NULL)
+            {
+                if(field[- dx + xKing][yKing]->getTeam() != field[xKing][yKing]->getTeam())
+                {
+                    if(field[- dx + xKing][yKing]->getType() == QUEEN || field[- dx + xKing][yKing]->getType() == ROOK)
+                    {
+                        check = true;
+                    }else if(field[-dx + xKing][yKing]->getType() == KING)
+                    {
+                        if(dx == 1)
+                        {
+                            cout << 2 << endl;
+                            check = true;
+                        }
+                        else break;
+                    }
+                    else break;
+                }else
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    for (int dy = 1; dy < 8; dy++)
+    {
+        if(dy + yKing <= 7)
+        {
+            if(field[xKing][dy + yKing] != NULL)
+            {
+                if(field[xKing][dy + yKing]->getTeam() != field[xKing][yKing]->getTeam())
+                {
+                    if(field[xKing][dy + yKing]->getType() == QUEEN || field[xKing][dy + yKing]->getType() == ROOK)
+                    {
+                        check = true;
+                    }else if(field[xKing][dy + yKing]->getType() == KING)
+                    {
+                        if(dy == 1)
+                        {
+                            cout << 3 << endl;
+                            check = true;
+                        }
+                        else break;
+                    }
+                    else break;
+
+                }else
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    for (int dy = 1; dy < 8; dy++)
+    {
+        if(- dy + yKing >= 0)
+        {
+            if(field[xKing][- dy + yKing] != NULL)
+            {
+                if(field[xKing][- dy + yKing]->getTeam() != field[xKing][yKing]->getTeam())
+                {
+                    if(field[xKing][- dy + yKing]->getType() == QUEEN || field[xKing][- dy + yKing]->getType() == ROOK)
+                    {
+                        check = true;
+                    }else if(field[xKing][-dy + yKing]->getType() == KING)
+                    {
+                        if(dy == 1)
+                        {
+                            cout << 4 << endl;
+                            check = true;
+                        }
+                        else break;
+                    }else break;
+
+                }else
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    for (int dz = 1; dz < 8; dz++)
+    {
+        if(dz + xKing <= 7 && dz + yKing <= 7)
+        {
+            if(field[dz + xKing][dz + yKing] != NULL)
+            {
+                if(field[dz + xKing][dz + yKing]->getTeam() != field[xKing][yKing]->getTeam())
+                {
+                    if(field[dz + xKing][dz + yKing]->getType() == QUEEN || field[dz + xKing][dz + yKing]->getType() == BISHOP) check = true;
+                    else if(field[dz + xKing][dz + yKing]->getType() == KING || field[dz + xKing][dz + yKing]->getType() == PAWN)
+                    {
+                        if(dz == 1)
+                        {
+                            cout << 5 << endl;
+                            check = true;
+                        }
+
+                        else break;
+                    }else break;
+                }else
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    for (int dz = 1; dz < 8; dz++)
+    {
+        if(-dz + xKing >= 0 && -dz + yKing >= 0)
+        {
+            if(field[-dz + xKing][-dz + yKing] != NULL)
+            {
+                if(field[-dz + xKing][-dz + yKing]->getTeam() != field[xKing][yKing]->getTeam())
+                {
+                    if(field[-dz + xKing][-dz + yKing]->getType() == QUEEN || field[-dz + xKing][-dz + yKing]->getType() == BISHOP) check = true;
+                    else if(field[-dz + xKing][-dz + yKing]->getType() == KING || field[-dz + xKing][-dz + yKing]->getType() == PAWN)
+                    {
+                        if(dz == 1)
+                        {
+                            cout << 6 << endl;
+                            check = true;
+                        }
+                        else break;
+                    }else break;
+                }else
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    for (int dz = 1; dz < 8; dz++)
+    {
+        if(-dz + xKing >= 0 && dz + yKing <= 7)
+        {
+            if(field[-dz + xKing][dz + yKing] != NULL)
+            {
+                if(field[-dz + xKing][dz + yKing]->getTeam() != field[xKing][yKing]->getTeam())
+                {
+                    if(field[-dz + xKing][dz + yKing]->getType() == QUEEN || field[-dz + xKing][dz + yKing]->getType() == BISHOP) check = true;
+                    else if(field[-dz + xKing][dz + yKing]->getType() == KING || field[-dz + xKing][dz + yKing]->getType() == PAWN)
+                    {
+                        if(dz == 1)
+                        {
+                            cout << 7 << endl;
+                            check = true;
+                        }
+                        else break;
+                    }else break;
+                }else
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    for (int dz = 1; dz < 8; dz++)
+    {
+        if(dz + xKing <= 7 && -dz + yKing >= 0)
+        {
+            if(field[dz + xKing][-dz + yKing] != NULL)
+            {
+                if(field[dz + xKing][-dz + yKing]->getTeam() != field[xKing][yKing]->getTeam())
+                {
+                    if(field[dz + xKing][-dz + yKing]->getType() == QUEEN || field[dz + xKing][-dz + yKing]->getType() == BISHOP) check = true;
+                    else if(field[dz + xKing][-dz + yKing]->getType() == KING || field[dz + xKing][-dz + yKing]->getType() == PAWN)
+                    {
+                        if(dz == 1)
+                        {
+                            cout << 8 << endl;
+                            check = true;
+                        }
+                        else break;
+                    }else break;
+                }else
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    for(int dx = -2; dx <= 2; dx += 4)
+    {
+        for (int dy = -1; dy <= 1; dy += 2)
+        {
+            if(xKing + dx >= 0 && xKing + dx <= 7 && yKing + dy >= 0 && yKing + dy <= 7)
+            {
+                if(field[dx + xKing][dy + yKing] != NULL)
+                {
+                    if(field[dx + xKing][dy + yKing]->getTeam() != field[xKing][yKing]->getTeam())
+                    {
+                        if(field[dx + xKing][dy + yKing]->getType() == KNIGHT) check = true;
                     }
                 }
             }
         }
     }
+
+    for(int dy = -2; dy <= 2; dy += 4)
+    {
+        for (int dx = -1; dx <= 1; dx += 2)
+        {
+            if(xKing + dx >= 0 && xKing + dx <= 7 && yKing + dy >= 0 && yKing + dy <= 7)
+            {
+                if(field[dx + xKing][dy + yKing] != NULL)
+                {
+                    if(field[dx + xKing][dy + yKing]->getTeam() != field[xKing][yKing]->getTeam())
+                    {
+                        if(field[dx + xKing][dy + yKing]->getType() == KNIGHT) check = true;
+                    }
+                }
+            }
+        }
+    }
+
     mCheck = check;
 }
 

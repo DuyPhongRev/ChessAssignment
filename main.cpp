@@ -210,13 +210,11 @@ void GamePlay::handle(){
             clickedOn = field[xStart][yStart];
             if(MoveTurn == Piece::WHITE)
             {
-                kw->setCheck(field, kw->getPossition().first, kw->getPossition().second);
-                field[xStart][yStart]->calcPossibleMoves(field, kw->getCheck());
+                field[xStart][yStart]->calcPossibleMoves(field, true);
             }
             else
             {
-                kb->setCheck(field, kb->getPossition().first, kb->getPossition().second);
-                field[xStart][yStart]->calcPossibleMoves(field, kb->getCheck());
+                field[xStart][yStart]->calcPossibleMoves(field, true);
             }
         }
     }

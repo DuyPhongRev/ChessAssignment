@@ -44,12 +44,6 @@ void Piece::cleanUp(){
 }
 
 vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, Piece::MoveType>> moveList, tuple<int, int, Piece::MoveType> singleMove, King *king, Piece *field[8][8], bool checkCheck){
-
-    if(!checkCheck)
-    {
-        moveList.push_back(singleMove);
-    } else
-    {
         Piece *tmpField[8][8];
         for (int x = 0; x < 8; x++)
         {
@@ -70,7 +64,6 @@ vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, 
         {
             moveList.push_back(singleMove);
         }
-    }
     return moveList;
 }
 

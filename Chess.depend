@@ -80,7 +80,7 @@
 	<vector>
 	<tuple>
 
-1678215628 source:c:\a_newchess\chess\king.cpp
+1678870601 source:c:\a_newchess\chess\king.cpp
 	"King.h"
 	<iostream>
 
@@ -120,7 +120,7 @@
 1678206415 c:\a_newchess\chess\queen.h
 	"Piece.h"
 
-1678354049 source:c:\a_newchess\chess\piece.cpp
+1678870057 source:c:\a_newchess\chess\piece.cpp
 	"Piece.h"
 	<iostream>
 	"King.h"
