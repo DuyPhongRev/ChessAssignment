@@ -8,12 +8,10 @@ Pawn::Pawn(Team team, std::pair<int, int> pos)
     {
         Piece::mSurface = IMG_Load("src/pw.png");
         dy = - 1;
-        Default = 6;
     }else
     {
         Piece::mSurface = IMG_Load("src/pb.png");
         dy = + 1;
-        Default = 1;
     }
 }
 
@@ -25,7 +23,7 @@ void Pawn::calcPossibleMoves(Piece* field[8][8])
         moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, NORMAL), getOwnKing(field), field);
     }
 
-    if(mPos.second == Default && field[mPos.first][mPos.second + dy * 2] == NULL)
+    if(mNotMove && field[mPos.first][mPos.second + dy * 2] == NULL)
     {
         moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy * 2, NORMAL), getOwnKing(field), field);
     }

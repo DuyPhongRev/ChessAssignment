@@ -18,7 +18,6 @@ class King : public Piece
     private:
         bool mCheck;
         bool movement;
-
 };
 
 #endif // KING_H
