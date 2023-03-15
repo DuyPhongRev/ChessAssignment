@@ -125,11 +125,11 @@ void GamePlay::renderBoard(){
         {
             if((x + y) % 2 == 0)
             {
-                if(clickedOn != NULL && clickedOn->isValidMove(x, y)) SDL_SetRenderDrawColor(renderer, 100, 196, 126, 1);
+                if(clickedOn != NULL && clickedOn->isValidMove( x, y)) SDL_SetRenderDrawColor(renderer, 100, 196, 126, 1);
                 else SDL_SetRenderDrawColor(renderer, 177, 212, 182, 1);
             }else
             {
-                if(clickedOn != NULL && clickedOn->isValidMove(x, y)) SDL_SetRenderDrawColor(renderer, 0, 111, 95, 1);
+                if(clickedOn != NULL && clickedOn->isValidMove( x, y)) SDL_SetRenderDrawColor(renderer, 0, 111, 95, 1);
                 else SDL_SetRenderDrawColor(renderer, 74, 118, 103, 1);
             }
             SDL_Rect site;
@@ -220,12 +220,12 @@ void GamePlay::handle(){
             }
         }
     }
-    if(event.type == SDL_MOUSEBUTTONUP && field[xStart][yStart] != NULL && field[xStart][yStart]->getTeam() == MoveTurn)
+    else if(event.type == SDL_MOUSEBUTTONUP && field[xStart][yStart] != NULL && field[xStart][yStart]->getTeam() == MoveTurn)
     {
         SDL_GetMouseState(&xEnd, &yEnd);
         xEnd /= 100;
         yEnd /= 100;
-        if(field[xStart][yStart]->isValidMove(xEnd, yEnd))
+        if(field[xStart][yStart]->isValidMove( xEnd, yEnd))
         {
             field[xStart][yStart]->PieceMove(std::pair<int, int>(xEnd, yEnd));
             if(field[xEnd][yEnd] != NULL && field[xEnd][yEnd]->getTeam() != field[xStart][yStart]->getTeam())
@@ -237,12 +237,10 @@ void GamePlay::handle(){
                 field[xEnd][yEnd] = field[xStart][yStart];
                 field[xStart][yStart] = NULL;
                 Movement = true;
-                clickedOn->clearPossibleMove();
                 clickedOn = NULL;
             }
         }else
         {
-            clickedOn->clearPossibleMove();
             clickedOn = NULL;
         }
     }

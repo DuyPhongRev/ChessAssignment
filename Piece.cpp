@@ -44,6 +44,7 @@ void Piece::cleanUp(){
 }
 
 vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, Piece::MoveType>> moveList, tuple<int, int, Piece::MoveType> singleMove, King *king, Piece *field[8][8], bool checkCheck){
+
     if(!checkCheck)
     {
         moveList.push_back(singleMove);
@@ -58,7 +59,6 @@ vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, 
         tmpField[get<0>(singleMove)][get<1>(singleMove)] = tmpField[mPos.first][mPos.second];
 
         tmpField[mPos.first][mPos.second] = NULL;
-
         if(king->getPossition().first == mPos.first && king->getPossition().second == mPos.second)
         {
             king->setCheck(tmpField, get<0>(singleMove), get<1>(singleMove));
@@ -66,7 +66,6 @@ vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, 
         {
             king->setCheck(tmpField, king->getPossition().first, king->getPossition().second);
         }
-
         if(!king->getCheck())
         {
             moveList.push_back(singleMove);
@@ -117,17 +116,10 @@ bool Piece::isValidMove(int xEnd, int yEnd)
 
         if (get<0>(mPossibleMove[i]) == xEnd && get<1>(mPossibleMove[i]) == yEnd)
         {
-            //mPossibleMove.clear();
             return true;
         }
     }
     return false;
 }
-
-void Piece::clearPossibleMove()
-{
-    mPossibleMove.clear();
-}
-
 
 

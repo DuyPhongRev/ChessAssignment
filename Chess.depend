@@ -73,7 +73,7 @@
 1678206415 c:\a_newchess\chess\bishop.h
 	"Piece.h"
 
-1678244060 c:\a_newchess\chess\piece.h
+1678354067 c:\a_newchess\chess\piece.h
 	"SDL.h"
 	"SDL_image.h"
 	<utility>
@@ -99,7 +99,7 @@
 	"Piece.h"
 	<tuple>
 
-1678245289 source:c:\a_newchess\chess\main.cpp
+1678354049 source:c:\a_newchess\chess\main.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -120,7 +120,7 @@
 1678206415 c:\a_newchess\chess\queen.h
 	"Piece.h"
 
-1678244086 source:c:\a_newchess\chess\piece.cpp
+1678354049 source:c:\a_newchess\chess\piece.cpp
 	"Piece.h"
 	<iostream>
 	"King.h"
