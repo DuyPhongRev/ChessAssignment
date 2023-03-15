@@ -8,7 +8,6 @@ class Rook : public Piece
         Rook(Team team, std::pair<int, int> pos);
 
         void calcPossibleMoves(Piece* field[8][8]);
-
 };
 
 #endif // ROOK_H

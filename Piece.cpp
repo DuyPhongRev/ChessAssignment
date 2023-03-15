@@ -20,6 +20,7 @@ Piece::Piece(Team team, PieceType piecetype, std::pair<int, int> pos){
     srcRect.h = 50;
     srcRect.w = 50;
     isDead = false;
+    mNotMove = true;
 }
 
 void Piece::render(SDL_Renderer* renderer){
@@ -32,6 +33,7 @@ void Piece::PieceMove(std::pair<int, int> pos){
     mPos = pos;
     desRect.x = (pos.first ) * WINDOW_WIDTH / 8;
     desRect.y = (pos.second ) * WINDOW_HEIGHT / 8;
+    mNotMove = false;
 }
 
 bool Piece::DeadPiece(){
@@ -81,6 +83,10 @@ Piece::PieceType Piece::getType(){
 
 Piece::Team Piece::getTeam(){
     return mTeam;
+}
+
+bool Piece::getNotMove(){
+    return mNotMove;
 }
 
 King* Piece::getOwnKing(Piece *field[8][8]){

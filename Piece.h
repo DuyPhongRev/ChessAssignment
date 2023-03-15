@@ -47,6 +47,7 @@ public:
 
     vector<tuple<int, int, Piece::MoveType>> getPossibleMove();
 
+    bool getNotMove();
 protected:
     Team mTeam;
     PieceType mType;
@@ -56,6 +57,7 @@ protected:
     SDL_Surface *mSurface = NULL;
     SDL_Texture *mTexture = NULL;
     vector<tuple<int, int, Piece::MoveType>> mPossibleMove;
+    bool mNotMove;
 };
 
 #endif // PIECE_H
