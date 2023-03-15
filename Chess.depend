@@ -99,7 +99,7 @@
 	"Piece.h"
 	<tuple>
 
-1678871253 source:c:\a_newchess\chess\main.cpp
+1678897286 source:c:\a_newchess\chess\main.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -120,7 +120,7 @@
 1678871253 c:\a_newchess\chess\queen.h
 	"Piece.h"
 
-1678871475 source:c:\a_newchess\chess\piece.cpp
+1678878355 source:c:\a_newchess\chess\piece.cpp
 	"Piece.h"
 	<iostream>
 	"King.h"

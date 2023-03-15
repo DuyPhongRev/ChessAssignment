@@ -7,8 +7,7 @@ using namespace std;
 #define WINDOW_HEIGHT 800
 #define WINDOW_WIDTH 800
 
-Piece::Piece(Team team, PieceType piecetype, std::pair<int, int> pos)
-{
+Piece::Piece(Team team, PieceType piecetype, std::pair<int, int> pos){
     mType = piecetype;
     mTeam = team;
     mPos = pos;
@@ -64,6 +63,7 @@ vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, 
         {
             moveList.push_back(singleMove);
         }
+        king->getCheck();
     return moveList;
 }
 

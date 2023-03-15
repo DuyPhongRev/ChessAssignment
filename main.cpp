@@ -140,6 +140,28 @@ void GamePlay::renderBoard(){
             SDL_RenderFillRect(renderer, &site);
         }
     }
+    kw->setCheck(field, kw->getPossition().first, kw->getPossition().second);
+    kb->setCheck(field, kb->getPossition().first, kb->getPossition().second);
+    if(kw->getCheck())
+    {
+        SDL_SetRenderDrawColor(renderer, 207, 33, 33, 1);
+        SDL_Rect site;
+        site.h = WINDOW_HEIGHT / 8;
+        site.w = WINDOW_WIDTH / 8;
+        site.x = kw->getPossition().first * WINDOW_WIDTH / 8;
+        site.y = kw->getPossition().second * WINDOW_HEIGHT / 8;
+        SDL_RenderFillRect(renderer, &site);
+    }
+    if(kb->getCheck())
+    {
+        SDL_SetRenderDrawColor(renderer, 207, 33, 33, 1);
+        SDL_Rect site;
+        site.h = WINDOW_HEIGHT / 8;
+        site.w = WINDOW_WIDTH / 8;
+        site.x = kb->getPossition().first * WINDOW_WIDTH / 8;
+        site.y = kb->getPossition().second * WINDOW_HEIGHT / 8;
+        SDL_RenderFillRect(renderer, &site);
+    }
 }
 
 void GamePlay::initMoveTurn(){
