@@ -21,6 +21,7 @@ Piece::Piece(Team team, PieceType piecetype, std::pair<int, int> pos){
     srcRect.w = 50;
     isDead = false;
     mNotMove = true;
+    mValidEnpassant = false;
 }
 
 void Piece::render(SDL_Renderer* renderer){
@@ -87,6 +88,16 @@ Piece::Team Piece::getTeam(){
 
 bool Piece::getNotMove(){
     return mNotMove;
+}
+
+void Piece::setEnpassant()
+{
+    mValidEnpassant= true;
+}
+
+bool Piece::getEnpassant()
+{
+    return mValidEnpassant;
 }
 
 King* Piece::getOwnKing(Piece *field[8][8]){

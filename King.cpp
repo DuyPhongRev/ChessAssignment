@@ -70,16 +70,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing){
                     if(field[dx + xKing][yKing]->getType() == QUEEN || field[dx + xKing][yKing]->getType() == ROOK)
                     {
                         check = true;
-                    }else if(field[dx + xKing][yKing]->getType() == KING)
-                    {
-                        if(dx == 1)
-                        {
-                            cout << 1 << endl;
-                            check = true;
-                        }
-                        else break;
-                    }
-                    else break;
+                    }else break;
                 }else
                 {
                     break;
@@ -99,14 +90,6 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing){
                     if(field[- dx + xKing][yKing]->getType() == QUEEN || field[- dx + xKing][yKing]->getType() == ROOK)
                     {
                         check = true;
-                    }else if(field[-dx + xKing][yKing]->getType() == KING)
-                    {
-                        if(dx == 1)
-                        {
-                            cout << 2 << endl;
-                            check = true;
-                        }
-                        else break;
                     }
                     else break;
                 }else
@@ -128,14 +111,6 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing){
                     if(field[xKing][dy + yKing]->getType() == QUEEN || field[xKing][dy + yKing]->getType() == ROOK)
                     {
                         check = true;
-                    }else if(field[xKing][dy + yKing]->getType() == KING)
-                    {
-                        if(dy == 1)
-                        {
-                            cout << 3 << endl;
-                            check = true;
-                        }
-                        else break;
                     }
                     else break;
 
@@ -158,14 +133,6 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing){
                     if(field[xKing][- dy + yKing]->getType() == QUEEN || field[xKing][- dy + yKing]->getType() == ROOK)
                     {
                         check = true;
-                    }else if(field[xKing][-dy + yKing]->getType() == KING)
-                    {
-                        if(dy == 1)
-                        {
-                            cout << 4 << endl;
-                            check = true;
-                        }
-                        else break;
                     }else break;
 
                 }else
@@ -185,16 +152,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing){
                 if(field[dz + xKing][dz + yKing]->getTeam() != field[xKing][yKing]->getTeam())
                 {
                     if(field[dz + xKing][dz + yKing]->getType() == QUEEN || field[dz + xKing][dz + yKing]->getType() == BISHOP) check = true;
-                    else if(field[dz + xKing][dz + yKing]->getType() == KING || field[dz + xKing][dz + yKing]->getType() == PAWN)
-                    {
-                        if(dz == 1)
-                        {
-                            cout << 5 << endl;
-                            check = true;
-                        }
-
-                        else break;
-                    }else break;
+                    else break;
                 }else
                 {
                     break;
@@ -212,15 +170,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing){
                 if(field[-dz + xKing][-dz + yKing]->getTeam() != field[xKing][yKing]->getTeam())
                 {
                     if(field[-dz + xKing][-dz + yKing]->getType() == QUEEN || field[-dz + xKing][-dz + yKing]->getType() == BISHOP) check = true;
-                    else if(field[-dz + xKing][-dz + yKing]->getType() == KING || field[-dz + xKing][-dz + yKing]->getType() == PAWN)
-                    {
-                        if(dz == 1)
-                        {
-                            cout << 6 << endl;
-                            check = true;
-                        }
-                        else break;
-                    }else break;
+                    else break;
                 }else
                 {
                     break;
@@ -238,15 +188,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing){
                 if(field[-dz + xKing][dz + yKing]->getTeam() != field[xKing][yKing]->getTeam())
                 {
                     if(field[-dz + xKing][dz + yKing]->getType() == QUEEN || field[-dz + xKing][dz + yKing]->getType() == BISHOP) check = true;
-                    else if(field[-dz + xKing][dz + yKing]->getType() == KING || field[-dz + xKing][dz + yKing]->getType() == PAWN)
-                    {
-                        if(dz == 1)
-                        {
-                            cout << 7 << endl;
-                            check = true;
-                        }
-                        else break;
-                    }else break;
+                    else break;
                 }else
                 {
                     break;
@@ -264,15 +206,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing){
                 if(field[dz + xKing][-dz + yKing]->getTeam() != field[xKing][yKing]->getTeam())
                 {
                     if(field[dz + xKing][-dz + yKing]->getType() == QUEEN || field[dz + xKing][-dz + yKing]->getType() == BISHOP) check = true;
-                    else if(field[dz + xKing][-dz + yKing]->getType() == KING || field[dz + xKing][-dz + yKing]->getType() == PAWN)
-                    {
-                        if(dz == 1)
-                        {
-                            cout << 8 << endl;
-                            check = true;
-                        }
-                        else break;
-                    }else break;
+                    else break;
                 }else
                 {
                     break;
@@ -315,6 +249,24 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing){
         }
     }
 
+    for (int x = 0; x < 8; x++)
+    {
+        for (int y = 0; y < 8; y++)
+        {
+            if(field[x][y] != NULL && field[x][y]->getTeam() != field[xKing][yKing]->getTeam() && field[x][y]->getType() == PAWN)
+            {
+                if(field[xKing][yKing]->getTeam() == WHITE)
+                {
+                    if(x + 1 == xKing&& y + 1 == yKing) check = true;
+                    else if(x - 1 == xKing&& y + 1 == yKing) check = true;
+                }else
+                {
+                    if(x + 1 == xKing && y - 1 == yKing) check = true;
+                    else if(x - 1 == xKing && y - 1 == yKing) check = true;
+                }
+            }
+        }
+    }
     mCheck = check;
 }
 

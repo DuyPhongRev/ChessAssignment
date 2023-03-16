@@ -19,7 +19,7 @@ public:
 
 	enum PieceType { PAWN, ROOK, KNIGHT, BISHOP, KING, QUEEN, EMPTY };
 
-	enum MoveType { NORMAL, CASTLE, ENPASSANT, NEWPIECE };
+	enum MoveType { NORMAL, CASTLE, ENPASSANT, PROMOTE };
 
 	Piece(Team team, PieceType piecetype, pair<int, int> pos);
 
@@ -48,16 +48,31 @@ public:
     vector<tuple<int, int, Piece::MoveType>> getPossibleMove();
 
     bool getNotMove();
+
+    void setEnpassant();
+
+    bool getEnpassant();
+
 protected:
     Team mTeam;
+
     PieceType mType;
+
     pair<int, int> mPos;
+
     SDL_Rect srcRect;
+
     SDL_Rect desRect;
+
     SDL_Surface *mSurface = NULL;
+
     SDL_Texture *mTexture = NULL;
+
     vector<tuple<int, int, Piece::MoveType>> mPossibleMove;
+
     bool mNotMove;
+
+    bool mValidEnpassant;
 };
 
 #endif // PIECE_H

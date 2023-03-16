@@ -8,6 +8,7 @@
 #include "Bishop.h"
 #include "Queen.h"
 #include "King.h"
+#include <SDL_mixer.h>
 
 #define WINDOW_HEIGHT 800
 #define WINDOW_WIDTH 800
@@ -91,6 +92,9 @@ private:
     Piece::Team MoveTurn;
     Piece *field[8][8];
     Piece * clickedOn;
+    Mix_Chunk *sCapture = NULL;
+    Mix_Chunk *sMove = NULL;
+    Mix_Chunk *sNotify = NULL;
 };
 
 bool GamePlay::initWindow(){
@@ -101,6 +105,11 @@ bool GamePlay::initWindow(){
     }else
     {
         window = SDL_CreateWindow("CHESS GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+         if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+        {
+            cout << "MIXER CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
+            return false;
+        }
         if(window == NULL)
         {
             cout << "WINDOW CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
@@ -115,6 +124,10 @@ bool GamePlay::initWindow(){
             }
         }
     }
+    sMove = Mix_LoadWAV("sound/move.wav");
+    sCapture = Mix_LoadWAV("sound/capture.wav");
+    sNotify = Mix_LoadWAV("sound/notify.wav");
+    if(sMove == NULL) cout << 1;
     return true;
 }
 
@@ -256,8 +269,9 @@ void GamePlay::handle(){
             field[xStart][yStart]->PieceMove(std::pair<int, int>(xEnd, yEnd));
             if(field[xEnd][yEnd] != NULL && field[xEnd][yEnd]->getTeam() != field[xStart][yStart]->getTeam())
             {
+                Mix_PlayChannel(-1, sCapture, 0);
                 field[xEnd][yEnd]->isDead = true;
-            }
+            }else Mix_PlayChannel(-1, sMove, 0);
             if(xStart != xEnd || yStart != yEnd)
             {
                 field[xEnd][yEnd] = field[xStart][yStart];
@@ -350,8 +364,13 @@ void GamePlay::render(){
 }
 
 void GamePlay::clean(){
+    Mix_FreeChunk(sMove);
+    Mix_FreeChunk(sCapture);
+    Mix_FreeChunk(sNotify);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    IMG_Quit();
+    Mix_Quit();
     SDL_Quit();
     cout << "GAME CLEANED!" << endl;
 }
