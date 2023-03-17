@@ -22,6 +22,8 @@ Piece::Piece(Team team, PieceType piecetype, std::pair<int, int> pos){
     isDead = false;
     mNotMove = true;
     mValidEnpassant = false;
+    mEnpassanted = false;
+    mMove = NORMAL;
 }
 
 void Piece::render(SDL_Renderer* renderer){
@@ -30,11 +32,45 @@ void Piece::render(SDL_Renderer* renderer){
     SDL_DestroyTexture(mTexture);
 }
 
-void Piece::PieceMove(std::pair<int, int> pos){
+void Piece::PieceMove(pair<int, int> pos, Piece *field[8][8]){
     mPos = pos;
     desRect.x = (pos.first ) * WINDOW_WIDTH / 8;
     desRect.y = (pos.second ) * WINDOW_HEIGHT / 8;
     mNotMove = false;
+    if(mMove == CASTLE)
+    {
+        if(pos.first == 6)
+        {
+            field[pos.first + 1][pos.second]->PieceMove(pair<int, int>(pos.first - 1,pos.second), field);
+            field[pos.first - 1][pos.second] = field[pos.first + 1][pos.second];
+            field[pos.first + 1][pos.second] = NULL;
+        }
+        if(pos.first == 2)
+        {
+            field[pos.first - 2][pos.second]->PieceMove(pair<int, int>(pos.first + 1,pos.second), field);
+            field[pos.first + 1][pos.second] = field[pos.first - 2][pos.second];
+            field[pos.first - 2][pos.second] = NULL;
+        }
+    }
+    else if(mMove == ENPASSANT)
+    {
+            if(mTeam == WHITE && field[pos.first][pos.second + 1] != NULL)
+            {
+                field[pos.first][pos.second + 1]->isDead = true;
+                field[pos.first][pos.second + 1] = NULL;
+                mValidEnpassant = false;
+            }
+            else if(mTeam == BLACK && field[pos.first][pos.second - 1] != NULL)
+            {
+                field[pos.first][pos.second - 1]->isDead = true;
+                field[pos.first][pos.second - 1] = NULL;
+                mValidEnpassant = false;
+            }
+    }
+    else if(mMove == PROMOTE)
+    {
+
+    }
 }
 
 bool Piece::DeadPiece(){
@@ -78,6 +114,10 @@ pair<int, int> Piece::getPossition(){
     return mPos;
 }
 
+Piece::MoveType Piece::getMoveType(){
+    return mMove;
+}
+
 Piece::PieceType Piece::getType(){
     return mType;
 }
@@ -90,9 +130,12 @@ bool Piece::getNotMove(){
     return mNotMove;
 }
 
-void Piece::setEnpassant()
-{
+void Piece::setEnpassant(){
     mValidEnpassant= true;
+}
+
+bool Piece::isEnpassanted(){
+    return mEnpassanted;
 }
 
 bool Piece::getEnpassant()
@@ -126,6 +169,7 @@ bool Piece::isValidMove(int xEnd, int yEnd)
 
         if (get<0>(mPossibleMove[i]) == xEnd && get<1>(mPossibleMove[i]) == yEnd)
         {
+            mMove = get<2>(mPossibleMove[i]);
             return true;
         }
     }

@@ -17,41 +17,41 @@ using namespace std;
 
 bool gRunning = true;
 
-Pawn *pw1 = new Pawn(Pawn::WHITE, std::pair<int, int>(0,6));
-Pawn *pw2 = new Pawn(Pawn::WHITE, std::pair<int, int>(1,6));
-Pawn *pw3 = new Pawn(Pawn::WHITE, std::pair<int, int>(2,6));
-Pawn *pw4 = new Pawn(Pawn::WHITE, std::pair<int, int>(3,6));
-Pawn *pw5 = new Pawn(Pawn::WHITE, std::pair<int, int>(4,6));
-Pawn *pw6 = new Pawn(Pawn::WHITE, std::pair<int, int>(5,6));
-Pawn *pw7 = new Pawn(Pawn::WHITE, std::pair<int, int>(6,6));
-Pawn *pw8 = new Pawn(Pawn::WHITE, std::pair<int, int>(7,6));
+Pawn *pw1 = new Pawn(Pawn::WHITE, pair<int, int>(0,6));
+Pawn *pw2 = new Pawn(Pawn::WHITE, pair<int, int>(1,6));
+Pawn *pw3 = new Pawn(Pawn::WHITE, pair<int, int>(2,6));
+Pawn *pw4 = new Pawn(Pawn::WHITE, pair<int, int>(3,6));
+Pawn *pw5 = new Pawn(Pawn::WHITE, pair<int, int>(4,6));
+Pawn *pw6 = new Pawn(Pawn::WHITE, pair<int, int>(5,6));
+Pawn *pw7 = new Pawn(Pawn::WHITE, pair<int, int>(6,6));
+Pawn *pw8 = new Pawn(Pawn::WHITE, pair<int, int>(7,6));
 
-Rook *rw1 = new Rook(Rook::WHITE, std::pair<int, int>(0,7));
-Rook *rw2 = new Rook(Rook::WHITE, std::pair<int, int>(7,7));
-King *kw = new King(King::WHITE, std::pair<int, int>(4,7));
-Queen *qw = new Queen(Queen::WHITE, std::pair<int, int>(3,7));
-Knight *kw1 = new Knight(Knight::WHITE, std::pair<int, int>(1,7));
-Knight *kw2 = new Knight(Knight::WHITE, std::pair<int, int>(6,7));
-Bishop *bw1 = new Bishop(Bishop::WHITE, std::pair<int, int>(2,7));
-Bishop *bw2 = new Bishop(Bishop::WHITE, std::pair<int, int>(5,7));
+Rook *rw1 = new Rook(Rook::WHITE, pair<int, int>(0,7));
+Rook *rw2 = new Rook(Rook::WHITE, pair<int, int>(7,7));
+King *kw = new King(King::WHITE, pair<int, int>(4,7));
+Queen *qw = new Queen(Queen::WHITE, pair<int, int>(3,7));
+Knight *kw1 = new Knight(Knight::WHITE, pair<int, int>(1,7));
+Knight *kw2 = new Knight(Knight::WHITE, pair<int, int>(6,7));
+Bishop *bw1 = new Bishop(Bishop::WHITE, pair<int, int>(2,7));
+Bishop *bw2 = new Bishop(Bishop::WHITE, pair<int, int>(5,7));
 
-Pawn *pb1 = new Pawn(Pawn::BLACK, std::pair<int, int>(0,1));
-Pawn *pb2 = new Pawn(Pawn::BLACK, std::pair<int, int>(1,1));
-Pawn *pb3 = new Pawn(Pawn::BLACK, std::pair<int, int>(2,1));
-Pawn *pb4 = new Pawn(Pawn::BLACK, std::pair<int, int>(3,1));
-Pawn *pb5 = new Pawn(Pawn::BLACK, std::pair<int, int>(4,1));
-Pawn *pb6 = new Pawn(Pawn::BLACK, std::pair<int, int>(5,1));
-Pawn *pb7 = new Pawn(Pawn::BLACK, std::pair<int, int>(6,1));
-Pawn *pb8 = new Pawn(Pawn::BLACK, std::pair<int, int>(7,1));
+Pawn *pb1 = new Pawn(Pawn::BLACK, pair<int, int>(0,1));
+Pawn *pb2 = new Pawn(Pawn::BLACK, pair<int, int>(1,1));
+Pawn *pb3 = new Pawn(Pawn::BLACK, pair<int, int>(2,1));
+Pawn *pb4 = new Pawn(Pawn::BLACK, pair<int, int>(3,1));
+Pawn *pb5 = new Pawn(Pawn::BLACK, pair<int, int>(4,1));
+Pawn *pb6 = new Pawn(Pawn::BLACK, pair<int, int>(5,1));
+Pawn *pb7 = new Pawn(Pawn::BLACK, pair<int, int>(6,1));
+Pawn *pb8 = new Pawn(Pawn::BLACK, pair<int, int>(7,1));
 
-Rook *rb1 = new Rook(Rook::BLACK, std::pair<int, int>(0,0));
-Rook *rb2 = new Rook(Rook::BLACK, std::pair<int, int>(7,0));
-King *kb = new King(King::BLACK, std::pair<int, int>(4,0));
-Queen *qb = new Queen(Queen::BLACK, std::pair<int, int>(3,0));
-Knight *kb1 = new Knight(Knight::BLACK, std::pair<int, int>(1,0));
-Knight *kb2 = new Knight(Knight::BLACK, std::pair<int, int>(6,0));
-Bishop *bb1 = new Bishop(Bishop::BLACK, std::pair<int, int>(2,0));
-Bishop *bb2 = new Bishop(Bishop::BLACK, std::pair<int, int>(5,0));
+Rook *rb1 = new Rook(Rook::BLACK, pair<int, int>(0,0));
+Rook *rb2 = new Rook(Rook::BLACK, pair<int, int>(7,0));
+King *kb = new King(King::BLACK, pair<int, int>(4,0));
+Queen *qb = new Queen(Queen::BLACK, pair<int, int>(3,0));
+Knight *kb1 = new Knight(Knight::BLACK, pair<int, int>(1,0));
+Knight *kb2 = new Knight(Knight::BLACK, pair<int, int>(6,0));
+Bishop *bb1 = new Bishop(Bishop::BLACK, pair<int, int>(2,0));
+Bishop *bb2 = new Bishop(Bishop::BLACK, pair<int, int>(5,0));
 
 int xStart = -1;
 int yStart = -1;
@@ -84,6 +84,11 @@ public:
     void getMoveturn();
 
     void  changeMoveTurn();
+
+    void printCurrentMove();
+
+    bool isEndGame();
+
 private:
     SDL_Renderer *renderer = NULL;
     SDL_Window *window = NULL;
@@ -94,6 +99,9 @@ private:
     Piece * clickedOn;
     Mix_Chunk *sCapture = NULL;
     Mix_Chunk *sMove = NULL;
+    Mix_Chunk *sCastle = NULL;
+    Mix_Chunk *sCheck = NULL;
+    Mix_Chunk *sStartGame = NULL;
     Mix_Chunk *sNotify = NULL;
 };
 
@@ -124,10 +132,12 @@ bool GamePlay::initWindow(){
             }
         }
     }
-    sMove = Mix_LoadWAV("sound/move.wav");
-    sCapture = Mix_LoadWAV("sound/capture.wav");
-    sNotify = Mix_LoadWAV("sound/notify.wav");
-    if(sMove == NULL) cout << 1;
+    sMove = Mix_LoadWAV("sound/Move.mp3");
+    sCapture = Mix_LoadWAV("sound/Capture.mp3");
+    sNotify = Mix_LoadWAV("sound/Notify.mp3");
+    sStartGame = Mix_LoadWAV("sound/StartGame.mp3");
+    sCastle = Mix_LoadWAV("sound/Castle.mp3");
+    sCheck = Mix_LoadWAV("sound/Check.mp3");
     return true;
 }
 
@@ -266,12 +276,11 @@ void GamePlay::handle(){
         yEnd /= 100;
         if(field[xStart][yStart]->isValidMove( xEnd, yEnd))
         {
-            field[xStart][yStart]->PieceMove(std::pair<int, int>(xEnd, yEnd));
+            field[xStart][yStart]->PieceMove(pair<int, int>(xEnd, yEnd), field);
             if(field[xEnd][yEnd] != NULL && field[xEnd][yEnd]->getTeam() != field[xStart][yStart]->getTeam())
             {
-                Mix_PlayChannel(-1, sCapture, 0);
                 field[xEnd][yEnd]->isDead = true;
-            }else Mix_PlayChannel(-1, sMove, 0);
+            }
             if(xStart != xEnd || yStart != yEnd)
             {
                 field[xEnd][yEnd] = field[xStart][yStart];
@@ -286,40 +295,69 @@ void GamePlay::handle(){
     }
 }
 
+void GamePlay::printCurrentMove(){
+    switch(xEnd)
+    {
+        case 0:
+            cout << " A-" << 8 - yEnd << "   ";
+            break;
+        case 1:
+            cout << " B-" << 8 - yEnd << "   ";
+            break;
+        case 2:
+            cout << " C-" << 8 - yEnd << "   ";
+            break;
+        case 3:
+            cout << " D-" << 8 - yEnd << "   ";
+            break;
+        case 4:
+            cout << " E-" << 8 - yEnd << "   ";
+            break;
+        case 5:
+            cout << " F-" << 8 - yEnd << "   ";
+            break;
+        case 6:
+            cout << " G-" << 8 - yEnd << "   ";
+            break;
+        case 7:
+            cout << " H-" << 8 - yEnd << "   ";
+            break;
+    }
+    if (MoveTurn == Piece::BLACK) cout << endl;
+    Movement = false;
+}
+
+bool GamePlay::isEndGame(){
+    for (int x = 0; x < 8; x++)
+    {
+        for (int y = 0; y < 8; y++)
+        {
+            if(field[x][y] != NULL)
+            {
+                if(field[x][y]->getTeam() == MoveTurn)
+                {
+                    field[x][y]->calcPossibleMoves(field);
+                    if(!field[x][y]->getPossibleMove().empty()) return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
 void GamePlay::update(){
     if(Movement)
     {
-        switch(xEnd)
-        {
-            case 0:
-                cout << " A-" << 8 - yEnd << "   ";
-                break;
-            case 1:
-                cout << " B-" << 8 - yEnd << "   ";
-                break;
-            case 2:
-                cout << " C-" << 8 - yEnd << "   ";
-                break;
-            case 3:
-                cout << " D-" << 8 - yEnd << "   ";
-                break;
-            case 4:
-                cout << " E-" << 8 - yEnd << "   ";
-                break;
-            case 5:
-                cout << " F-" << 8 - yEnd << "   ";
-                break;
-            case 6:
-                cout << " G-" << 8 - yEnd << "   ";
-                break;
-            case 7:
-                cout << " H-" << 8 - yEnd << "   ";
-                break;
-        }
-        if (MoveTurn == Piece::BLACK) cout << endl;
+        printCurrentMove();
         changeMoveTurn();
-        Movement = false;
     }
+    if(isEndGame())
+    {
+        gRunning = false;
+        if(MoveTurn == Piece::BLACK) cout << "WHITE IS WINNER!" << endl;
+        else cout << "BLACK IS WINNER!" << endl;
+    }
+
 }
 
 void GamePlay::render(){
@@ -386,8 +424,8 @@ int main(int argc, char* argv[])
         while(gRunning)
         {
             chess->handle();
-            chess->update();
             chess->render();
+            chess->update();
         }
     }
     chess->clean();

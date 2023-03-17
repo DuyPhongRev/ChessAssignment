@@ -25,7 +25,7 @@ public:
 
 	void render(SDL_Renderer* renderer);
 
-	void PieceMove(pair<int, int> pos);
+	void PieceMove(pair<int, int> pos, Piece *field[8][8]);
 
     bool DeadPiece();
 
@@ -34,6 +34,8 @@ public:
     Team getTeam();
 
     PieceType getType();
+
+    MoveType getMoveType();
 
     pair<int, int> getPossition();
 
@@ -53,10 +55,14 @@ public:
 
     bool getEnpassant();
 
+    bool isEnpassanted();
+
 protected:
     Team mTeam;
 
     PieceType mType;
+
+    MoveType mMove;
 
     pair<int, int> mPos;
 
@@ -66,6 +72,7 @@ protected:
 
     SDL_Surface *mSurface = NULL;
 
+
     SDL_Texture *mTexture = NULL;
 
     vector<tuple<int, int, Piece::MoveType>> mPossibleMove;
@@ -73,6 +80,8 @@ protected:
     bool mNotMove;
 
     bool mValidEnpassant;
+
+    bool mEnpassanted;
 };
 
 #endif // PIECE_H
