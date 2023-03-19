@@ -20,7 +20,8 @@ void Pawn::calcPossibleMoves(Piece* field[8][8])
     vector<tuple<int, int, Piece::MoveType>> moves;
     if(mPos.second + dy >= 0 && mPos.second + dy <= 7 && field[mPos.first][mPos.second + dy] == NULL)
     {
-        moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, NORMAL), getOwnKing(field), field);
+        if(mPos.second + dy == 0 || mPos.second + dy == 7) moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, PROMOTE), getOwnKing(field), field);
+        else moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, NORMAL), getOwnKing(field), field);
     }
 
     if(mNotMove && field[mPos.first][mPos.second + dy * 2] == NULL)
@@ -42,8 +43,8 @@ void Pawn::calcPossibleMoves(Piece* field[8][8])
     {
         if(field[mPos.first + dy][mPos.second + dy]->getTeam() != mTeam)
         {
-            if(mPos.second + dy < 7) moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dy, mPos.second + dy, NORMAL), getOwnKing(field), field);
-            else moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dy, mPos.second + dy, PROMOTE), getOwnKing(field), field);
+            if(mPos.second + dy == 0 || mPos.second + dy == 7) moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dy, mPos.second + dy, PROMOTE), getOwnKing(field), field);
+            else moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dy, mPos.second + dy, NORMAL), getOwnKing(field), field);
         }
     }
 
@@ -51,8 +52,8 @@ void Pawn::calcPossibleMoves(Piece* field[8][8])
     {
         if(field[mPos.first - dy][mPos.second + dy]->getTeam() != mTeam)
         {
-            if(mPos.second + dy > 0) moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dy, mPos.second + dy, NORMAL), getOwnKing(field), field);
-            else moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dy, mPos.second + dy, PROMOTE), getOwnKing(field), field);
+            if(mPos.second + dy == 0 || mPos.second + dy == 7) moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dy, mPos.second + dy, PROMOTE), getOwnKing(field), field);
+            else moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dy, mPos.second + dy, NORMAL), getOwnKing(field), field);
 
         }
     }

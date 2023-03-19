@@ -2,14 +2,14 @@
 
 using namespace std;
 
-Pawn *pw1 = new Pawn(Pawn::WHITE, pair<int, int>(0,6));
-Pawn *pw2 = new Pawn(Pawn::WHITE, pair<int, int>(1,6));
-Pawn *pw3 = new Pawn(Pawn::WHITE, pair<int, int>(2,6));
-Pawn *pw4 = new Pawn(Pawn::WHITE, pair<int, int>(3,6));
-Pawn *pw5 = new Pawn(Pawn::WHITE, pair<int, int>(4,6));
-Pawn *pw6 = new Pawn(Pawn::WHITE, pair<int, int>(5,6));
-Pawn *pw7 = new Pawn(Pawn::WHITE, pair<int, int>(6,6));
-Pawn *pw8 = new Pawn(Pawn::WHITE, pair<int, int>(7,6));
+Piece *pw1 = new Pawn(Pawn::WHITE, pair<int, int>(0,6));
+Piece *pw2 = new Pawn(Pawn::WHITE, pair<int, int>(1,6));
+Piece *pw3 = new Pawn(Pawn::WHITE, pair<int, int>(2,6));
+Piece *pw4 = new Pawn(Pawn::WHITE, pair<int, int>(3,6));
+Piece *pw5 = new Pawn(Pawn::WHITE, pair<int, int>(4,6));
+Piece *pw6 = new Pawn(Pawn::WHITE, pair<int, int>(5,6));
+Piece *pw7 = new Pawn(Pawn::WHITE, pair<int, int>(6,6));
+Piece *pw8 = new Pawn(Pawn::WHITE, pair<int, int>(7,6));
 
 Rook *rw1 = new Rook(Rook::WHITE, pair<int, int>(0,7));
 Rook *rw2 = new Rook(Rook::WHITE, pair<int, int>(7,7));
@@ -20,14 +20,14 @@ Knight *kw2 = new Knight(Knight::WHITE, pair<int, int>(6,7));
 Bishop *bw1 = new Bishop(Bishop::WHITE, pair<int, int>(2,7));
 Bishop *bw2 = new Bishop(Bishop::WHITE, pair<int, int>(5,7));
 
-Pawn *pb1 = new Pawn(Pawn::BLACK, pair<int, int>(0,1));
-Pawn *pb2 = new Pawn(Pawn::BLACK, pair<int, int>(1,1));
-Pawn *pb3 = new Pawn(Pawn::BLACK, pair<int, int>(2,1));
-Pawn *pb4 = new Pawn(Pawn::BLACK, pair<int, int>(3,1));
-Pawn *pb5 = new Pawn(Pawn::BLACK, pair<int, int>(4,1));
-Pawn *pb6 = new Pawn(Pawn::BLACK, pair<int, int>(5,1));
-Pawn *pb7 = new Pawn(Pawn::BLACK, pair<int, int>(6,1));
-Pawn *pb8 = new Pawn(Pawn::BLACK, pair<int, int>(7,1));
+Piece *pb1 = new Pawn(Pawn::BLACK, pair<int, int>(0,1));
+Piece *pb2 = new Pawn(Pawn::BLACK, pair<int, int>(1,1));
+Piece *pb3 = new Pawn(Pawn::BLACK, pair<int, int>(2,1));
+Piece *pb4 = new Pawn(Pawn::BLACK, pair<int, int>(3,1));
+Piece *pb5 = new Pawn(Pawn::BLACK, pair<int, int>(4,1));
+Piece *pb6 = new Pawn(Pawn::BLACK, pair<int, int>(5,1));
+Piece *pb7 = new Pawn(Pawn::BLACK, pair<int, int>(6,1));
+Piece *pb8 = new Pawn(Pawn::BLACK, pair<int, int>(7,1));
 
 Rook *rb1 = new Rook(Rook::BLACK, pair<int, int>(0,0));
 Rook *rb2 = new Rook(Rook::BLACK, pair<int, int>(7,0));
@@ -151,30 +151,6 @@ void  GamePlay::changeMoveTurn(){
     else MoveTurn = Piece::BLACK;
 }
 
-void GamePlay::botPlay(){
-    if(MoveTurn == Piece::BLACK)
-    {
-        for(int x = 0; x < 8; x++)
-        {
-            for (int y = 0; y < 8; y++)
-            {
-                if(field[x][y] != NULL && field[x][y]->getTeam() == Piece::BLACK)
-                {
-                    field[x][y]->calcPossibleMoves(field);
-                    if(!field[x][y]->getPossibleMove().empty())
-                    {
-                        vector<tuple<int, int, Piece::MoveType>> BlackMove = field[x][y]->getPossibleMove();
-                        currentMove = field[x][y]->PieceMove(pair<int, int>(get<0>(BlackMove[0]), get<1>(BlackMove[0])) , field);
-                        xEnd = get<0>(BlackMove[0]);
-                        yEnd = get<1>(BlackMove[0]);
-                        return;
-                    }
-                }
-            }
-        }
-    }
-}
-
 void GamePlay::startPos(){
     field[0][1] = pb1;
     field[1][1] = pb2;
@@ -251,7 +227,38 @@ void GamePlay::handle(){
                 }
                 currentMove = field[xStart][yStart]->PieceMove(pair<int, int>(xEnd, yEnd), field);
             }else clickedOn = NULL;
+            if(currentMove == Piece::PROMOTE)
+            {
+                tryToPromote();
+            }
         }
+}
+
+void GamePlay::tryToPromote(){
+    while(true)
+    {
+        SDL_WaitEvent(&event);
+        if(event.type == SDL_KEYDOWN)
+        {
+            switch(event.key.keysym.sym)
+            {
+                case SDLK_UP:
+                    field[xEnd][yEnd] = new Rook(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+                    break;
+                case SDLK_DOWN:
+                    field[xEnd][yEnd] = new Knight(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+                    break;
+                case SDLK_LEFT:
+                    field[xEnd][yEnd] = new Bishop(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+                    break;
+                case SDLK_RIGHT:
+                    field[xEnd][yEnd] = new Queen(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+                    break;
+            }
+            Mix_PlayChannel(-1, sMove, 0);
+            break;
+        }
+    }
 }
 
 void GamePlay::printCurrentMove(){
@@ -310,12 +317,6 @@ void GamePlay::sound(){
         Mix_PlayChannel(-1, sStartGame, 0);
         gameStart = false;
     }
-    else if(!running())
-    {
-
-        Mix_PlayChannel(-1, sNotify, 0);
-        SDL_Delay(1000);
-    }
     else if(currentMove == Piece::NORMAL)
     {
         kw->setCheck(field, kw->getPossition().first, kw->getPossition().second);
@@ -345,6 +346,12 @@ void GamePlay::sound(){
     {
         Mix_PlayChannel(-1, sCapture, 0);
         currentMove = Piece::NONE;
+    }
+    if(checkEndGame())
+    {
+        SDL_Delay(500);
+        Mix_PlayChannel(-1, sNotify, 0);
+        SDL_Delay(1000);
     }
 }
 

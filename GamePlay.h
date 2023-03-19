@@ -55,6 +55,8 @@ public:
 
     bool running();
 
+    void tryToPromote();
+
 private:
     SDL_Renderer *renderer = NULL;
     SDL_Window *window = NULL;
