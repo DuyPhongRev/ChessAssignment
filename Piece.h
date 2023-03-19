@@ -15,17 +15,19 @@ class Piece
 public:
     bool isDead;
 
-    enum Team { BLACK, WHITE, NONE };
+    bool mEnpassanted;
+
+    enum Team { BLACK, WHITE, NEITHER};
 
 	enum PieceType { PAWN, ROOK, KNIGHT, BISHOP, KING, QUEEN, EMPTY };
 
-	enum MoveType { NORMAL, CASTLE, ENPASSANT, PROMOTE };
+	enum MoveType { NORMAL, CASTLE, ENPASSANT, PROMOTE, NONE };
 
 	Piece(Team team, PieceType piecetype, pair<int, int> pos);
 
 	void render(SDL_Renderer* renderer);
 
-	void PieceMove(pair<int, int> pos, Piece *field[8][8]);
+	MoveType PieceMove(pair<int, int> pos, Piece *field[8][8]);
 
     bool DeadPiece();
 
@@ -55,8 +57,6 @@ public:
 
     bool getEnpassant();
 
-    bool isEnpassanted();
-
 protected:
     Team mTeam;
 
@@ -80,8 +80,6 @@ protected:
     bool mNotMove;
 
     bool mValidEnpassant;
-
-    bool mEnpassanted;
 };
 
 #endif // PIECE_H

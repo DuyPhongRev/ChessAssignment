@@ -35,6 +35,8 @@
 		</Compiler>
 		<Unit filename="Bishop.cpp" />
 		<Unit filename="Bishop.h" />
+		<Unit filename="GamePlay.cpp" />
+		<Unit filename="GamePlay.h" />
 		<Unit filename="King.cpp" />
 		<Unit filename="King.h" />
 		<Unit filename="Knight.cpp" />

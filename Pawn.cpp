@@ -59,11 +59,11 @@ void Pawn::calcPossibleMoves(Piece* field[8][8])
 
     if(mValidEnpassant)
     {
-        if(mPos.first + 1 <= 7 && field[mPos.first + 1][mPos.second] != NULL && field[mPos.first + 1][mPos.second]->getType() == PAWN && field[mPos.first + 1][mPos.second]->isEnpassanted())
+        if(mPos.first + 1 <= 7 && field[mPos.first + 1][mPos.second] != NULL && field[mPos.first + 1][mPos.second]->getType() == PAWN && field[mPos.first + 1][mPos.second]->mEnpassanted)
         {
             moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + 1, mPos.second + dy, ENPASSANT), getOwnKing(field), field);
         }
-        if(mPos.first - 1 >= 0 && field[mPos.first - 1][mPos.second]->isEnpassanted())
+        if(mPos.first - 1 >= 0 && field[mPos.first - 1][mPos.second] != NULL && field[mPos.first - 1][mPos.second]->getType() == PAWN && field[mPos.first - 1][mPos.second]->mEnpassanted)
         {
             moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - 1, mPos.second + dy, ENPASSANT), getOwnKing(field), field);
         }
