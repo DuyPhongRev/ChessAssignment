@@ -27,7 +27,7 @@ void Queen::calcPossibleMoves(Piece* field[8][8])
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second, NORMAL), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -45,7 +45,7 @@ void Queen::calcPossibleMoves(Piece* field[8][8])
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second, NORMAL), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -63,7 +63,7 @@ void Queen::calcPossibleMoves(Piece* field[8][8])
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, NORMAL), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -81,7 +81,7 @@ void Queen::calcPossibleMoves(Piece* field[8][8])
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second - dy, NORMAL), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second - dy, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -101,7 +101,7 @@ void Queen::calcPossibleMoves(Piece* field[8][8])
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dx, NORMAL), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dx, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -120,7 +120,7 @@ void Queen::calcPossibleMoves(Piece* field[8][8])
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second -dx, NORMAL), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second -dx, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }
@@ -138,7 +138,7 @@ void Queen::calcPossibleMoves(Piece* field[8][8])
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second - dx, NORMAL), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second - dx, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }
@@ -156,7 +156,7 @@ void Queen::calcPossibleMoves(Piece* field[8][8])
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second + dx, NORMAL), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second + dx, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }

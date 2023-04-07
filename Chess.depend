@@ -67,20 +67,20 @@
 1678005384 c:\newchess\chess\bishop.h
 	"Piece.h"
 
-1678871392 source:c:\a_newchess\chess\bishop.cpp
+1680853868 source:c:\a_newchess\chess\bishop.cpp
 	"Bishop.h"
 
 1678871253 c:\a_newchess\chess\bishop.h
 	"Piece.h"
 
-1679213343 c:\a_newchess\chess\piece.h
+1680809341 c:\a_newchess\chess\piece.h
 	"SDL.h"
 	"SDL_image.h"
 	<utility>
 	<vector>
 	<tuple>
 
-1678953518 source:c:\a_newchess\chess\king.cpp
+1680853870 source:c:\a_newchess\chess\king.cpp
 	"King.h"
 	<iostream>
 	"Rook.h"
@@ -90,7 +90,7 @@
 	<utility>
 	<cmath>
 
-1678871449 source:c:\a_newchess\chess\knight.cpp
+1680853933 source:c:\a_newchess\chess\knight.cpp
 	"Knight.h"
 	<tuple>
 	<iostream>
@@ -100,7 +100,7 @@
 	"Piece.h"
 	<tuple>
 
-1679217293 source:c:\a_newchess\chess\main.cpp
+1680853871 source:c:\a_newchess\chess\main.cpp
 	<iostream>
 	"GamePlay.h"
 
@@ -113,19 +113,19 @@
 1678871253 c:\a_newchess\chess\queen.h
 	"Piece.h"
 
-1679221130 source:c:\a_newchess\chess\piece.cpp
+1680232216 source:c:\a_newchess\chess\piece.cpp
 	"Piece.h"
 	<iostream>
 	"King.h"
 
-1678871449 source:c:\a_newchess\chess\queen.cpp
+1680854009 source:c:\a_newchess\chess\queen.cpp
 	"Queen.h"
 
-1678871449 source:c:\a_newchess\chess\rook.cpp
+1680853931 source:c:\a_newchess\chess\rook.cpp
 	"Rook.h"
 	<iostream>
 
-1679222484 source:c:\a_newchess\chess\pawn.cpp
+1680807042 source:c:\a_newchess\chess\pawn.cpp
 	"Pawn.h"
 	<iostream>
 
@@ -199,10 +199,12 @@
 	"Queen.h"
 	"King.h"
 
-1679219634 c:\a_newchess\chess\gameplay.h
+1680853603 c:\a_newchess\chess\gameplay.h
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
+	<SDL_ttf.h>
+	<SDL_mixer.h>
 	"Piece.h"
 	"Pawn.h"
 	"Rook.h"
@@ -210,9 +212,8 @@
 	"Bishop.h"
 	"Queen.h"
 	"King.h"
-	<SDL_mixer.h>
 
-1679222593 source:c:\a_newchess\chess\gameplay.cpp
+1680854302 source:c:\a_newchess\chess\gameplay.cpp
 	"GamePlay.h"
 
 1679213302 c:\a_newchess\chess\\gameplay.h

@@ -29,7 +29,7 @@ void Knight::calcPossibleMoves(Piece* field[8][8])
                     moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field);
                 }else if(field[mPos.first + dx][mPos.second + dy]->getTeam() != mTeam)
                 {
-                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field);
+                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, CAPTURE), getOwnKing(field), field);
                 }
             }
         }
@@ -46,7 +46,7 @@ void Knight::calcPossibleMoves(Piece* field[8][8])
                     moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field);
                 }else if(field[mPos.first + dx][mPos.second + dy]->getTeam() != mTeam)
                 {
-                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field);
+                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, CAPTURE), getOwnKing(field), field);
                 }
             }
         }

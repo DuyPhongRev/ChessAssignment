@@ -23,7 +23,7 @@ Piece::Piece(Team team, PieceType piecetype, std::pair<int, int> pos){
     mNotMove = true;
     mValidEnpassant = false;
     mEnpassanted = false;
-    mMove = NORMAL;
+    mMove = STATIONARY;
 }
 
 void Piece::render(SDL_Renderer* renderer){
@@ -32,7 +32,7 @@ void Piece::render(SDL_Renderer* renderer){
     SDL_DestroyTexture(mTexture);
 }
 
-Piece::MoveType Piece::PieceMove(pair<int, int> pos, Piece *field[8][8]){
+void Piece::PieceMove(pair<int, int> pos, Piece *field[8][8]){
     desRect.x = (pos.first ) * WINDOW_WIDTH / 8;
     desRect.y = (pos.second ) * WINDOW_HEIGHT / 8;
     if(field[pos.first][pos.second] != NULL && field[pos.first][pos.second]->getTeam() != field[mPos.first][mPos.second]->getTeam())
@@ -46,39 +46,23 @@ Piece::MoveType Piece::PieceMove(pair<int, int> pos, Piece *field[8][8]){
     }
     mNotMove = false;
     mPos = pos;
-    if(mMove == CASTLE)
+}
+
+void Piece::declineEnpassant(Piece* field[8][8]){
+    mValidEnpassant = false;
+    for(int x = 0; x < 8; x++)
     {
-        if(pos.first == 6)
+        for(int y = 0; y < 8; y++)
         {
-            cout << 1;
-            field[pos.first + 1][pos.second]->PieceMove(pair<int, int>(pos.first - 1,pos.second), field);
-        }
-        if(pos.first == 2)
-        {
-            field[pos.first - 2][pos.second]->PieceMove(pair<int, int>(pos.first + 1,pos.second), field);
-        }
-        return CASTLE;
-    }
-    else if(mMove == ENPASSANT)
-    {
-            if(mTeam == WHITE && field[pos.first][pos.second + 1] != NULL)
+            if(field[x][y] != NULL && field[x][y]->getTeam() == mTeam && field[x][y]->getType() == PAWN)
             {
-                field[pos.first][pos.second + 1]->isDead = true;
-                field[pos.first][pos.second + 1] = NULL;
-                mValidEnpassant = false;
+                if(field[x][y]->getEnpassant())
+                {
+                    field[x][y]->mEnpassanted = false;
+                }
             }
-            else if(mTeam == BLACK && field[pos.first][pos.second - 1] != NULL)
-            {
-                field[pos.first][pos.second - 1]->isDead = true;
-                field[pos.first][pos.second - 1] = NULL;
-                mValidEnpassant = false;
-            }
-            return ENPASSANT;
+        }
     }
-    else if(mMove == PROMOTE)
-    {
-        return PROMOTE;
-    }else return NORMAL;
 }
 
 bool Piece::DeadPiece(){

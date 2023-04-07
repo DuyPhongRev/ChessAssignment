@@ -44,7 +44,7 @@ void Pawn::calcPossibleMoves(Piece* field[8][8])
         if(field[mPos.first + dy][mPos.second + dy]->getTeam() != mTeam)
         {
             if(mPos.second + dy == 0 || mPos.second + dy == 7) moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dy, mPos.second + dy, PROMOTE), getOwnKing(field), field);
-            else moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dy, mPos.second + dy, NORMAL), getOwnKing(field), field);
+            else moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dy, mPos.second + dy, CAPTURE), getOwnKing(field), field);
         }
     }
 
@@ -53,7 +53,7 @@ void Pawn::calcPossibleMoves(Piece* field[8][8])
         if(field[mPos.first - dy][mPos.second + dy]->getTeam() != mTeam)
         {
             if(mPos.second + dy == 0 || mPos.second + dy == 7) moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dy, mPos.second + dy, PROMOTE), getOwnKing(field), field);
-            else moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dy, mPos.second + dy, NORMAL), getOwnKing(field), field);
+            else moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dy, mPos.second + dy, CAPTURE), getOwnKing(field), field);
 
         }
     }

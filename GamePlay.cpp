@@ -2,48 +2,50 @@
 
 using namespace std;
 
-Piece *pw1 = new Pawn(Pawn::WHITE, pair<int, int>(0,6));
-Piece *pw2 = new Pawn(Pawn::WHITE, pair<int, int>(1,6));
-Piece *pw3 = new Pawn(Pawn::WHITE, pair<int, int>(2,6));
-Piece *pw4 = new Pawn(Pawn::WHITE, pair<int, int>(3,6));
-Piece *pw5 = new Pawn(Pawn::WHITE, pair<int, int>(4,6));
-Piece *pw6 = new Pawn(Pawn::WHITE, pair<int, int>(5,6));
-Piece *pw7 = new Pawn(Pawn::WHITE, pair<int, int>(6,6));
-Piece *pw8 = new Pawn(Pawn::WHITE, pair<int, int>(7,6));
-
-Rook *rw1 = new Rook(Rook::WHITE, pair<int, int>(0,7));
-Rook *rw2 = new Rook(Rook::WHITE, pair<int, int>(7,7));
-King *kw = new King(King::WHITE, pair<int, int>(4,7));
-Queen *qw = new Queen(Queen::WHITE, pair<int, int>(3,7));
-Knight *kw1 = new Knight(Knight::WHITE, pair<int, int>(1,7));
-Knight *kw2 = new Knight(Knight::WHITE, pair<int, int>(6,7));
-Bishop *bw1 = new Bishop(Bishop::WHITE, pair<int, int>(2,7));
-Bishop *bw2 = new Bishop(Bishop::WHITE, pair<int, int>(5,7));
-
-Piece *pb1 = new Pawn(Pawn::BLACK, pair<int, int>(0,1));
-Piece *pb2 = new Pawn(Pawn::BLACK, pair<int, int>(1,1));
-Piece *pb3 = new Pawn(Pawn::BLACK, pair<int, int>(2,1));
-Piece *pb4 = new Pawn(Pawn::BLACK, pair<int, int>(3,1));
-Piece *pb5 = new Pawn(Pawn::BLACK, pair<int, int>(4,1));
-Piece *pb6 = new Pawn(Pawn::BLACK, pair<int, int>(5,1));
-Piece *pb7 = new Pawn(Pawn::BLACK, pair<int, int>(6,1));
-Piece *pb8 = new Pawn(Pawn::BLACK, pair<int, int>(7,1));
-
-Rook *rb1 = new Rook(Rook::BLACK, pair<int, int>(0,0));
-Rook *rb2 = new Rook(Rook::BLACK, pair<int, int>(7,0));
-King *kb = new King(King::BLACK, pair<int, int>(4,0));
-Queen *qb = new Queen(Queen::BLACK, pair<int, int>(3,0));
-Knight *kb1 = new Knight(Knight::BLACK, pair<int, int>(1,0));
-Knight *kb2 = new Knight(Knight::BLACK, pair<int, int>(6,0));
-Bishop *bb1 = new Bishop(Bishop::BLACK, pair<int, int>(2,0));
-Bishop *bb2 = new Bishop(Bishop::BLACK, pair<int, int>(5,0));
-
 GamePlay::GamePlay(){
-isRunning = true;
-xStart = -1;
-yStart = -1;
-xEnd = -1;
-yEnd = -1;
+    isRunning = true;
+    xStart = -1;
+    yStart = -1;
+    xEnd = -1;
+    yEnd = -1;
+    pw1 = new Pawn(Pawn::WHITE, pair<int, int>(0,6));
+    pw2 = new Pawn(Pawn::WHITE, pair<int, int>(1,6));
+    pw3 = new Pawn(Pawn::WHITE, pair<int, int>(2,6));
+    pw4 = new Pawn(Pawn::WHITE, pair<int, int>(3,6));
+    pw5 = new Pawn(Pawn::WHITE, pair<int, int>(4,6));
+    pw6 = new Pawn(Pawn::WHITE, pair<int, int>(5,6));
+    pw7 = new Pawn(Pawn::WHITE, pair<int, int>(6,6));
+    pw8 = new Pawn(Pawn::WHITE, pair<int, int>(7,6));
+
+    rw1 = new Rook(Rook::WHITE, pair<int, int>(0,7));
+    rw2 = new Rook(Rook::WHITE, pair<int, int>(7,7));
+    kw = new King(King::WHITE, pair<int, int>(4,7));
+    qw = new Queen(Queen::WHITE, pair<int, int>(3,7));
+    kw1 = new Knight(Knight::WHITE, pair<int, int>(1,7));
+    kw2 = new Knight(Knight::WHITE, pair<int, int>(6,7));
+    bw1 = new Bishop(Bishop::WHITE, pair<int, int>(2,7));
+    bw2 = new Bishop(Bishop::WHITE, pair<int, int>(5,7));
+
+    pb1 = new Pawn(Pawn::BLACK, pair<int, int>(0,1));
+    pb2 = new Pawn(Pawn::BLACK, pair<int, int>(1,1));
+    pb3 = new Pawn(Pawn::BLACK, pair<int, int>(2,1));
+    pb4 = new Pawn(Pawn::BLACK, pair<int, int>(3,1));
+    pb5 = new Pawn(Pawn::BLACK, pair<int, int>(4,1));
+    pb6 = new Pawn(Pawn::BLACK, pair<int, int>(5,1));
+    pb7 = new Pawn(Pawn::BLACK, pair<int, int>(6,1));
+    pb8 = new Pawn(Pawn::BLACK, pair<int, int>(7,1));
+
+    rb1 = new Rook(Rook::BLACK, pair<int, int>(0,0));
+    rb2 = new Rook(Rook::BLACK, pair<int, int>(7,0));
+    kb = new King(King::BLACK, pair<int, int>(4,0));
+    qb = new Queen(Queen::BLACK, pair<int, int>(3,0));
+    kb1 = new Knight(Knight::BLACK, pair<int, int>(1,0));
+    kb2 = new Knight(Knight::BLACK, pair<int, int>(6,0));
+    bb1 = new Bishop(Bishop::BLACK, pair<int, int>(2,0));
+    bb2 = new Bishop(Bishop::BLACK, pair<int, int>(5,0));
+
+    MoveTurn = Piece::WHITE;
+    Movement = false;
 }
 
 GamePlay::~GamePlay(){
@@ -63,6 +65,11 @@ bool GamePlay::initWindow(){
          if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
         {
             cout << "MIXER CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
+            return false;
+        }
+        if (TTF_Init() < 0)
+        {
+            cout << "TTF CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
             return false;
         }
         if(window == NULL)
@@ -85,12 +92,16 @@ bool GamePlay::initWindow(){
     sStartGame = Mix_LoadWAV("sound/StartGame.mp3");
     sCastle = Mix_LoadWAV("sound/Castle.mp3");
     sCheck = Mix_LoadWAV("sound/Check.mp3");
+
+    tFont = TTF_OpenFont("font/Silkscreen-Regular.ttf", 20);
+
     gameStart = true;
-    currentMove = Piece::NONE;
+    currentMove = Piece::STATIONARY;
     return true;
 }
 
 void GamePlay::renderBoard(){
+
     for (int x = 0; x < 8; x++)
     {
         for (int y = 0; y < 8; y++)
@@ -142,8 +153,17 @@ void GamePlay::renderBoard(){
     }
 }
 
-void GamePlay::initMoveTurn(){
-    MoveTurn = Piece::WHITE;
+void GamePlay::renderText(string text, int x, int y, int sizeText = 3){
+    SDL_Surface *tmpSurface = TTF_RenderText_Solid(tFont, text.c_str(), textColor);
+    SDL_Texture *tmpTexture = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+    SDL_Rect desRect;
+    desRect.h = tmpSurface->h * sizeText;
+    desRect.w = tmpSurface->w * sizeText;
+    desRect.x = x;
+    desRect.y = y;
+    SDL_RenderCopy(renderer, tmpTexture, NULL, &desRect);
+    SDL_FreeSurface(tmpSurface);
+    SDL_RenderPresent(renderer);
 }
 
 void  GamePlay::changeMoveTurn(){
@@ -219,46 +239,93 @@ void GamePlay::handle(){
             yEnd /= 100;
             if(field[xStart][yStart]->isValidMove( xEnd, yEnd))
             {
+                field[xStart][yStart]->PieceMove(pair<int, int>(xEnd, yEnd), field);
+                specificMove();
                 if(xStart != xEnd || yStart != yEnd)
                 {
-                    if(field[xEnd][yEnd] != NULL) Capture = true;
                     Movement = true;
                     clickedOn = NULL;
                 }
-                currentMove = field[xStart][yStart]->PieceMove(pair<int, int>(xEnd, yEnd), field);
             }else clickedOn = NULL;
-            if(currentMove == Piece::PROMOTE)
-            {
-                tryToPromote();
-            }
         }
 }
 
-void GamePlay::tryToPromote(){
-    while(true)
+void GamePlay::specificMove(){
+    if(clickedOn->getMoveType() == Piece::CASTLE) castle();
+    else if(clickedOn->getMoveType() == Piece::ENPASSANT) enpassant();
+    else if(clickedOn->getMoveType() == Piece::PROMOTE) promote();
+    clickedOn->declineEnpassant(field);
+    sound(clickedOn->getMoveType());
+}
+
+void GamePlay::castle(){
+    if(xEnd == 6)
+    {
+        field[xEnd + 1][yEnd]->PieceMove(pair<int, int>(xEnd - 1,yEnd), field);
+    }
+    if(xEnd == 2)
+    {
+        field[xEnd - 2][yEnd]->PieceMove(pair<int, int>(xEnd + 1,yEnd), field);
+    }
+}
+
+void GamePlay::enpassant(){
+    if(clickedOn->getTeam() == Piece::WHITE && field[xEnd][yEnd + 1] != NULL)
+    {
+        field[xEnd][yEnd + 1]->isDead = true;
+        field[xEnd][yEnd + 1] = NULL;
+    }
+    else if(clickedOn->getTeam() == Piece::BLACK && field[xEnd][yEnd - 1] != NULL)
+    {
+        field[xEnd][yEnd - 1]->isDead = true;
+        field[xEnd][yEnd - 1] = NULL;
+    }
+}
+
+void GamePlay::promote(){
+    renderText("PICK YOUR PIECE", 100, 250);
+    SDL_Surface *tmpSurface = NULL;
+    if(MoveTurn == Piece::BLACK) tmpSurface = IMG_Load("src/promoteBlack.png");
+    else tmpSurface = IMG_Load("src/promoteWhite.png");
+    SDL_Texture *tmpTexture = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+    SDL_Rect desRect;
+    desRect.x = (WINDOW_WIDTH - 600) / 2;
+    desRect.y = (WINDOW_HEIGHT - 150) / 2;
+    desRect.h = 150;
+    desRect.w = 600;
+    SDL_RenderCopy(renderer, tmpTexture, NULL, &desRect);
+    SDL_FreeSurface(tmpSurface);
+    SDL_RenderPresent(renderer);
+    bool promoteSuccess = false;
+    while(!promoteSuccess)
     {
         SDL_WaitEvent(&event);
         if(event.type == SDL_KEYDOWN)
         {
             switch(event.key.keysym.sym)
             {
-                case SDLK_UP:
-                    field[xEnd][yEnd] = new Rook(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
-                    break;
-                case SDLK_DOWN:
+                case SDLK_1:
                     field[xEnd][yEnd] = new Knight(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+                    promoteSuccess = true;
                     break;
-                case SDLK_LEFT:
+                case SDLK_2:
                     field[xEnd][yEnd] = new Bishop(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+                    promoteSuccess = true;
                     break;
-                case SDLK_RIGHT:
+                case SDLK_3:
+                    field[xEnd][yEnd] = new Rook(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+                    promoteSuccess = true;
+                    break;
+                case SDLK_4:
                     field[xEnd][yEnd] = new Queen(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+                    promoteSuccess = true;
+                    break;
+                default:
                     break;
             }
-            Mix_PlayChannel(-1, sMove, 0);
-            break;
         }
     }
+    SDL_DestroyTexture(tmpTexture);
 }
 
 void GamePlay::printCurrentMove(){
@@ -311,45 +378,30 @@ bool GamePlay::checkEndGame(){
     return true;
 }
 
-void GamePlay::sound(){
+void GamePlay::sound(Piece::MoveType soundType){
     if(gameStart)
     {
         Mix_PlayChannel(-1, sStartGame, 0);
         gameStart = false;
     }
-    else if(currentMove == Piece::NORMAL)
-    {
-        kw->setCheck(field, kw->getPossition().first, kw->getPossition().second);
-        kb->setCheck(field, kb->getPossition().first, kb->getPossition().second);
-        if(kw->getCheck() || kb->getCheck())
-        {
-            Mix_PlayChannel(-1, sCheck, 0);
-            Capture = false;
-        }
-        else
-        {
-            if(Capture)
-            {
-                Mix_PlayChannel(-1, sCapture, 0);
-                Capture = false;
-            }
-            else Mix_PlayChannel(-1, sMove, 0);
-        }
-        currentMove = Piece::NONE;
-    }
-    else if(currentMove == Piece::CASTLE)
-    {
-        Mix_PlayChannel(-1, sCastle, 0);
-        currentMove = Piece::NONE;
-    }
-    else if (currentMove == Piece::ENPASSANT)
+    if(soundType == Piece::CAPTURE)
     {
         Mix_PlayChannel(-1, sCapture, 0);
-        currentMove = Piece::NONE;
+    }
+    else if(soundType == Piece::CASTLE)
+    {
+        Mix_PlayChannel(-1, sCastle, 0);
+    }
+    else if(soundType == Piece::NORMAL)
+    {
+        Mix_PlayChannel(-1, sMove, 0);
+    }
+    else if(soundType == Piece::PROMOTE)
+    {
+        Mix_PlayChannel(-1, sCapture, 0);
     }
     if(checkEndGame())
     {
-        SDL_Delay(500);
         Mix_PlayChannel(-1, sNotify, 0);
         SDL_Delay(1000);
     }
@@ -364,8 +416,9 @@ void GamePlay::update(){
     if(checkEndGame())
     {
         isRunning = false;
-        if(MoveTurn == Piece::BLACK) cout << "WHITE IS WINNER!" << endl;
-        else cout << "BLACK IS WINNER!" << endl;
+        if(MoveTurn == Piece::BLACK) renderText("WHITE IS WINNWER", 50, 300, 3);
+        else renderText("BLACK IS WINNWER", 50, 300, 3);
+        sound();
     }
 
 }

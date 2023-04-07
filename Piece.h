@@ -17,17 +17,17 @@ public:
 
     bool mEnpassanted;
 
-    enum Team { BLACK, WHITE, NEITHER};
+    enum Team { BLACK, WHITE, NONE};
 
 	enum PieceType { PAWN, ROOK, KNIGHT, BISHOP, KING, QUEEN, EMPTY };
 
-	enum MoveType { NORMAL, CASTLE, ENPASSANT, PROMOTE, NONE };
+	enum MoveType { NORMAL, CASTLE, ENPASSANT, PROMOTE, CAPTURE, STATIONARY};
 
 	Piece(Team team, PieceType piecetype, pair<int, int> pos);
 
 	void render(SDL_Renderer* renderer);
 
-	MoveType PieceMove(pair<int, int> pos, Piece *field[8][8]);
+	void PieceMove(pair<int, int> pos, Piece *field[8][8]);
 
     bool DeadPiece();
 
@@ -57,6 +57,8 @@ public:
 
     bool getEnpassant();
 
+    void declineEnpassant(Piece* field[8][8]);
+
 protected:
     Team mTeam;
 
@@ -71,7 +73,6 @@ protected:
     SDL_Rect desRect;
 
     SDL_Surface *mSurface = NULL;
-
 
     SDL_Texture *mTexture = NULL;
 

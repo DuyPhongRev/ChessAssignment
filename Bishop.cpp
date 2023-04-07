@@ -27,7 +27,7 @@ void Bishop::calcPossibleMoves(Piece* field[8][8])
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dx, NORMAL), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dx, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -45,7 +45,7 @@ void Bishop::calcPossibleMoves(Piece* field[8][8])
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second -dx, NORMAL), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second -dx, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }
@@ -63,7 +63,7 @@ void Bishop::calcPossibleMoves(Piece* field[8][8])
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second - dx, NORMAL), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second - dx, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }
@@ -81,7 +81,7 @@ void Bishop::calcPossibleMoves(Piece* field[8][8])
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second + dx, NORMAL), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second + dx, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }

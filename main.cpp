@@ -10,13 +10,12 @@ int main(int argc, char* argv[])
     if(chess->initWindow())
     {
         chess->startPos();
-        chess->initMoveTurn();
+        chess->sound();
         while(true)
         {
             chess->handle();
             chess->render();
             chess->update();
-            chess->sound();
             if(!chess->running()) break;
         }
     }
