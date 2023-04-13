@@ -66,6 +66,10 @@ public:
 
     void promote();
 
+    int evaluate(Piece *field[8][8]);
+
+    int alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int beta, bool maximizingPlayer);
+
 private:
     SDL_Renderer *renderer = NULL;
     SDL_Window *window = NULL;

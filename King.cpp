@@ -57,7 +57,6 @@ void King::calcPossibleMoves(Piece* field[8][8])
 
 void King::setCheck(Piece *field[8][8], int xKing, int yKing){
     bool check = false;
-
     for(int dx = 1; dx < 8; dx++)
     {
         if(dx + xKing <= 7)
@@ -66,7 +65,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing){
             {
                 if(field[dx + xKing][yKing]->getTeam() != field[xKing][yKing]->getTeam())
                 {
-
+                    if(dx == 1 && field[dx + xKing][yKing]->getType() == KING) check = true;
                     if(field[dx + xKing][yKing]->getType() == QUEEN || field[dx + xKing][yKing]->getType() == ROOK)
                     {
                         check = true;
@@ -87,6 +86,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing){
             {
                 if(field[- dx + xKing][yKing]->getTeam() != field[xKing][yKing]->getTeam())
                 {
+                    if(dx == 1 && field[- dx + xKing][yKing]->getType() == KING) check = true;
                     if(field[- dx + xKing][yKing]->getType() == QUEEN || field[- dx + xKing][yKing]->getType() == ROOK)
                     {
                         check = true;
@@ -108,6 +108,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing){
             {
                 if(field[xKing][dy + yKing]->getTeam() != field[xKing][yKing]->getTeam())
                 {
+                    if(dy == 1 && field[xKing][dy + yKing]->getType() == KING) check = true;
                     if(field[xKing][dy + yKing]->getType() == QUEEN || field[xKing][dy + yKing]->getType() == ROOK)
                     {
                         check = true;
@@ -130,6 +131,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing){
             {
                 if(field[xKing][- dy + yKing]->getTeam() != field[xKing][yKing]->getTeam())
                 {
+                    if(dy == 1 && field[xKing][- dy + yKing]->getType() == KING) check = true;
                     if(field[xKing][- dy + yKing]->getType() == QUEEN || field[xKing][- dy + yKing]->getType() == ROOK)
                     {
                         check = true;
@@ -151,6 +153,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing){
             {
                 if(field[dz + xKing][dz + yKing]->getTeam() != field[xKing][yKing]->getTeam())
                 {
+                    if(dz == 1 && field[dz + xKing][dz + yKing]->getType() == KING) check = true;
                     if(field[dz + xKing][dz + yKing]->getType() == QUEEN || field[dz + xKing][dz + yKing]->getType() == BISHOP) check = true;
                     else break;
                 }else
@@ -169,6 +172,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing){
             {
                 if(field[-dz + xKing][-dz + yKing]->getTeam() != field[xKing][yKing]->getTeam())
                 {
+                    if(dz == 1 && field[-dz + xKing][-dz + yKing]->getType() == KING) check = true;
                     if(field[-dz + xKing][-dz + yKing]->getType() == QUEEN || field[-dz + xKing][-dz + yKing]->getType() == BISHOP) check = true;
                     else break;
                 }else
@@ -187,6 +191,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing){
             {
                 if(field[-dz + xKing][dz + yKing]->getTeam() != field[xKing][yKing]->getTeam())
                 {
+                    if(dz == 1 && field[-dz + xKing][dz + yKing]->getType() == KING) check = true;
                     if(field[-dz + xKing][dz + yKing]->getType() == QUEEN || field[-dz + xKing][dz + yKing]->getType() == BISHOP) check = true;
                     else break;
                 }else
@@ -205,6 +210,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing){
             {
                 if(field[dz + xKing][-dz + yKing]->getTeam() != field[xKing][yKing]->getTeam())
                 {
+                    if(dz == 1 && field[dz + xKing][-dz + yKing]->getType() == KING) check = true;
                     if(field[dz + xKing][-dz + yKing]->getType() == QUEEN || field[dz + xKing][-dz + yKing]->getType() == BISHOP) check = true;
                     else break;
                 }else

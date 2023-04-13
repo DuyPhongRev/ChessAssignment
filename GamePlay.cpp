@@ -214,7 +214,147 @@ void GamePlay::startPos(){
     }
 }
 
+int GamePlay::evaluate(Piece *tmpField[8][8])
+{
+    int score_white = 0;
+    int score_black = 0;
+    for(int x = 0; x < 8; x++)
+    {
+        for(int y = 0; y < 8; y++)
+        {
+
+            if(tmpField[x][y] != NULL)
+            {
+                int score = 0;
+                switch(tmpField[x][y]->getType())
+                {
+                    case Piece::PAWN:
+                        score = 1;
+                        break;
+                    case Piece::KNIGHT:
+                        score = 3;
+                        break;
+                    case Piece::BISHOP:
+                        score = 3;
+                        break;
+                    case Piece::ROOK:
+                        score = 5;
+                        break;
+                    case Piece::QUEEN:
+                        score = 9;
+                        break;
+                    default:
+                        break;
+                }
+                if(tmpField[x][y]->getTeam() == Piece::WHITE) score_white += score;
+                else score_black += score;
+            }
+        }
+    }
+    return score_white - score_black;
+    return 10;
+}
+
+int GamePlay::alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int beta, bool maximizingPlayer)
+{
+    Piece *tmpField[8][8];
+    for (int x = 0; x < 8; x++)
+    {
+        for (int y = 0; y < 8; y++)
+        {
+            tmpField[x][y] = field[x][y];
+        }
+    }
+    if(depth == 0) return evaluate(tmpField);
+    if(maximizingPlayer)
+    {
+        //cout << depth << "trang" << endl;
+        int maxValue = INT_MIN;
+        for(int x = 0; x < 8; x++)
+        {
+            for(int y = 0; y < 8; y++)
+            {
+                if(tmpField[x][y] != NULL && tmpField[x][y]->getTeam() == Piece::WHITE)
+                {
+                    tmpField[x][y]->calcPossibleMoves(tmpField);
+                    vector<tuple<int, int, Piece::MoveType>> tmpPossibleMove = tmpField[x][y]->getPossibleMove();
+                    for(tuple<int, int, Piece::MoveType> singleMove : tmpPossibleMove)
+                    {
+                        //cout << tmpField[x][y]->getType() << "piece pos: " << x << "  " << y << "  ";
+                        //cout << "piece move to " << get<0>(singleMove) << "  " << get<1>(singleMove) << endl;
+                        Piece *tmp1 = field[x][y];
+                        Piece *tmp2 = field[get<0>(singleMove)][get<1>(singleMove)];
+                        tmpField[get<0>(singleMove)][get<1>(singleMove)] = tmpField[x][y];
+                        tmpField[x][y] = NULL;
+                        int value = alphaBetaPrunning(tmpField, depth-1, alpha, beta, false);
+                        maxValue = max(value, maxValue);
+                        alpha = max(value, alpha);
+                        tmpField[x][y] = tmp1;
+                        tmpField[get<0>(singleMove)][get<1>(singleMove)] = tmp2;
+                    }
+                }
+            }
+            if(beta <= alpha)
+            {
+                break;
+            }
+        }
+        return maxValue;
+    }
+    else
+    {
+        //cout << depth << "den" << endl;
+        int minValue = INT_MAX;
+        for(int y = 0; y < 8; y++)
+        {
+            for(int x = 0; x < 8; x++)
+            {
+                //cout << x << "  " << y << endl;
+                if(tmpField[x][y] != NULL && tmpField[x][y]->getTeam() == Piece::BLACK)
+                {
+                    tmpField[x][y]->calcPossibleMoves(tmpField);
+                    vector<tuple<int, int, Piece::MoveType>> tmpPossibleMove = tmpField[x][y]->getPossibleMove();
+                    for(tuple<int, int, Piece::MoveType> singleMove : tmpPossibleMove)
+                    {
+                        //if(tmpField[x][y] != NULL)cout << tmpField[x][y]->getType() << "piece pos: " << x << "  " << y << "  ";
+                        //cout << "piece move to " << get<0>(singleMove) << "  " << get<1>(singleMove) << endl;
+                        Piece *tmp1 = field[x][y];
+                        Piece *tmp2 = field[get<0>(singleMove)][get<1>(singleMove)];
+                        tmpField[get<0>(singleMove)][get<1>(singleMove)] = tmpField[x][y];
+                        tmpField[x][y] = NULL;
+                        int value = alphaBetaPrunning(tmpField, depth-1, alpha, beta, true);
+                        if(value < minValue && depth == 3)
+                        {
+                            xStart = x;
+                            yStart = y;
+                            xEnd = get<0>(singleMove);
+                            yEnd = get<1>(singleMove);
+                        }
+                        minValue = min(value, minValue);
+                        beta = min(value, beta);
+                        tmpField[x][y] = tmp1;
+                        tmpField[get<0>(singleMove)][get<1>(singleMove)] = tmp2;
+                    }
+                }
+            }
+            if(beta <= alpha)
+            {
+                break;
+            }
+        }
+        return minValue;
+    }
+}
+
 void GamePlay::handle(){
+    if(MoveTurn == Piece::BLACK)
+    {
+        cout << alphaBetaPrunning(field, 3, INT_MIN, INT_MAX, false);
+        //cout << xStart << "  " << yStart;
+        field[xStart][yStart]->PieceMove(pair<int, int>(xEnd, yEnd), field);
+        changeMoveTurn();
+    }
+
     SDL_WaitEvent(&event);
     if(event.type == SDL_QUIT)
     {
@@ -228,8 +368,7 @@ void GamePlay::handle(){
             if (field[xStart][yStart] != NULL && field[xStart][yStart]->getTeam() == MoveTurn)
             {
                 clickedOn = field[xStart][yStart];
-                if(MoveTurn == Piece::WHITE) field[xStart][yStart]->calcPossibleMoves(field);
-                else field[xStart][yStart]->calcPossibleMoves(field);
+                field[xStart][yStart]->calcPossibleMoves(field);
             }
         }
         else if(event.type == SDL_MOUSEBUTTONUP && field[xStart][yStart] != NULL && field[xStart][yStart]->getTeam() == MoveTurn)

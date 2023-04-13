@@ -74,27 +74,27 @@ void Piece::cleanUp(){
 }
 
 vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, Piece::MoveType>> moveList, tuple<int, int, Piece::MoveType> singleMove, King *king, Piece *field[8][8]){
-        Piece *tmpField[8][8];
-        for (int x = 0; x < 8; x++)
-        {
-            for (int y = 0; y < 8; y++)
-                tmpField[x][y] = field[x][y];
-        }
-        tmpField[get<0>(singleMove)][get<1>(singleMove)] = tmpField[mPos.first][mPos.second];
+    Piece *tmpField[8][8];
+    for (int x = 0; x < 8; x++)
+    {
+        for (int y = 0; y < 8; y++)
+            tmpField[x][y] = field[x][y];
+    }
+    tmpField[get<0>(singleMove)][get<1>(singleMove)] = tmpField[mPos.first][mPos.second];
 
-        tmpField[mPos.first][mPos.second] = NULL;
-        if(king->getPossition().first == mPos.first && king->getPossition().second == mPos.second)
-        {
-            king->setCheck(tmpField, get<0>(singleMove), get<1>(singleMove));
-        }else
-        {
-            king->setCheck(tmpField, king->getPossition().first, king->getPossition().second);
-        }
-        if(!king->getCheck())
-        {
-            moveList.push_back(singleMove);
-        }
-        king->getCheck();
+    tmpField[mPos.first][mPos.second] = NULL;
+    if(king->getPossition().first == mPos.first && king->getPossition().second == mPos.second)
+    {
+        king->setCheck(tmpField, get<0>(singleMove), get<1>(singleMove));
+    }else
+    {
+        king->setCheck(tmpField, king->getPossition().first, king->getPossition().second);
+    }
+    if(!king->getCheck())
+    {
+        moveList.push_back(singleMove);
+    }
+    king->getCheck();
     return moveList;
 }
 

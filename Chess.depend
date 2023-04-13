@@ -258,3 +258,82 @@
 	<utility>
 	<cmath>
 
+1681365554 source:c:\chess\assignment\bishop.cpp
+	"Bishop.h"
+
+1681365554 c:\chess\assignment\bishop.h
+	"Piece.h"
+
+1681366978 c:\chess\assignment\piece.h
+	"SDL.h"
+	"SDL_image.h"
+	<utility>
+	<vector>
+	<tuple>
+
+1681376169 source:c:\chess\assignment\king.cpp
+	"King.h"
+	<iostream>
+	"Rook.h"
+
+1681365554 c:\chess\assignment\king.h
+	"Piece.h"
+	<utility>
+	<cmath>
+
+1681365554 c:\chess\assignment\rook.h
+	"Piece.h"
+
+1681365554 source:c:\chess\assignment\knight.cpp
+	"Knight.h"
+	<tuple>
+	<iostream>
+	<vector>
+
+1681365554 c:\chess\assignment\knight.h
+	"Piece.h"
+	<tuple>
+
+1681365555 source:c:\chess\assignment\main.cpp
+	<iostream>
+	"GamePlay.h"
+
+1681372451 c:\chess\assignment\gameplay.h
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_ttf.h>
+	<SDL_mixer.h>
+	"Piece.h"
+	"Pawn.h"
+	"Rook.h"
+	"Knight.h"
+	"Bishop.h"
+	"Queen.h"
+	"King.h"
+
+1681365554 c:\chess\assignment\pawn.h
+	"Piece.h"
+
+1681365554 c:\chess\assignment\queen.h
+	"Piece.h"
+
+1681365554 source:c:\chess\assignment\pawn.cpp
+	"Pawn.h"
+	<iostream>
+
+1681367432 source:c:\chess\assignment\piece.cpp
+	"Piece.h"
+	<iostream>
+	"King.h"
+
+1681365554 source:c:\chess\assignment\queen.cpp
+	"Queen.h"
+
+1681365554 source:c:\chess\assignment\rook.cpp
+	"Rook.h"
+	<iostream>
+
+1681376977 source:c:\chess\assignment\gameplay.cpp
+	"GamePlay.h"
+
