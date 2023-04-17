@@ -12,22 +12,24 @@ Queen::Queen(Team team, std::pair<int, int> pos)
     }
 }
 
-void Queen::calcPossibleMoves(Piece* field[8][8])
+void Queen::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0)
 {
+    tmpPosX = xPos;
+    tmpPosY = yPos;
     vector<tuple<int, int, Piece::MoveType>> moves;
     for (int dx = 1; dx <= 7; dx++)
     {
-        if(mPos.first + dx <= 7 && mPos.first + dx >= 0)
+        if(xPos + dx <= 7 && xPos + dx >= 0)
         {
-            if(field[mPos.first + dx][mPos.second] == NULL)
+            if(field[xPos + dx][yPos] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second, NORMAL), getOwnKing(field), field);
-            }else if(field[mPos.first + dx][mPos.second]->getTeam() == mTeam)
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos + dx, yPos, NORMAL), getOwnKing(field), field);
+            }else if(field[xPos + dx][yPos]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second, CAPTURE), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos + dx, yPos, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -35,17 +37,17 @@ void Queen::calcPossibleMoves(Piece* field[8][8])
 
     for (int dx = 1; dx <= 7; dx++)
     {
-        if(mPos.first - dx <= 7 && mPos.first - dx >= 0)
+        if(xPos - dx <= 7 && xPos - dx >= 0)
         {
-            if(field[mPos.first - dx][mPos.second] == NULL)
+            if(field[xPos - dx][yPos] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second, NORMAL), getOwnKing(field), field);
-            }else if(field[mPos.first - dx][mPos.second]->getTeam() == mTeam)
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos - dx, yPos, NORMAL), getOwnKing(field), field);
+            }else if(field[xPos - dx][yPos]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second, CAPTURE), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos - dx, yPos, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -53,17 +55,17 @@ void Queen::calcPossibleMoves(Piece* field[8][8])
 
     for (int dy = 1; dy <= 7; dy++)
     {
-        if(mPos.second + dy <= 7 && mPos.second + dy >= 0)
+        if(yPos + dy <= 7 && yPos + dy >= 0)
         {
-            if(field[mPos.first][mPos.second + dy] == NULL)
+            if(field[xPos][yPos + dy] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, NORMAL), getOwnKing(field), field);
-            }else if(field[mPos.first][mPos.second + dy]->getTeam() == mTeam)
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos, yPos + dy, NORMAL), getOwnKing(field), field);
+            }else if(field[xPos][yPos + dy]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, CAPTURE), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos, yPos + dy, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -71,17 +73,17 @@ void Queen::calcPossibleMoves(Piece* field[8][8])
 
     for (int dy = 1; dy <= 7; dy++)
     {
-        if(mPos.second - dy <= 7 && mPos.second - dy >= 0)
+        if(yPos - dy <= 7 && yPos - dy >= 0)
         {
-            if(field[mPos.first][mPos.second - dy] == NULL)
+            if(field[xPos][yPos - dy] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second - dy, NORMAL), getOwnKing(field), field);
-            }else if(field[mPos.first][mPos.second - dy]->getTeam() == mTeam)
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos, yPos - dy, NORMAL), getOwnKing(field), field);
+            }else if(field[xPos][yPos - dy]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second - dy, CAPTURE), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos, yPos - dy, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -91,17 +93,17 @@ void Queen::calcPossibleMoves(Piece* field[8][8])
 
     for (int dx = 1; dx <= 7; dx++)
     {
-        if(mPos.first + dx <= 7 && mPos.first + dx >= 0 && mPos.second + dx <= 7 && mPos.second + dx >= 0)
+        if(xPos + dx <= 7 && xPos + dx >= 0 && yPos + dx <= 7 && yPos + dx >= 0)
         {
-            if(field[mPos.first + dx][mPos.second + dx] == NULL)
+            if(field[xPos + dx][yPos + dx] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dx, NORMAL), getOwnKing(field), field);
-            }else if(field[mPos.first + dx][mPos.second + dx]->getTeam() == mTeam)
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos + dx, yPos + dx, NORMAL), getOwnKing(field), field);
+            }else if(field[xPos + dx][yPos + dx]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dx, CAPTURE), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos + dx, yPos + dx, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }else break;
@@ -110,17 +112,17 @@ void Queen::calcPossibleMoves(Piece* field[8][8])
 
     for (int dx = 1; dx <= 7; dx++)
     {
-        if(mPos.first - dx <= 7 && mPos.first - dx >= 0 && mPos.second - dx <= 7 && mPos.second - dx >= 0)
+        if(xPos - dx <= 7 && xPos - dx >= 0 && yPos - dx <= 7 && yPos - dx >= 0)
         {
-            if(field[mPos.first - dx][mPos.second - dx] == NULL)
+            if(field[xPos - dx][yPos - dx] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second - dx, NORMAL), getOwnKing(field), field);
-            }else if(field[mPos.first - dx][mPos.second - dx]->getTeam() == mTeam)
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos - dx, yPos - dx, NORMAL), getOwnKing(field), field);
+            }else if(field[xPos - dx][yPos - dx]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second -dx, CAPTURE), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos - dx, yPos -dx, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }
@@ -128,17 +130,17 @@ void Queen::calcPossibleMoves(Piece* field[8][8])
 
     for (int dx = 1; dx <= 7; dx++)
     {
-        if(mPos.first + dx <= 7 && mPos.first + dx >= 0 && mPos.second - dx <= 7 && mPos.second - dx >= 0)
+        if(xPos + dx <= 7 && xPos + dx >= 0 && yPos - dx <= 7 && yPos - dx >= 0)
         {
-            if(field[mPos.first + dx][mPos.second - dx] == NULL)
+            if(field[xPos + dx][yPos - dx] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second - dx, NORMAL), getOwnKing(field), field);
-            }else if(field[mPos.first + dx][mPos.second - dx]->getTeam() == mTeam)
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos + dx, yPos - dx, NORMAL), getOwnKing(field), field);
+            }else if(field[xPos + dx][yPos - dx]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second - dx, CAPTURE), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos + dx, yPos - dx, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }
@@ -146,17 +148,17 @@ void Queen::calcPossibleMoves(Piece* field[8][8])
 
     for (int dx = 1; dx <= 7; dx++)
     {
-        if(mPos.first - dx <= 7 && mPos.first - dx >= 0 && mPos.second + dx <= 7 && mPos.second + dx >= 0)
+        if(xPos - dx <= 7 && xPos - dx >= 0 && yPos + dx <= 7 && yPos + dx >= 0)
         {
-            if(field[mPos.first - dx][mPos.second + dx] == NULL)
+            if(field[xPos - dx][yPos + dx] == NULL)
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second + dx, NORMAL), getOwnKing(field), field);
-            }else if(field[mPos.first - dx][mPos.second + dx] != NULL && field[mPos.first - dx][mPos.second + dx]->getTeam() == mTeam)
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos - dx, yPos + dx, NORMAL), getOwnKing(field), field);
+            }else if(field[xPos - dx][yPos + dx] != NULL && field[xPos - dx][yPos + dx]->getTeam() == mTeam)
             {
                 break;
             }else
             {
-                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dx, mPos.second + dx, CAPTURE), getOwnKing(field), field);
+                moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos - dx, yPos + dx, CAPTURE), getOwnKing(field), field);
                 break;
             }
         }

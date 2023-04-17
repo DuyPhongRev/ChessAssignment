@@ -57,31 +57,31 @@ bool GamePlay::initWindow(){
     WINDOW_WIDTH = 800;
     if(SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
-        cout << "SDL INIT FAIL! ERROR LOG: " << SDL_GetError() << endl;
+        //cerr << "SDL INIT FAIL! ERROR LOG: " << SDL_GetError() << endl;
         return false;
     }else
     {
         window = SDL_CreateWindow("CHESS GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
          if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
         {
-            cout << "MIXER CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
+            //cerr << "MIXER CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
             return false;
         }
         if (TTF_Init() < 0)
         {
-            cout << "TTF CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
+            //cerr << "TTF CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
             return false;
         }
         if(window == NULL)
         {
-            cout << "WINDOW CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
+            //cerr << "WINDOW CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
             return false;
         }else
         {
             renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
             if(renderer == NULL)
             {
-                cout << "RENDERER CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
+                //cerr << "RENDERER CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
                 return false;
             }
         }
@@ -123,8 +123,8 @@ void GamePlay::renderBoard(){
             SDL_RenderFillRect(renderer, &site);
         }
     }
-    kw->setCheck(field, kw->getPossition().first, kw->getPossition().second);
-    kb->setCheck(field, kb->getPossition().first, kb->getPossition().second);
+    kw->setCheck(field, kw->getPossition().first, kw->getPossition().second, Piece::WHITE);
+    kb->setCheck(field, kb->getPossition().first, kb->getPossition().second, Piece::BLACK);
     if(kw->getCheck())
     {
         if((kw->getPossition().first + kw->getPossition().second) % 2 == 0)
@@ -216,6 +216,14 @@ void GamePlay::startPos(){
 
 int GamePlay::evaluate(Piece *tmpField[8][8])
 {
+    int score_base[8][8] = {0, 1, 3, 4, 4, 3, 1, 0,
+                            1, 3, 4, 5, 5, 4, 3, 1,
+                            1, 4, 5, 7, 7, 5, 4, 1,
+                            2, 5, 7, 9, 9, 7, 5, 2,
+                            2, 5, 7, 9, 9, 7, 5, 2,
+                            1, 4, 5, 7, 7, 5, 4, 1,
+                            1, 3, 4, 5, 5, 4, 3, 1,
+                            0, 1, 3, 4, 4, 3, 1, 0};
     int score_white = 0;
     int score_black = 0;
     for(int x = 0; x < 8; x++)
@@ -229,30 +237,30 @@ int GamePlay::evaluate(Piece *tmpField[8][8])
                 switch(tmpField[x][y]->getType())
                 {
                     case Piece::PAWN:
-                        score = 1;
+                        score = 10;
                         break;
                     case Piece::KNIGHT:
-                        score = 3;
+                        score = 30;
                         break;
                     case Piece::BISHOP:
-                        score = 3;
+                        score = 30;
                         break;
                     case Piece::ROOK:
-                        score = 5;
+                        score = 50;
                         break;
                     case Piece::QUEEN:
-                        score = 9;
+                        score = 90;
                         break;
                     default:
+                        score = 10000;
                         break;
                 }
-                if(tmpField[x][y]->getTeam() == Piece::WHITE) score_white += score;
-                else score_black += score;
+                if(tmpField[x][y]->getTeam() == Piece::WHITE) score_white += score + score_base[x][y];
+                else score_black += score + score_base[x][y];
             }
         }
     }
     return score_white - score_black;
-    return 10;
 }
 
 int GamePlay::alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int beta, bool maximizingPlayer)
@@ -265,10 +273,16 @@ int GamePlay::alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int be
             tmpField[x][y] = field[x][y];
         }
     }
-    if(depth == 0) return evaluate(tmpField);
+    //cerr << "begin" << endl;
+    Piece::Team currentTeam = Piece::BLACK;
+    if(maximizingPlayer) currentTeam = Piece::WHITE;
+    else currentTeam = Piece::BLACK;
+    if(depth == 0 || checkEndGame(tmpField, currentTeam)) return evaluate(tmpField);
+    //cerr << "begin" << endl;
+
     if(maximizingPlayer)
     {
-        //cout << depth << "trang" << endl;
+        //cerr << depth << "trang" << endl;
         int maxValue = INT_MIN;
         for(int x = 0; x < 8; x++)
         {
@@ -276,21 +290,25 @@ int GamePlay::alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int be
             {
                 if(tmpField[x][y] != NULL && tmpField[x][y]->getTeam() == Piece::WHITE)
                 {
-                    tmpField[x][y]->calcPossibleMoves(tmpField);
+                    tmpField[x][y]->calcPossibleMoves(tmpField, x, y);
                     vector<tuple<int, int, Piece::MoveType>> tmpPossibleMove = tmpField[x][y]->getPossibleMove();
                     for(tuple<int, int, Piece::MoveType> singleMove : tmpPossibleMove)
                     {
-                        //cout << tmpField[x][y]->getType() << "piece pos: " << x << "  " << y << "  ";
-                        //cout << "piece move to " << get<0>(singleMove) << "  " << get<1>(singleMove) << endl;
+                        //cerr << tmpField[x][y]->getType() << "piece pos: " << x << "  " << y << "  ";
+                        //cerr << "piece move to " << get<0>(singleMove) << "  " << get<1>(singleMove) << endl;
                         Piece *tmp1 = field[x][y];
                         Piece *tmp2 = field[get<0>(singleMove)][get<1>(singleMove)];
+
+                        if(tmp2 != NULL && tmp2->getType() == Piece::KING) continue;
                         tmpField[get<0>(singleMove)][get<1>(singleMove)] = tmpField[x][y];
                         tmpField[x][y] = NULL;
+                        //cerr << "half done" << endl;
                         int value = alphaBetaPrunning(tmpField, depth-1, alpha, beta, false);
                         maxValue = max(value, maxValue);
                         alpha = max(value, alpha);
                         tmpField[x][y] = tmp1;
                         tmpField[get<0>(singleMove)][get<1>(singleMove)] = tmp2;
+                        //cerr << "done" << endl;
                     }
                 }
             }
@@ -303,37 +321,41 @@ int GamePlay::alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int be
     }
     else
     {
-        //cout << depth << "den" << endl;
+        //cerr << depth << "den" << endl;
         int minValue = INT_MAX;
         for(int y = 0; y < 8; y++)
         {
             for(int x = 0; x < 8; x++)
             {
-                //cout << x << "  " << y << endl;
+                ////cerr << x << "  " << y << endl;
                 if(tmpField[x][y] != NULL && tmpField[x][y]->getTeam() == Piece::BLACK)
                 {
-                    tmpField[x][y]->calcPossibleMoves(tmpField);
+                    tmpField[x][y]->calcPossibleMoves(tmpField, x , y);
                     vector<tuple<int, int, Piece::MoveType>> tmpPossibleMove = tmpField[x][y]->getPossibleMove();
                     for(tuple<int, int, Piece::MoveType> singleMove : tmpPossibleMove)
                     {
-                        //if(tmpField[x][y] != NULL)cout << tmpField[x][y]->getType() << "piece pos: " << x << "  " << y << "  ";
-                        //cout << "piece move to " << get<0>(singleMove) << "  " << get<1>(singleMove) << endl;
+                        //cerr << tmpField[x][y]->getType() << "piece pos: " << x << "  " << y << "  ";
+                        //cerr << "piece move to " << get<0>(singleMove) << "  " << get<1>(singleMove) << endl;
                         Piece *tmp1 = field[x][y];
                         Piece *tmp2 = field[get<0>(singleMove)][get<1>(singleMove)];
+                        if(tmp2 != NULL && tmp2->getType() == Piece::KING) continue;
                         tmpField[get<0>(singleMove)][get<1>(singleMove)] = tmpField[x][y];
                         tmpField[x][y] = NULL;
+                        //cerr << "half done" << endl;
                         int value = alphaBetaPrunning(tmpField, depth-1, alpha, beta, true);
-                        if(value < minValue && depth == 3)
+                        if(value < minValue && depth == mDepth)
                         {
                             xStart = x;
                             yStart = y;
                             xEnd = get<0>(singleMove);
                             yEnd = get<1>(singleMove);
+                            ////cerr << value << " ";
                         }
                         minValue = min(value, minValue);
                         beta = min(value, beta);
                         tmpField[x][y] = tmp1;
                         tmpField[get<0>(singleMove)][get<1>(singleMove)] = tmp2;
+                        //cerr << "done" << endl;
                     }
                 }
             }
@@ -347,11 +369,12 @@ int GamePlay::alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int be
 }
 
 void GamePlay::handle(){
+    mDepth = 3;
     if(MoveTurn == Piece::BLACK)
     {
-        cout << alphaBetaPrunning(field, 3, INT_MIN, INT_MAX, false);
+        alphaBetaPrunning(field, mDepth, INT_MIN, INT_MAX, false);
         //cout << xStart << "  " << yStart;
-        field[xStart][yStart]->PieceMove(pair<int, int>(xEnd, yEnd), field);
+        if(field[xStart][yStart] != NULL)field[xStart][yStart]->PieceMove(pair<int, int>(xEnd, yEnd), field);
         changeMoveTurn();
     }
 
@@ -368,7 +391,7 @@ void GamePlay::handle(){
             if (field[xStart][yStart] != NULL && field[xStart][yStart]->getTeam() == MoveTurn)
             {
                 clickedOn = field[xStart][yStart];
-                field[xStart][yStart]->calcPossibleMoves(field);
+                field[xStart][yStart]->calcPossibleMoves(field, xStart, yStart);
             }
         }
         else if(event.type == SDL_MOUSEBUTTONUP && field[xStart][yStart] != NULL && field[xStart][yStart]->getTeam() == MoveTurn)
@@ -499,17 +522,23 @@ void GamePlay::printCurrentMove(){
     Movement = false;
 }
 
-bool GamePlay::checkEndGame(){
+bool GamePlay::checkEndGame(Piece *tmpPiece[8][8], Piece::Team currentTeam){
     for (int x = 0; x < 8; x++)
     {
         for (int y = 0; y < 8; y++)
         {
-            if(field[x][y] != NULL)
+            if(tmpPiece[x][y] != NULL)
             {
-                if(field[x][y]->getTeam() == MoveTurn)
+                if(tmpPiece[x][y]->getTeam() == currentTeam)
                 {
-                    field[x][y]->calcPossibleMoves(field);
-                    if(!field[x][y]->getPossibleMove().empty()) return false;
+                    //cerr << x << "  " << y << endl;
+                    tmpPiece[x][y]->calcPossibleMoves(tmpPiece, x , y);
+                    //cerr << "here" << endl;
+                    if(!tmpPiece[x][y]->getPossibleMove().empty())
+                    {
+                        //cerr << "returned" << endl;
+                        return false;
+                    }
                 }
             }
         }
@@ -539,7 +568,7 @@ void GamePlay::sound(Piece::MoveType soundType){
     {
         Mix_PlayChannel(-1, sCapture, 0);
     }
-    if(checkEndGame())
+    if(checkEndGame(field, MoveTurn))
     {
         Mix_PlayChannel(-1, sNotify, 0);
         SDL_Delay(1000);
@@ -552,7 +581,7 @@ void GamePlay::update(){
         printCurrentMove();
         changeMoveTurn();
     }
-    if(checkEndGame())
+    if(checkEndGame(field, MoveTurn))
     {
         isRunning = false;
         if(MoveTurn == Piece::BLACK) renderText("WHITE IS WINNWER", 50, 300, 3);

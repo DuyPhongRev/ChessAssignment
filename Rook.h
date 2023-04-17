@@ -7,7 +7,7 @@ class Rook : public Piece
     public:
         Rook(Team team, std::pair<int, int> pos);
 
-        void calcPossibleMoves(Piece* field[8][8]);
+        void calcPossibleMoves(Piece* field[8][8], int xPos, int yPos);
 };
 
 #endif // ROOK_H

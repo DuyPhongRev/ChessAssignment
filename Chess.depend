@@ -258,47 +258,47 @@
 	<utility>
 	<cmath>
 
-1681365554 source:c:\chess\assignment\bishop.cpp
+1681442359 source:c:\chess\assignment\bishop.cpp
 	"Bishop.h"
 
-1681365554 c:\chess\assignment\bishop.h
+1681441637 c:\chess\assignment\bishop.h
 	"Piece.h"
 
-1681366978 c:\chess\assignment\piece.h
+1681442335 c:\chess\assignment\piece.h
 	"SDL.h"
 	"SDL_image.h"
 	<utility>
 	<vector>
 	<tuple>
 
-1681376169 source:c:\chess\assignment\king.cpp
+1681726535 source:c:\chess\assignment\king.cpp
 	"King.h"
 	<iostream>
 	"Rook.h"
 
-1681365554 c:\chess\assignment\king.h
+1681726126 c:\chess\assignment\king.h
 	"Piece.h"
 	<utility>
 	<cmath>
 
-1681365554 c:\chess\assignment\rook.h
+1681441637 c:\chess\assignment\rook.h
 	"Piece.h"
 
-1681365554 source:c:\chess\assignment\knight.cpp
+1681442359 source:c:\chess\assignment\knight.cpp
 	"Knight.h"
 	<tuple>
 	<iostream>
 	<vector>
 
-1681365554 c:\chess\assignment\knight.h
+1681441637 c:\chess\assignment\knight.h
 	"Piece.h"
 	<tuple>
 
-1681365555 source:c:\chess\assignment\main.cpp
+1681405992 source:c:\chess\assignment\main.cpp
 	<iostream>
 	"GamePlay.h"
 
-1681372451 c:\chess\assignment\gameplay.h
+1681719988 c:\chess\assignment\gameplay.h
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -312,28 +312,28 @@
 	"Queen.h"
 	"King.h"
 
-1681365554 c:\chess\assignment\pawn.h
+1681441637 c:\chess\assignment\pawn.h
 	"Piece.h"
 
-1681365554 c:\chess\assignment\queen.h
+1681441637 c:\chess\assignment\queen.h
 	"Piece.h"
 
-1681365554 source:c:\chess\assignment\pawn.cpp
+1681726443 source:c:\chess\assignment\pawn.cpp
 	"Pawn.h"
 	<iostream>
 
-1681367432 source:c:\chess\assignment\piece.cpp
+1681726443 source:c:\chess\assignment\piece.cpp
 	"Piece.h"
 	<iostream>
 	"King.h"
 
-1681365554 source:c:\chess\assignment\queen.cpp
+1681442359 source:c:\chess\assignment\queen.cpp
 	"Queen.h"
 
-1681365554 source:c:\chess\assignment\rook.cpp
+1681442359 source:c:\chess\assignment\rook.cpp
 	"Rook.h"
 	<iostream>
 
-1681376977 source:c:\chess\assignment\gameplay.cpp
+1681726694 source:c:\chess\assignment\gameplay.cpp
 	"GamePlay.h"
 

@@ -41,7 +41,7 @@ public:
 
     pair<int, int> getPossition();
 
-    virtual void calcPossibleMoves(Piece* field[8][8]) = 0;
+    virtual void calcPossibleMoves(Piece* field[8][8], int xPos, int yPos) = 0;
 
     vector<tuple<int, int, Piece::MoveType>> pushMove(vector<tuple<int, int, Piece::MoveType>> moveList, tuple<int, int, Piece::MoveType> singleMove, King *king, Piece *tmpField[8][8]);
 
@@ -81,6 +81,10 @@ protected:
     bool mNotMove;
 
     bool mValidEnpassant;
+
+    int tmpPosX;
+
+    int tmpPosY;
 };
 
 #endif // PIECE_H

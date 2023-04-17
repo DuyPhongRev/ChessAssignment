@@ -48,7 +48,7 @@ public:
 
     void printCurrentMove();
 
-    bool checkEndGame();
+    bool checkEndGame(Piece *tmpPiece[8][8], Piece::Team currentTeam);
 
     void sound(Piece::MoveType soundType = Piece::STATIONARY);
 
@@ -93,6 +93,7 @@ private:
     int xEnd;
     int yEnd;
     bool Capture;
+    int mDepth;
     Piece *pw1 = NULL;
     Piece *pw2 = NULL;
     Piece *pw3 = NULL;

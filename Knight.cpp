@@ -15,21 +15,23 @@ Knight::Knight(Team team, std::pair<int, int> pos)
     }
 }
 
-void Knight::calcPossibleMoves(Piece* field[8][8])
+void Knight::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0)
 {
+    tmpPosX = xPos;
+    tmpPosY = yPos;
     vector<tuple<int, int, Piece::MoveType>> moves;
     for(int dx = -2; dx <= 2; dx += 4)
     {
         for (int dy = -1; dy <= 1; dy += 2)
         {
-            if(mPos.first + dx <= 7 && mPos.first + dx >= 0 && mPos.second + dy <= 7 && mPos.second + dy >= 0)
+            if(xPos + dx <= 7 && xPos + dx >= 0 && yPos + dy <= 7 && yPos + dy >= 0)
             {
-                if(field[mPos.first + dx][mPos.second + dy] == NULL)
+                if(field[xPos + dx][yPos + dy] == NULL)
                 {
-                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field);
-                }else if(field[mPos.first + dx][mPos.second + dy]->getTeam() != mTeam)
+                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos + dx, yPos + dy, NORMAL), getOwnKing(field), field);
+                }else if(field[xPos + dx][yPos + dy]->getTeam() != mTeam)
                 {
-                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, CAPTURE), getOwnKing(field), field);
+                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos + dx, yPos + dy, CAPTURE), getOwnKing(field), field);
                 }
             }
         }
@@ -39,14 +41,14 @@ void Knight::calcPossibleMoves(Piece* field[8][8])
     {
         for (int dx = -1; dx <= 1; dx += 2)
         {
-            if(mPos.first + dx <= 7 && mPos.first + dx >= 0 && mPos.second + dy <= 7 && mPos.second + dy >= 0)
+            if(xPos + dx <= 7 && xPos + dx >= 0 && yPos + dy <= 7 && yPos + dy >= 0)
             {
-                if(field[mPos.first + dx][mPos.second + dy] == NULL)
+                if(field[xPos + dx][yPos + dy] == NULL)
                 {
-                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, NORMAL), getOwnKing(field), field);
-                }else if(field[mPos.first + dx][mPos.second + dy]->getTeam() != mTeam)
+                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos + dx, yPos + dy, NORMAL), getOwnKing(field), field);
+                }else if(field[xPos + dx][yPos + dy]->getTeam() != mTeam)
                 {
-                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dx, mPos.second + dy, CAPTURE), getOwnKing(field), field);
+                    moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos + dx, yPos + dy, CAPTURE), getOwnKing(field), field);
                 }
             }
         }

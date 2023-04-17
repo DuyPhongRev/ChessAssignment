@@ -15,58 +15,67 @@ Pawn::Pawn(Team team, std::pair<int, int> pos)
     }
 }
 
-void Pawn::calcPossibleMoves(Piece* field[8][8])
+void Pawn::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0)
 {
+    //cerr << "check pawn" << endl;
+    tmpPosX = xPos;
+    tmpPosY = yPos;
     vector<tuple<int, int, Piece::MoveType>> moves;
-    if(mPos.second + dy >= 0 && mPos.second + dy <= 7 && field[mPos.first][mPos.second + dy] == NULL)
+    if(yPos + dy >= 0 && yPos + dy <= 7 && field[xPos][yPos + dy] == NULL)
     {
-        if(mPos.second + dy == 0 || mPos.second + dy == 7) moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, PROMOTE), getOwnKing(field), field);
-        else moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy, NORMAL), getOwnKing(field), field);
-    }
-
-    if(mNotMove && field[mPos.first][mPos.second + dy * 2] == NULL)
-    {
-        moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first, mPos.second + dy * 2, NORMAL), getOwnKing(field), field);
-        if(mPos.first + 1 <= 7 && field[mPos.first + 1][mPos.second + dy * 2] != NULL && field[mPos.first + 1][mPos.second + dy * 2]->getTeam() != mTeam && field[mPos.first + 1][mPos.second + dy * 2]->getType() == PAWN)
+        //cerr << "this" << endl;
+        if(yPos + dy == 0 || yPos + dy == 7) moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos, yPos + dy, PROMOTE), getOwnKing(field), field);
+        else
         {
-            field[mPos.first + 1][mPos.second + dy * 2]->setEnpassant();
+            //cerr << "here" << endl;
+            moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos, yPos + dy, NORMAL), getOwnKing(field), field);
+            //cerr << "right here" << endl;
+        }
+    }
+//cerr << "check pawn1" << endl;
+    if(mNotMove && field[xPos][yPos + dy * 2] == NULL && field[xPos][yPos + dy] == NULL)
+    {
+        moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos, yPos + dy * 2, NORMAL), getOwnKing(field), field);
+        if(xPos + 1 <= 7 && field[xPos + 1][yPos + dy * 2] != NULL && field[xPos + 1][yPos + dy * 2]->getTeam() != mTeam && field[xPos + 1][yPos + dy * 2]->getType() == PAWN)
+        {
+            field[xPos + 1][yPos + dy * 2]->setEnpassant();
             mEnpassanted = true;
         }
-        if(mPos.first - 1 >= 0 && field[mPos.first - 1][mPos.second + dy * 2] != NULL && field[mPos.first - 1][mPos.second + dy * 2]->getTeam() != mTeam && field[mPos.first - 1][mPos.second + dy * 2]->getType() == PAWN)
+        if(xPos - 1 >= 0 && field[xPos - 1][yPos + dy * 2] != NULL && field[xPos - 1][yPos + dy * 2]->getTeam() != mTeam && field[xPos - 1][yPos + dy * 2]->getType() == PAWN)
         {
-            field[mPos.first - 1][mPos.second + dy * 2]->setEnpassant();
+            field[xPos - 1][yPos + dy * 2]->setEnpassant();
             mEnpassanted = true;
         }
     }
-
-    if(mPos.first + dy >= 0 && mPos.first + dy <= 7 && mPos.second + dy >= 0 && mPos.second + dy <= 7 && field[mPos.first + dy][mPos.second + dy] != NULL)
+//cerr << "check pawn2" << endl;
+    if(xPos + dy >= 0 && xPos + dy <= 7 && yPos + dy >= 0 && yPos + dy <= 7 && field[xPos + dy][yPos + dy] != NULL)
     {
-        if(field[mPos.first + dy][mPos.second + dy]->getTeam() != mTeam)
+        if(field[xPos + dy][yPos + dy]->getTeam() != mTeam)
         {
-            if(mPos.second + dy == 0 || mPos.second + dy == 7) moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dy, mPos.second + dy, PROMOTE), getOwnKing(field), field);
-            else moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + dy, mPos.second + dy, CAPTURE), getOwnKing(field), field);
+            if(yPos + dy == 0 || yPos + dy == 7) moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos + dy, yPos + dy, PROMOTE), getOwnKing(field), field);
+            else moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos + dy, yPos + dy, CAPTURE), getOwnKing(field), field);
         }
     }
-
-    if(mPos.first - dy <= 7 && mPos.first - dy >= 0 && mPos.second + dy >= 0 && mPos.second + dy <= 7 && field[mPos.first - dy][mPos.second + dy] != NULL)
+//cerr << "check pawn3" << endl;
+    if(xPos - dy <= 7 && xPos - dy >= 0 && yPos + dy >= 0 && yPos + dy <= 7 && field[xPos - dy][yPos + dy] != NULL)
     {
-        if(field[mPos.first - dy][mPos.second + dy]->getTeam() != mTeam)
+        if(field[xPos - dy][yPos + dy]->getTeam() != mTeam)
         {
-            if(mPos.second + dy == 0 || mPos.second + dy == 7) moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dy, mPos.second + dy, PROMOTE), getOwnKing(field), field);
-            else moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - dy, mPos.second + dy, CAPTURE), getOwnKing(field), field);
+            if(yPos + dy == 0 || yPos + dy == 7) moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos - dy, yPos + dy, PROMOTE), getOwnKing(field), field);
+            else moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos - dy, yPos + dy, CAPTURE), getOwnKing(field), field);
 
         }
     }
-
+//cerr << "check pawn4" << endl;
     if(mValidEnpassant)
     {
-        if(mPos.first + 1 <= 7 && field[mPos.first + 1][mPos.second] != NULL && field[mPos.first + 1][mPos.second]->getType() == PAWN && field[mPos.first + 1][mPos.second]->mEnpassanted)
+        if(xPos + 1 <= 7 && field[xPos + 1][yPos] != NULL && field[xPos + 1][yPos]->getType() == PAWN && field[xPos + 1][yPos]->mEnpassanted)
         {
-            moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first + 1, mPos.second + dy, ENPASSANT), getOwnKing(field), field);
+            moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos + 1, yPos + dy, ENPASSANT), getOwnKing(field), field);
         }
-        if(mPos.first - 1 >= 0 && field[mPos.first - 1][mPos.second] != NULL && field[mPos.first - 1][mPos.second]->getType() == PAWN && field[mPos.first - 1][mPos.second]->mEnpassanted)
+        if(xPos - 1 >= 0 && field[xPos - 1][yPos] != NULL && field[xPos - 1][yPos]->getType() == PAWN && field[xPos - 1][yPos]->mEnpassanted)
         {
-            moves = pushMove(moves, tuple<int, int, Piece::MoveType>(mPos.first - 1, mPos.second + dy, ENPASSANT), getOwnKing(field), field);
+            moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos - 1, yPos + dy, ENPASSANT), getOwnKing(field), field);
         }
     }
     mPossibleMove = moves;
