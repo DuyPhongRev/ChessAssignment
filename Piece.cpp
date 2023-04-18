@@ -131,7 +131,7 @@ bool Piece::getNotMove(){
 }
 
 void Piece::setEnpassant(){
-    mValidEnpassant= true;
+    mValidEnpassant = true;
 }
 
 bool Piece::getEnpassant()

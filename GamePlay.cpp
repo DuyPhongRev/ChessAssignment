@@ -216,14 +216,67 @@ void GamePlay::startPos(){
 
 int GamePlay::evaluate(Piece *tmpField[8][8])
 {
-    int score_base[8][8] = {0, 1, 3, 4, 4, 3, 1, 0,
-                            1, 3, 4, 5, 5, 4, 3, 1,
-                            1, 4, 5, 7, 7, 5, 4, 1,
-                            2, 5, 7, 9, 9, 7, 5, 2,
-                            2, 5, 7, 9, 9, 7, 5, 2,
-                            1, 4, 5, 7, 7, 5, 4, 1,
-                            1, 3, 4, 5, 5, 4, 3, 1,
-                            0, 1, 3, 4, 4, 3, 1, 0};
+    int pawnTable[8][8] =   {
+                            {60, 60, 60, 60, 60, 60, 60, 60},
+                            {50, 50, 50, 50, 50, 50, 50, 50},
+                            {10, 10, 20, 30, 30, 20, 10, 10},
+                            { 5,  5, 10, 25, 25, 10,  5,  5},
+                            { 0,  0,  0, 20, 20,  0,  0,  0},
+                            { 5, -5,-10,  0,  0,-10, -5,  5},
+                            { 5, 10, 10,-20,-20, 10, 10,  5},
+                            { 0,  0,  0,  0,  0,  0,  0,  0}
+                            };
+    int knightTable[8][8] = {
+                            {-50,-40,-30,-30,-30,-30,-40,-50},
+                            {-40,-20,  0,  0,  0,  0,-20,-40},
+                            {-30,  0, 10, 15, 15, 10,  0,-30},
+                            {-30,  5, 15, 20, 20, 15,  5,-30},
+                            {-30,  0, 15, 20, 20, 15,  0,-30},
+                            {-30,  5, 10, 15, 15, 10,  5,-30},
+                            {-40,-20,  0,  5,  5,  0,-20,-40},
+                            {-50,-40,-30,-30,-30,-30,-40,-50}
+                            };
+    int bishopTable[8][8] = {
+                            {-20,-10,-10,-10,-10,-10,-10,-20},
+                            {-10,  0,  0,  0,  0,  0,  0,-10},
+                            {-10,  0,  5, 10, 10,  5,  0,-10},
+                            {-10,  5,  5, 10, 10,  5,  5,-10},
+                            {-10,  0, 10, 10, 10, 10,  0,-10},
+                            {-10, 10, 10, 10, 10, 10, 10,-10},
+                            {-10,  5,  0,  0,  0,  0,  5,-10},
+                            {-20,-10,-10,-10,-10,-10,-10,-20}
+                            };
+    int rookTable[8][8] =   {
+                            {  0,  0,  5, 10, 10,  5,  0,  0 },
+                            { -5,  0,  0,  0,  0,  0,  0, -5 },
+                            { -5,  0,  0,  0,  0,  0,  0, -5 },
+                            { -5,  0,  0,  0,  0,  0,  0, -5 },
+                            { -5,  0,  0,  0,  0,  0,  0, -5 },
+                            { -5,  0,  0,  0,  0,  0,  0, -5 },
+                            {  5, 10, 10, 10, 10, 10, 10,  5 },
+                            {  0,  0,  5, 10, 10,  5,  0,  0 }
+                            };
+    int queenTable[8][8] =  {
+                            {-20,-10,-10, -5, -5,-10,-10,-20},
+                            {-10,  0,  0,  0,  0,  0,  0,-10},
+                            {-10,  0,  5,  5,  5,  5,  0,-10},
+                            { -5,  0,  5,  5,  5,  5,  0, -5},
+                            { -5,  0,  5,  5,  5,  5,  0, -5},
+                            {-10,  0,  5,  5,  5,  5,  0,-10},
+                            {-10,  0,  0,  0,  0,  0,  0,-10},
+                            {-20,-10,-10, -5, -5,-10,-10,-20}
+                            };
+    int kingTable[8][8] =   {
+                            {-20,-10, 10, -5, -5,-10, 10,-20},
+                            {-10,  0,  0,  0,  0,  0,  0,-10},
+                            {-10,  0,  5,  5,  5,  5,  0,-10},
+                            { -5,  0,  5,  5,  5,  5,  0, -5},
+                            { -5,  0,  5,  5,  5,  5,  0, -5},
+                            {-10,  0,  5,  5,  5,  5,  0,-10},
+                            {-10,  0,  0,  0,  0,  0,  0,-10},
+                            {-20,-10, 10, -5, -5,-10, 10,-20}
+                            };
+
     int score_white = 0;
     int score_black = 0;
     for(int x = 0; x < 8; x++)
@@ -233,33 +286,48 @@ int GamePlay::evaluate(Piece *tmpField[8][8])
 
             if(tmpField[x][y] != NULL)
             {
-                int score = 0;
                 switch(tmpField[x][y]->getType())
                 {
                     case Piece::PAWN:
-                        score = 10;
+                        if(tmpField[x][y]->getTeam() == Piece::WHITE) score_white += 100 + pawnTable[x][y];
+                        else score_black += 100 + pawnTable[7-y][x];
                         break;
                     case Piece::KNIGHT:
-                        score = 30;
+                        if(tmpField[x][y]->getTeam() == Piece::WHITE) score_white += 320 + knightTable[x][y];
+                        else score_black += 320 + knightTable[7-y][x];
                         break;
                     case Piece::BISHOP:
-                        score = 30;
+                        if(tmpField[x][y]->getTeam() == Piece::WHITE) score_white += 330 + knightTable[x][y];
+                        else score_black += 330 + bishopTable[7-y][x];
                         break;
                     case Piece::ROOK:
-                        score = 50;
+                        if(tmpField[x][y]->getTeam() == Piece::WHITE) score_white += 500 + rookTable[x][y];
+                        else score_black += 500 + rookTable[7-y][x];
                         break;
                     case Piece::QUEEN:
-                        score = 90;
+                        if(tmpField[x][y]->getTeam() == Piece::WHITE) score_white += 900 + queenTable[x][y];
+                        else score_black += 900 + queenTable[7-y][x];
                         break;
                     default:
-                        score = 10000;
+                        if(tmpField[x][y]->getTeam() == Piece::WHITE)
+                        {
+                            kw->setCheck(tmpField, x, y, Piece::WHITE);
+                            if(kw->getCheck()) score_black += 50;
+                            score_white += 10000 + kingTable[x][y];
+                        }
+                        else
+                        {
+                            kb->setCheck(tmpField, x, y, Piece::BLACK);
+                            if(kb->getCheck()) score_white += 50;
+                            score_black += 10000 + kingTable[7-y][x];
+                        }
                         break;
                 }
-                if(tmpField[x][y]->getTeam() == Piece::WHITE) score_white += score + score_base[x][y];
-                else score_black += score + score_base[x][y];
             }
         }
     }
+
+
     return score_white - score_black;
 }
 
@@ -373,11 +441,16 @@ void GamePlay::handle(){
     if(MoveTurn == Piece::BLACK)
     {
         alphaBetaPrunning(field, mDepth, INT_MIN, INT_MAX, false);
-        //cout << xStart << "  " << yStart;
-        if(field[xStart][yStart] != NULL)field[xStart][yStart]->PieceMove(pair<int, int>(xEnd, yEnd), field);
-        changeMoveTurn();
+        field[xStart][yStart]->calcPossibleMoves(field, xStart, yStart);
+        if(field[xStart][yStart]->isValidMove(xEnd, yEnd))
+        {
+            clickedOn = field[xStart][yStart];
+            field[xStart][yStart]->PieceMove(pair<int, int>(xEnd, yEnd), field);
+            specificMove();
+            Movement = true;
+            clickedOn = NULL;
+        }
     }
-
     SDL_WaitEvent(&event);
     if(event.type == SDL_QUIT)
     {

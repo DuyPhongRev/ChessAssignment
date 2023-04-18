@@ -69,11 +69,11 @@ void Pawn::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0)
 //cerr << "check pawn4" << endl;
     if(mValidEnpassant)
     {
-        if(xPos + 1 <= 7 && field[xPos + 1][yPos] != NULL && field[xPos + 1][yPos]->getType() == PAWN && field[xPos + 1][yPos]->mEnpassanted)
+        if((yPos == 4 || yPos == 5) && xPos + 1 <= 7 && field[xPos + 1][yPos] != NULL && field[xPos + 1][yPos]->getType() == PAWN && field[xPos + 1][yPos]->mEnpassanted)
         {
             moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos + 1, yPos + dy, ENPASSANT), getOwnKing(field), field);
         }
-        if(xPos - 1 >= 0 && field[xPos - 1][yPos] != NULL && field[xPos - 1][yPos]->getType() == PAWN && field[xPos - 1][yPos]->mEnpassanted)
+        if((yPos == 4 || yPos == 5) && xPos - 1 >= 0 && field[xPos - 1][yPos] != NULL && field[xPos - 1][yPos]->getType() == PAWN && field[xPos - 1][yPos]->mEnpassanted)
         {
             moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos - 1, yPos + dy, ENPASSANT), getOwnKing(field), field);
         }
