@@ -22,7 +22,6 @@ Piece::Piece(Team team, PieceType piecetype, std::pair<int, int> pos){
     isDead = false;
     mNotMove = true;
     mValidEnpassant = false;
-    mEnpassanted = false;
     mMove = STATIONARY;
 }
 
@@ -49,16 +48,15 @@ void Piece::PieceMove(pair<int, int> pos, Piece *field[8][8]){
 }
 
 void Piece::declineEnpassant(Piece* field[8][8]){
-    mValidEnpassant = false;
     for(int x = 0; x < 8; x++)
     {
         for(int y = 0; y < 8; y++)
         {
             if(field[x][y] != NULL && field[x][y]->getTeam() == mTeam && field[x][y]->getType() == PAWN)
             {
-                if(field[x][y]->getEnpassant())
+                if(field[x][y]->mValidEnpassant)
                 {
-                    field[x][y]->mEnpassanted = false;
+                    field[x][y]->mValidEnpassant = false;
                 }
             }
         }
@@ -74,7 +72,7 @@ void Piece::cleanUp(){
 }
 
 vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, Piece::MoveType>> moveList, tuple<int, int, Piece::MoveType> singleMove, King *king, Piece *field[8][8]){
-    //cerr << "pushMove" << endl;
+    ////cerr << "pushMove" << endl;
     Piece *tmpField[8][8];
     for (int x = 0; x < 8; x++)
     {
@@ -84,7 +82,7 @@ vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, 
     tmpField[get<0>(singleMove)][get<1>(singleMove)] = tmpField[tmpPosX][tmpPosY];
 
     tmpField[tmpPosX][tmpPosY] = NULL;
-//cerr << "pushMove1" << endl;
+////cerr << "pushMove1" << endl;
 
     if(king->getPossition().first == tmpPosX && king->getPossition().second == tmpPosY)
     {
@@ -92,17 +90,17 @@ vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, 
     }else
     {
         //king->getOwnKing(tmpField);
-        //cerr << "prepare setcheck" << endl;
+        ////cerr << "prepare setcheck" << endl;
         king->setCheck(tmpField, king->getPossition().first, king->getPossition().second, king->getTeam());
     }
-//cerr << "pushMove2" << endl;
+////cerr << "pushMove2" << endl;
     if(!king->getCheck())
     {
         moveList.push_back(singleMove);
     }
-//cerr << "pushMove3" << endl;
+////cerr << "pushMove3" << endl;
     king->getCheck();
-//cerr << "pushMove4" << endl;
+////cerr << "pushMove4" << endl;
     return moveList;
 }
 

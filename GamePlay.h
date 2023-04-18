@@ -26,7 +26,7 @@ public:
 
     void renderBoard();
 
-    void renderText(string text, int x, int y, int sizeText);
+    void renderText(string text, int sizeText, int x, int y);
 
     void handle();
 
@@ -94,6 +94,7 @@ private:
     int yEnd;
     bool Capture;
     int mDepth;
+    int countMoveToDraw = 0;
     Piece *pw1 = NULL;
     Piece *pw2 = NULL;
     Piece *pw3 = NULL;

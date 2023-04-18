@@ -19,6 +19,7 @@ int main(int argc, char* argv[])
             if(!chess->running()) break;
         }
     }
-    chess->clean();
+    SDL_Delay(5000)
+;    chess->clean();
     return 0;
 }

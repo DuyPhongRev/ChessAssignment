@@ -264,14 +264,14 @@
 1681441637 c:\chess\assignment\bishop.h
 	"Piece.h"
 
-1681442335 c:\chess\assignment\piece.h
+1681815650 c:\chess\assignment\piece.h
 	"SDL.h"
 	"SDL_image.h"
 	<utility>
 	<vector>
 	<tuple>
 
-1681726535 source:c:\chess\assignment\king.cpp
+1681831629 source:c:\chess\assignment\king.cpp
 	"King.h"
 	<iostream>
 	"Rook.h"
@@ -294,11 +294,11 @@
 	"Piece.h"
 	<tuple>
 
-1681405992 source:c:\chess\assignment\main.cpp
+1681818974 source:c:\chess\assignment\main.cpp
 	<iostream>
 	"GamePlay.h"
 
-1681719988 c:\chess\assignment\gameplay.h
+1681833433 c:\chess\assignment\gameplay.h
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -318,11 +318,11 @@
 1681441637 c:\chess\assignment\queen.h
 	"Piece.h"
 
-1681750348 source:c:\chess\assignment\pawn.cpp
+1681832243 source:c:\chess\assignment\pawn.cpp
 	"Pawn.h"
 	<iostream>
 
-1681749463 source:c:\chess\assignment\piece.cpp
+1681831629 source:c:\chess\assignment\piece.cpp
 	"Piece.h"
 	<iostream>
 	"King.h"
@@ -334,6 +334,6 @@
 	"Rook.h"
 	<iostream>
 
-1681793616 source:c:\chess\assignment\gameplay.cpp
+1681839366 source:c:\chess\assignment\gameplay.cpp
 	"GamePlay.h"
 

@@ -58,8 +58,8 @@ void King::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0)
 }
 
 void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
-    //cerr << "setcheck" << endl;
-    //if(field[xKing][yKing] == NULL) //cerr << "error here" << endl;
+    ////cerr << "setcheck" << endl;
+    //if(field[xKing][yKing] == NULL) ////cerr << "error here" << endl;
     bool check = false;
     for(int dx = 1; dx < 8; dx++)
     {
@@ -67,19 +67,19 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
         {
             if(field[dx + xKing][yKing] != NULL)
             {
-                //cerr << "here";
+                ////cerr << "here";
                 if(field[dx + xKing][yKing]->getTeam() != team)
                 {
-                    //cerr << "here3";
+                    ////cerr << "here3";
                     if(dx == 1 && field[dx + xKing][yKing]->getType() == KING)
                     {
                         check = true;
-                        ////cerr << "here1";
+                        //////cerr << "here1";
                     }
-                    //cerr << "here1";
+                    ////cerr << "here1";
                     if(field[dx + xKing][yKing]->getType() == QUEEN || field[dx + xKing][yKing]->getType() == ROOK)
                     {
-                        //cerr << "here2";
+                        ////cerr << "here2";
                         check = true;
                     }else break;
                 }else
@@ -89,7 +89,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-//cerr << "setcheck1" << endl;
+////cerr << "setcheck1" << endl;
     for(int dx = 1; dx < 8; dx++)
     {
         if(- dx + xKing >= 0)
@@ -111,7 +111,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-//cerr << "setcheck2" << endl;
+////cerr << "setcheck2" << endl;
     for (int dy = 1; dy < 8; dy++)
     {
         if(dy + yKing <= 7)
@@ -134,7 +134,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-//cerr << "setcheck3" << endl;
+////cerr << "setcheck3" << endl;
     for (int dy = 1; dy < 8; dy++)
     {
         if(- dy + yKing >= 0)
@@ -156,7 +156,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-//cerr << "setcheck4" << endl;
+////cerr << "setcheck4" << endl;
     for (int dz = 1; dz < 8; dz++)
     {
         if(dz + xKing <= 7 && dz + yKing <= 7)
@@ -175,7 +175,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-//cerr << "setcheck5" << endl;
+////cerr << "setcheck5" << endl;
     for (int dz = 1; dz < 8; dz++)
     {
         if(-dz + xKing >= 0 && -dz + yKing >= 0)
@@ -194,7 +194,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-//cerr << "setcheck6" << endl;
+////cerr << "setcheck6" << endl;
     for (int dz = 1; dz < 8; dz++)
     {
         if(-dz + xKing >= 0 && dz + yKing <= 7)
@@ -213,7 +213,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-//cerr << "setcheck7" << endl;
+////cerr << "setcheck7" << endl;
     for (int dz = 1; dz < 8; dz++)
     {
         if(dz + xKing <= 7 && -dz + yKing >= 0)
@@ -232,7 +232,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-//cerr << "setcheck8" << endl;
+////cerr << "setcheck8" << endl;
     for(int dx = -2; dx <= 2; dx += 4)
     {
         for (int dy = -1; dy <= 1; dy += 2)
@@ -249,7 +249,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-//cerr << "setcheck9" << endl;
+////cerr << "setcheck9" << endl;
     for(int dy = -2; dy <= 2; dy += 4)
     {
         for (int dx = -1; dx <= 1; dx += 2)
@@ -266,7 +266,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-//cerr << "setcheck10" << endl;
+////cerr << "setcheck10" << endl;
     for (int x = 0; x < 8; x++)
     {
         for (int y = 0; y < 8; y++)
@@ -285,7 +285,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-//cerr << "setcheck11" << endl;
+////cerr << "setcheck11" << endl;
     mCheck = check;
 }
 

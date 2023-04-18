@@ -15,8 +15,6 @@ class Piece
 public:
     bool isDead;
 
-    bool mEnpassanted;
-
     enum Team { BLACK, WHITE, NONE};
 
 	enum PieceType { PAWN, ROOK, KNIGHT, BISHOP, KING, QUEEN, EMPTY };

@@ -92,9 +92,7 @@ bool GamePlay::initWindow(){
     sStartGame = Mix_LoadWAV("sound/StartGame.mp3");
     sCastle = Mix_LoadWAV("sound/Castle.mp3");
     sCheck = Mix_LoadWAV("sound/Check.mp3");
-
     tFont = TTF_OpenFont("font/Silkscreen-Regular.ttf", 20);
-
     gameStart = true;
     currentMove = Piece::STATIONARY;
     return true;
@@ -153,14 +151,22 @@ void GamePlay::renderBoard(){
     }
 }
 
-void GamePlay::renderText(string text, int x, int y, int sizeText = 3){
+void GamePlay::renderText(string text, int sizeText = 3, int x = -1, int y = -1){
     SDL_Surface *tmpSurface = TTF_RenderText_Solid(tFont, text.c_str(), textColor);
     SDL_Texture *tmpTexture = SDL_CreateTextureFromSurface(renderer, tmpSurface);
     SDL_Rect desRect;
     desRect.h = tmpSurface->h * sizeText;
     desRect.w = tmpSurface->w * sizeText;
-    desRect.x = x;
-    desRect.y = y;
+    if(x < 0 && y < 0)
+    {
+        desRect.x = (WINDOW_WIDTH - desRect.w) / 2;
+        desRect.y = (WINDOW_HEIGHT - desRect.h) / 2;
+    }
+    else
+    {
+        desRect.x = x;
+        desRect.y = y;
+    }
     SDL_RenderCopy(renderer, tmpTexture, NULL, &desRect);
     SDL_FreeSurface(tmpSurface);
     SDL_RenderPresent(renderer);
@@ -217,73 +223,72 @@ void GamePlay::startPos(){
 int GamePlay::evaluate(Piece *tmpField[8][8])
 {
     int pawnTable[8][8] =   {
-                            {60, 60, 60, 60, 60, 60, 60, 60},
-                            {50, 50, 50, 50, 50, 50, 50, 50},
-                            {10, 10, 20, 30, 30, 20, 10, 10},
-                            { 5,  5, 10, 25, 25, 10,  5,  5},
-                            { 0,  0,  0, 20, 20,  0,  0,  0},
-                            { 5, -5,-10,  0,  0,-10, -5,  5},
-                            { 5, 10, 10,-20,-20, 10, 10,  5},
-                            { 0,  0,  0,  0,  0,  0,  0,  0}
+                             60, 60, 60, 60, 60, 60, 60, 60,
+                             50, 50, 50, 50, 50, 50, 50, 50,
+                             10, 10, 20, 30, 30, 20, 10, 10,
+                              5,  5, 10, 25, 25, 10,  5,  5,
+                              0,  0,  0, 20, 20,  0,  0,  0,
+                              5, -5,-10,  0,  0,-10, -5,  5,
+                              5, 10, 10,-20,-20, 10, 10,  5,
+                              0,  0,  0,  0,  0,  0,  0,  0
                             };
     int knightTable[8][8] = {
-                            {-50,-40,-30,-30,-30,-30,-40,-50},
-                            {-40,-20,  0,  0,  0,  0,-20,-40},
-                            {-30,  0, 10, 15, 15, 10,  0,-30},
-                            {-30,  5, 15, 20, 20, 15,  5,-30},
-                            {-30,  0, 15, 20, 20, 15,  0,-30},
-                            {-30,  5, 10, 15, 15, 10,  5,-30},
-                            {-40,-20,  0,  5,  5,  0,-20,-40},
-                            {-50,-40,-30,-30,-30,-30,-40,-50}
+                            -50,-40,-30,-30,-30,-30,-40,-50,
+                            -40,-20,  0,  0,  0,  0,-20,-40,
+                            -30,  0, 10, 15, 15, 10,  0,-30,
+                            -30,  5, 15, 20, 20, 15,  5,-30,
+                            -30,  0, 15, 20, 20, 15,  0,-30,
+                            -30,  5, 10, 15, 15, 10,  5,-30,
+                            -40,-20,  0,  5,  5,  0,-20,-40,
+                            -50,-40,-30,-30,-30,-30,-40,-50
                             };
     int bishopTable[8][8] = {
-                            {-20,-10,-10,-10,-10,-10,-10,-20},
-                            {-10,  0,  0,  0,  0,  0,  0,-10},
-                            {-10,  0,  5, 10, 10,  5,  0,-10},
-                            {-10,  5,  5, 10, 10,  5,  5,-10},
-                            {-10,  0, 10, 10, 10, 10,  0,-10},
-                            {-10, 10, 10, 10, 10, 10, 10,-10},
-                            {-10,  5,  0,  0,  0,  0,  5,-10},
-                            {-20,-10,-10,-10,-10,-10,-10,-20}
+                            -20,-10,-10,-10,-10,-10,-10,-20,
+                            -10,  0,  0,  0,  0,  0,  0,-10,
+                            -10,  0,  5, 10, 10,  5,  0,-10,
+                            -10,  5,  5, 10, 10,  5,  5,-10,
+                            -10,  0, 10, 10, 10, 10,  0,-10,
+                            -10, 10, 10, 10, 10, 10, 10,-10,
+                            -10,  5,  0,  0,  0,  0,  5,-10,
+                            -20,-10,-10,-10,-10,-10,-10,-20
                             };
     int rookTable[8][8] =   {
-                            {  0,  0,  5, 10, 10,  5,  0,  0 },
-                            { -5,  0,  0,  0,  0,  0,  0, -5 },
-                            { -5,  0,  0,  0,  0,  0,  0, -5 },
-                            { -5,  0,  0,  0,  0,  0,  0, -5 },
-                            { -5,  0,  0,  0,  0,  0,  0, -5 },
-                            { -5,  0,  0,  0,  0,  0,  0, -5 },
-                            {  5, 10, 10, 10, 10, 10, 10,  5 },
-                            {  0,  0,  5, 10, 10,  5,  0,  0 }
+                              0,  0,  5, 10, 10,  5,  0,  0,
+                             -5,  0,  0,  0,  0,  0,  0, -5,
+                             -5,  0,  0,  0,  0,  0,  0, -5,
+                             -5,  0,  0,  0,  0,  0,  0, -5,
+                             -5,  0,  0,  0,  0,  0,  0, -5,
+                             -5,  0,  0,  0,  0,  0,  0, -5,
+                              5, 10, 10, 10, 10, 10, 10,  5,
+                              0,  0,  5, 10, 10,  5,  0,  0
                             };
     int queenTable[8][8] =  {
-                            {-20,-10,-10, -5, -5,-10,-10,-20},
-                            {-10,  0,  0,  0,  0,  0,  0,-10},
-                            {-10,  0,  5,  5,  5,  5,  0,-10},
-                            { -5,  0,  5,  5,  5,  5,  0, -5},
-                            { -5,  0,  5,  5,  5,  5,  0, -5},
-                            {-10,  0,  5,  5,  5,  5,  0,-10},
-                            {-10,  0,  0,  0,  0,  0,  0,-10},
-                            {-20,-10,-10, -5, -5,-10,-10,-20}
+                            -20,-10,-10, -5, -5,-10,-10,-20,
+                            -10,  0,  0,  0,  0,  0,  0,-10,
+                            -10,  0,  5,  5,  5,  5,  0,-10,
+                             -5,  0,  5,  5,  5,  5,  0, -5,
+                             -5,  0,  5,  5,  5,  5,  0, -5,
+                            -10,  0,  5,  5,  5,  5,  0,-10,
+                            -10,  0,  0,  0,  0,  0,  0,-10,
+                            -20,-10,-10, -5, -5,-10,-10,-20
                             };
     int kingTable[8][8] =   {
-                            {-20,-10, 10, -5, -5,-10, 10,-20},
-                            {-10,  0,  0,  0,  0,  0,  0,-10},
-                            {-10,  0,  5,  5,  5,  5,  0,-10},
-                            { -5,  0,  5,  5,  5,  5,  0, -5},
-                            { -5,  0,  5,  5,  5,  5,  0, -5},
-                            {-10,  0,  5,  5,  5,  5,  0,-10},
-                            {-10,  0,  0,  0,  0,  0,  0,-10},
-                            {-20,-10, 10, -5, -5,-10, 10,-20}
+                            -30,-40,-40,-50,-50,-40,-40,-30,
+                            -30,-40,-40,-50,-50,-40,-40,-30,
+                            -30,-40,-40,-50,-50,-40,-40,-30,
+                            -30,-40,-40,-50,-50,-40,-40,-30,
+                            -20,-30,-30,-40,-40,-30,-30,-20,
+                            -10,-20,-20,-20,-20,-20,-20,-10,
+                             20, 20,  0,  0,  0,  0, 20, 20,
+                             20, 30, 10,  0,  0, 10, 30, 20
                             };
-
     int score_white = 0;
     int score_black = 0;
+    if(checkEndGame(tmpField, Piece::WHITE)) score_black += 20000;
     for(int x = 0; x < 8; x++)
     {
         for(int y = 0; y < 8; y++)
         {
-
             if(tmpField[x][y] != NULL)
             {
                 switch(tmpField[x][y]->getType())
@@ -312,7 +317,7 @@ int GamePlay::evaluate(Piece *tmpField[8][8])
                         if(tmpField[x][y]->getTeam() == Piece::WHITE)
                         {
                             kw->setCheck(tmpField, x, y, Piece::WHITE);
-                            if(kw->getCheck()) score_black += 50;
+                            if(kw->getCheck()) score_black += 99;
                             score_white += 10000 + kingTable[x][y];
                         }
                         else
@@ -389,7 +394,6 @@ int GamePlay::alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int be
     }
     else
     {
-        //cerr << depth << "den" << endl;
         int minValue = INT_MAX;
         for(int y = 0; y < 8; y++)
         {
@@ -417,7 +421,7 @@ int GamePlay::alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int be
                             yStart = y;
                             xEnd = get<0>(singleMove);
                             yEnd = get<1>(singleMove);
-                            ////cerr << value << " ";
+                            //cerr << value << " ";
                         }
                         minValue = min(value, minValue);
                         beta = min(value, beta);
@@ -437,10 +441,11 @@ int GamePlay::alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int be
 }
 
 void GamePlay::handle(){
-    mDepth = 3;
+    mDepth = 5;
     if(MoveTurn == Piece::BLACK)
     {
         alphaBetaPrunning(field, mDepth, INT_MIN, INT_MAX, false);
+        cerr << "done" << endl;
         field[xStart][yStart]->calcPossibleMoves(field, xStart, yStart);
         if(field[xStart][yStart]->isValidMove(xEnd, yEnd))
         {
@@ -489,6 +494,8 @@ void GamePlay::specificMove(){
     if(clickedOn->getMoveType() == Piece::CASTLE) castle();
     else if(clickedOn->getMoveType() == Piece::ENPASSANT) enpassant();
     else if(clickedOn->getMoveType() == Piece::PROMOTE) promote();
+    else if(clickedOn->getMoveType() == Piece::CAPTURE) countMoveToDraw = 0;
+    if(clickedOn->getType() == Piece::PAWN) countMoveToDraw = 0;
     clickedOn->declineEnpassant(field);
     sound(clickedOn->getMoveType());
 }
@@ -518,7 +525,12 @@ void GamePlay::enpassant(){
 }
 
 void GamePlay::promote(){
-    renderText("PICK YOUR PIECE", 100, 250);
+    if(MoveTurn == Piece::BLACK)
+    {
+        field[xEnd][yEnd] = new Queen(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+        return;
+    }
+    renderText("PICK YOUR PIECE", 3, 100, 250);
     SDL_Surface *tmpSurface = NULL;
     if(MoveTurn == Piece::BLACK) tmpSurface = IMG_Load("src/promoteBlack.png");
     else tmpSurface = IMG_Load("src/promoteWhite.png");
@@ -651,17 +663,26 @@ void GamePlay::sound(Piece::MoveType soundType){
 void GamePlay::update(){
     if(Movement)
     {
+        countMoveToDraw++;
         printCurrentMove();
         changeMoveTurn();
     }
+    kb->setCheck(field, kb->getPossition().first, kb->getPossition().second, Piece::BLACK);
+    kw->setCheck(field, kw->getPossition().first, kw->getPossition().second, Piece::WHITE);
     if(checkEndGame(field, MoveTurn))
     {
         isRunning = false;
-        if(MoveTurn == Piece::BLACK) renderText("WHITE IS WINNWER", 50, 300, 3);
-        else renderText("BLACK IS WINNWER", 50, 300, 3);
+        if(kb->getCheck()) renderText("WHITE WIN", 5);
+        else if(kw->getCheck()) renderText("BLACK WIN", 5);
+        else renderText("DRAW", 4);
         sound();
     }
-
+    if(countMoveToDraw == 100)
+    {
+        isRunning = false;
+        renderText("DRAW", 5);
+        sound();
+    }
 }
 
 void GamePlay::render(){
