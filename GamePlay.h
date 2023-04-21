@@ -5,6 +5,8 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
+#include <ctime>
+#include <cstdlib>
 #include "Piece.h"
 #include "Pawn.h"
 #include "Rook.h"
@@ -70,6 +72,7 @@ public:
 
     int alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int beta, bool maximizingPlayer);
 
+    void waitUntilKeyPress();
 private:
     SDL_Renderer *renderer = NULL;
     SDL_Window *window = NULL;

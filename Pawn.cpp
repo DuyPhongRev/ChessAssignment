@@ -17,22 +17,17 @@ Pawn::Pawn(Team team, std::pair<int, int> pos)
 
 void Pawn::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0)
 {
-    //cerr << "check pawn" << endl;
     tmpPosX = xPos;
     tmpPosY = yPos;
     vector<tuple<int, int, Piece::MoveType>> moves;
     if(yPos + dy >= 0 && yPos + dy <= 7 && field[xPos][yPos + dy] == NULL)
     {
-        //cerr << "this" << endl;
         if(yPos + dy == 0 || yPos + dy == 7) moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos, yPos + dy, PROMOTE), getOwnKing(field), field);
         else
         {
-            //cerr << "here" << endl;
             moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos, yPos + dy, NORMAL), getOwnKing(field), field);
-            //cerr << "right here" << endl;
         }
     }
-//cerr << "check pawn1" << endl;
     if(mNotMove && field[xPos][yPos + dy * 2] == NULL && field[xPos][yPos + dy] == NULL)
     {
         moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos, yPos + dy * 2, NORMAL), getOwnKing(field), field);
@@ -45,7 +40,6 @@ void Pawn::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0)
             field[xPos - 1][yPos + dy * 2]->setEnpassant();
         }
     }
-//cerr << "check pawn2" << endl;
     if(xPos + dy >= 0 && xPos + dy <= 7 && yPos + dy >= 0 && yPos + dy <= 7 && field[xPos + dy][yPos + dy] != NULL)
     {
         if(field[xPos + dy][yPos + dy]->getTeam() != mTeam)
@@ -54,7 +48,6 @@ void Pawn::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0)
             else moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos + dy, yPos + dy, CAPTURE), getOwnKing(field), field);
         }
     }
-//cerr << "check pawn3" << endl;
     if(xPos - dy <= 7 && xPos - dy >= 0 && yPos + dy >= 0 && yPos + dy <= 7 && field[xPos - dy][yPos + dy] != NULL)
     {
         if(field[xPos - dy][yPos + dy]->getTeam() != mTeam)
@@ -63,7 +56,6 @@ void Pawn::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0)
             else moves = pushMove(moves, tuple<int, int, Piece::MoveType>(xPos - dy, yPos + dy, CAPTURE), getOwnKing(field), field);
         }
     }
-//cerr << "check pawn4" << endl;
     if(mValidEnpassant)
     {
         if(mTeam == WHITE)

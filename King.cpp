@@ -58,8 +58,6 @@ void King::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0)
 }
 
 void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
-    ////cerr << "setcheck" << endl;
-    //if(field[xKing][yKing] == NULL) ////cerr << "error here" << endl;
     bool check = false;
     for(int dx = 1; dx < 8; dx++)
     {
@@ -67,19 +65,14 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
         {
             if(field[dx + xKing][yKing] != NULL)
             {
-                ////cerr << "here";
-                if(field[dx + xKing][yKing]->getTeam() != team)
+                if(field[dx + xKing][yKing]->getTeam() != mTeam)
                 {
-                    ////cerr << "here3";
                     if(dx == 1 && field[dx + xKing][yKing]->getType() == KING)
                     {
                         check = true;
-                        //////cerr << "here1";
                     }
-                    ////cerr << "here1";
                     if(field[dx + xKing][yKing]->getType() == QUEEN || field[dx + xKing][yKing]->getType() == ROOK)
                     {
-                        ////cerr << "here2";
                         check = true;
                     }else break;
                 }else
@@ -89,14 +82,13 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-////cerr << "setcheck1" << endl;
     for(int dx = 1; dx < 8; dx++)
     {
         if(- dx + xKing >= 0)
         {
             if(field[- dx + xKing][yKing] != NULL)
             {
-                if(field[- dx + xKing][yKing]->getTeam() != team)
+                if(field[- dx + xKing][yKing]->getTeam() != mTeam)
                 {
                     if(dx == 1 && field[- dx + xKing][yKing]->getType() == KING) check = true;
                     if(field[- dx + xKing][yKing]->getType() == QUEEN || field[- dx + xKing][yKing]->getType() == ROOK)
@@ -111,14 +103,13 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-////cerr << "setcheck2" << endl;
     for (int dy = 1; dy < 8; dy++)
     {
         if(dy + yKing <= 7)
         {
             if(field[xKing][dy + yKing] != NULL)
             {
-                if(field[xKing][dy + yKing]->getTeam() != team)
+                if(field[xKing][dy + yKing]->getTeam() != mTeam)
                 {
                     if(dy == 1 && field[xKing][dy + yKing]->getType() == KING) check = true;
                     if(field[xKing][dy + yKing]->getType() == QUEEN || field[xKing][dy + yKing]->getType() == ROOK)
@@ -134,14 +125,13 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-////cerr << "setcheck3" << endl;
     for (int dy = 1; dy < 8; dy++)
     {
         if(- dy + yKing >= 0)
         {
             if(field[xKing][- dy + yKing] != NULL)
             {
-                if(field[xKing][- dy + yKing]->getTeam() != team)
+                if(field[xKing][- dy + yKing]->getTeam() != mTeam)
                 {
                     if(dy == 1 && field[xKing][- dy + yKing]->getType() == KING) check = true;
                     if(field[xKing][- dy + yKing]->getType() == QUEEN || field[xKing][- dy + yKing]->getType() == ROOK)
@@ -156,14 +146,13 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-////cerr << "setcheck4" << endl;
     for (int dz = 1; dz < 8; dz++)
     {
         if(dz + xKing <= 7 && dz + yKing <= 7)
         {
             if(field[dz + xKing][dz + yKing] != NULL)
             {
-                if(field[dz + xKing][dz + yKing]->getTeam() != team)
+                if(field[dz + xKing][dz + yKing]->getTeam() != mTeam)
                 {
                     if(dz == 1 && field[dz + xKing][dz + yKing]->getType() == KING) check = true;
                     if(field[dz + xKing][dz + yKing]->getType() == QUEEN || field[dz + xKing][dz + yKing]->getType() == BISHOP) check = true;
@@ -175,14 +164,13 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-////cerr << "setcheck5" << endl;
     for (int dz = 1; dz < 8; dz++)
     {
         if(-dz + xKing >= 0 && -dz + yKing >= 0)
         {
             if(field[-dz + xKing][-dz + yKing] != NULL)
             {
-                if(field[-dz + xKing][-dz + yKing]->getTeam() != team)
+                if(field[-dz + xKing][-dz + yKing]->getTeam() != mTeam)
                 {
                     if(dz == 1 && field[-dz + xKing][-dz + yKing]->getType() == KING) check = true;
                     if(field[-dz + xKing][-dz + yKing]->getType() == QUEEN || field[-dz + xKing][-dz + yKing]->getType() == BISHOP) check = true;
@@ -194,14 +182,13 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-////cerr << "setcheck6" << endl;
     for (int dz = 1; dz < 8; dz++)
     {
         if(-dz + xKing >= 0 && dz + yKing <= 7)
         {
             if(field[-dz + xKing][dz + yKing] != NULL)
             {
-                if(field[-dz + xKing][dz + yKing]->getTeam() != team)
+                if(field[-dz + xKing][dz + yKing]->getTeam() != mTeam)
                 {
                     if(dz == 1 && field[-dz + xKing][dz + yKing]->getType() == KING) check = true;
                     if(field[-dz + xKing][dz + yKing]->getType() == QUEEN || field[-dz + xKing][dz + yKing]->getType() == BISHOP) check = true;
@@ -213,14 +200,13 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-////cerr << "setcheck7" << endl;
     for (int dz = 1; dz < 8; dz++)
     {
         if(dz + xKing <= 7 && -dz + yKing >= 0)
         {
             if(field[dz + xKing][-dz + yKing] != NULL)
             {
-                if(field[dz + xKing][-dz + yKing]->getTeam() != team)
+                if(field[dz + xKing][-dz + yKing]->getTeam() != mTeam)
                 {
                     if(dz == 1 && field[dz + xKing][-dz + yKing]->getType() == KING) check = true;
                     if(field[dz + xKing][-dz + yKing]->getType() == QUEEN || field[dz + xKing][-dz + yKing]->getType() == BISHOP) check = true;
@@ -232,7 +218,6 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-////cerr << "setcheck8" << endl;
     for(int dx = -2; dx <= 2; dx += 4)
     {
         for (int dy = -1; dy <= 1; dy += 2)
@@ -241,7 +226,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             {
                 if(field[dx + xKing][dy + yKing] != NULL)
                 {
-                    if(field[dx + xKing][dy + yKing]->getTeam() != team)
+                    if(field[dx + xKing][dy + yKing]->getTeam() != mTeam)
                     {
                         if(field[dx + xKing][dy + yKing]->getType() == KNIGHT) check = true;
                     }
@@ -249,7 +234,6 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-////cerr << "setcheck9" << endl;
     for(int dy = -2; dy <= 2; dy += 4)
     {
         for (int dx = -1; dx <= 1; dx += 2)
@@ -258,7 +242,7 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             {
                 if(field[dx + xKing][dy + yKing] != NULL)
                 {
-                    if(field[dx + xKing][dy + yKing]->getTeam() != team)
+                    if(field[dx + xKing][dy + yKing]->getTeam() != mTeam)
                     {
                         if(field[dx + xKing][dy + yKing]->getType() == KNIGHT) check = true;
                     }
@@ -266,14 +250,13 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-////cerr << "setcheck10" << endl;
     for (int x = 0; x < 8; x++)
     {
         for (int y = 0; y < 8; y++)
         {
-            if(field[x][y] != NULL && field[x][y]->getTeam() != team && field[x][y]->getType() == PAWN)
+            if(field[x][y] != NULL && field[x][y]->getTeam() != mTeam && field[x][y]->getType() == PAWN)
             {
-                if(team == WHITE)
+                if(mTeam == WHITE)
                 {
                     if(x + 1 == xKing&& y + 1 == yKing) check = true;
                     else if(x - 1 == xKing&& y + 1 == yKing) check = true;
@@ -285,7 +268,6 @@ void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
             }
         }
     }
-////cerr << "setcheck11" << endl;
     mCheck = check;
 }
 
