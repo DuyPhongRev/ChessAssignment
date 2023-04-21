@@ -13,8 +13,8 @@ Piece::Piece(Team team, PieceType piecetype, std::pair<int, int> pos){
     mPos = pos;
     desRect.h = WINDOW_WIDTH / 8;
     desRect.w = WINDOW_HEIGHT / 8;
-    desRect.x = (pos.first ) * WINDOW_WIDTH / 8;
-    desRect.y = (pos.second ) * WINDOW_HEIGHT / 8;
+    desRect.x = (pos.first ) * WINDOW_WIDTH / 8 + 25;
+    desRect.y = (pos.second ) * WINDOW_HEIGHT / 8 + 25;
     srcRect.x = 0;
     srcRect.y = 0;
     srcRect.h = 50;
@@ -32,8 +32,8 @@ void Piece::render(SDL_Renderer* renderer){
 }
 
 void Piece::PieceMove(pair<int, int> pos, Piece *field[8][8]){
-    desRect.x = (pos.first ) * WINDOW_WIDTH / 8;
-    desRect.y = (pos.second ) * WINDOW_HEIGHT / 8;
+    desRect.x = (pos.first ) * WINDOW_WIDTH / 8 + 25;
+    desRect.y = (pos.second ) * WINDOW_HEIGHT / 8 + 25;
     if(field[pos.first][pos.second] != NULL && field[pos.first][pos.second]->getTeam() != field[mPos.first][mPos.second]->getTeam())
     {
         field[pos.first][pos.second]->isDead = true;

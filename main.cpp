@@ -9,13 +9,12 @@ int main(int argc, char* argv[])
 
     if(chess->initWindow())
     {
-        chess->startPos();
         chess->sound();
         while(true)
         {
-            chess->handle();
-            chess->render();
-            chess->update();
+            chess->handleEvent();
+            chess->renderAll();
+            chess->updateConditional();
             if(!chess->running()) break;
         }
     }

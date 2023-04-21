@@ -20,9 +20,6 @@ class GamePlay
 public:
     GamePlay();
     ~GamePlay();
-    int WINDOW_HEIGHT;
-
-    int WINDOW_WIDTH;
 
     bool initWindow();
 
@@ -30,11 +27,11 @@ public:
 
     void renderText(string text, int sizeText, int x, int y);
 
-    void handle();
+    void handleEvent();
 
-    void update();
+    void updateConditional();
 
-    void render();
+    void renderAll();
 
     void clean();
 
@@ -73,7 +70,19 @@ public:
     int alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int beta, bool maximizingPlayer);
 
     void waitUntilKeyPress();
+
+    void renderPieces();
+
+    void manageAutoBot();
+
+    void holdPiece();
+
+    void movePiece();
+
+    void loadSoundEffect();
 private:
+    const int WINDOW_HEIGHT = 850;
+    const int WINDOW_WIDTH = 850;
     SDL_Renderer *renderer = NULL;
     SDL_Window *window = NULL;
     SDL_Event event;

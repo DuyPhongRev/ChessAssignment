@@ -46,20 +46,23 @@ GamePlay::GamePlay(){
 
     MoveTurn = Piece::WHITE;
     Movement = false;
+    gameStart = true;
+    currentMove = Piece::STATIONARY;
 }
 
 GamePlay::~GamePlay(){
     //dtor
 }
 
+
+//main function of GamePlay
 bool GamePlay::initWindow(){
-    WINDOW_HEIGHT = 800;
-    WINDOW_WIDTH = 800;
     if(SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
         cerr << "SDL INIT FAIL! ERROR LOG: " << SDL_GetError() << endl;
         return false;
-    }else
+    }
+    else
     {
         window = SDL_CreateWindow("CHESS GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
          if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
@@ -86,6 +89,109 @@ bool GamePlay::initWindow(){
             }
         }
     }
+    startPos();
+    loadSoundEffect();
+    return true;
+}
+
+void GamePlay::handleEvent(){
+    if(MoveTurn == Piece::BLACK)
+    {
+        manageAutoBot();
+    }
+    SDL_WaitEvent(&event);
+    switch(event.type)
+    {
+        case SDL_QUIT:
+            isRunning = false;
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+            holdPiece();
+            break;
+        case SDL_MOUSEBUTTONUP:
+            if(clickedOn != NULL && clickedOn->getTeam() == MoveTurn) movePiece();
+            break;
+        default:
+            break;
+    }
+}
+
+void GamePlay::sound(Piece::MoveType soundType){
+    if(gameStart)
+    {
+        Mix_PlayChannel(-1, sStartGame, 0);
+        gameStart = false;
+    }
+    if(soundType == Piece::CAPTURE)
+    {
+        Mix_PlayChannel(-1, sCapture, 0);
+    }
+    else if(soundType == Piece::CASTLE)
+    {
+        Mix_PlayChannel(-1, sCastle, 0);
+    }
+    else if(soundType == Piece::NORMAL)
+    {
+        Mix_PlayChannel(-1, sMove, 0);
+    }
+    else if(soundType == Piece::PROMOTE)
+    {
+        Mix_PlayChannel(-1, sCapture, 0);
+    }
+    if(checkEndGame(field, MoveTurn))
+    {
+        Mix_PlayChannel(-1, sNotify, 0);
+        SDL_Delay(1000);
+    }
+}
+
+void GamePlay::updateConditional(){
+    if(Movement)
+    {
+        countMoveToDraw++;
+        printCurrentMove();
+        changeMoveTurn();
+    }
+    kb->setCheck(field, kb->getPossition().first, kb->getPossition().second, Piece::BLACK);
+    kw->setCheck(field, kw->getPossition().first, kw->getPossition().second, Piece::WHITE);
+    if(checkEndGame(field, MoveTurn))
+    {
+        isRunning = false;
+        if(kb->getCheck()) renderText("WHITE WIN", 5, -1, -1);
+        else if(kw->getCheck()) renderText("BLACK WIN", 5, -1, -1);
+        else renderText("DRAW", 4, -1, -1);
+        sound();
+    }
+    if(countMoveToDraw == 100)
+    {
+        isRunning = false;
+        renderText("DRAW", 5, -1, -1);
+        sound();
+    }
+}
+
+void GamePlay::renderAll(){
+    renderBoard();
+    renderPieces();
+    SDL_RenderPresent(renderer);
+}
+
+
+void GamePlay::clean(){
+    Mix_FreeChunk(sMove);
+    Mix_FreeChunk(sCapture);
+    Mix_FreeChunk(sNotify);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    IMG_Quit();
+    Mix_Quit();
+    SDL_Quit();
+    cout << "GAME CLEANED!" << endl;
+}
+
+
+// function of initWindow
+void GamePlay::loadSoundEffect(){
     sMove = Mix_LoadWAV("sound/Move.mp3");
     sCapture = Mix_LoadWAV("sound/Capture.mp3");
     sNotify = Mix_LoadWAV("sound/Notify.mp3");
@@ -93,87 +199,6 @@ bool GamePlay::initWindow(){
     sCastle = Mix_LoadWAV("sound/Castle.mp3");
     sCheck = Mix_LoadWAV("sound/Check.mp3");
     tFont = TTF_OpenFont("font/Silkscreen-Regular.ttf", 20);
-    gameStart = true;
-    currentMove = Piece::STATIONARY;
-    return true;
-}
-
-void GamePlay::renderBoard(){
-    for (int x = 0; x < 8; x++)
-    {
-        for (int y = 0; y < 8; y++)
-        {
-            if((x + y) % 2 == 0)
-            {
-                if(clickedOn != NULL && clickedOn->isValidMove( x, y)) SDL_SetRenderDrawColor(renderer, 100, 196, 126, 1);
-                else SDL_SetRenderDrawColor(renderer, 177, 212, 182, 1);
-            }else
-            {
-                if(clickedOn != NULL && clickedOn->isValidMove( x, y)) SDL_SetRenderDrawColor(renderer, 0, 111, 95, 1);
-                else SDL_SetRenderDrawColor(renderer, 74, 118, 103, 1);
-            }
-            SDL_Rect site;
-            site.h = WINDOW_HEIGHT / 8;
-            site.w = WINDOW_WIDTH / 8;
-            site.x = x * WINDOW_WIDTH / 8;
-            site.y = y * WINDOW_HEIGHT / 8;
-            SDL_RenderFillRect(renderer, &site);
-        }
-    }
-    kw->setCheck(field, kw->getPossition().first, kw->getPossition().second, Piece::WHITE);
-    kb->setCheck(field, kb->getPossition().first, kb->getPossition().second, Piece::BLACK);
-    if(kw->getCheck())
-    {
-        if((kw->getPossition().first + kw->getPossition().second) % 2 == 0)
-        {
-            SDL_SetRenderDrawColor(renderer, 178, 98, 63, 1);
-        }else SDL_SetRenderDrawColor(renderer, 128, 55, 47, 1);
-        SDL_Rect site;
-        site.h = WINDOW_HEIGHT / 8;
-        site.w = WINDOW_WIDTH / 8;
-        site.x = kw->getPossition().first * WINDOW_WIDTH / 8;
-        site.y = kw->getPossition().second * WINDOW_HEIGHT / 8;
-        SDL_RenderFillRect(renderer, &site);
-    }
-    if(kb->getCheck())
-    {
-        if((kb->getPossition().first + kb->getPossition().second) % 2 == 0)
-        {
-            SDL_SetRenderDrawColor(renderer, 178, 98, 63, 1);
-        }else SDL_SetRenderDrawColor(renderer, 128, 55, 47, 1);
-        SDL_Rect site;
-        site.h = WINDOW_HEIGHT / 8;
-        site.w = WINDOW_WIDTH / 8;
-        site.x = kb->getPossition().first * WINDOW_WIDTH / 8;
-        site.y = kb->getPossition().second * WINDOW_HEIGHT / 8;
-        SDL_RenderFillRect(renderer, &site);
-    }
-}
-
-void GamePlay::renderText(string text, int sizeText = 3, int x = -1, int y = -1){
-    SDL_Surface *tmpSurface = TTF_RenderText_Solid(tFont, text.c_str(), textColor);
-    SDL_Texture *tmpTexture = SDL_CreateTextureFromSurface(renderer, tmpSurface);
-    SDL_Rect desRect;
-    desRect.h = tmpSurface->h * sizeText;
-    desRect.w = tmpSurface->w * sizeText;
-    if(x < 0 && y < 0)
-    {
-        desRect.x = (WINDOW_WIDTH - desRect.w) / 2;
-        desRect.y = (WINDOW_HEIGHT - desRect.h) / 2;
-    }
-    else
-    {
-        desRect.x = x;
-        desRect.y = y;
-    }
-    SDL_RenderCopy(renderer, tmpTexture, NULL, &desRect);
-    SDL_FreeSurface(tmpSurface);
-    SDL_RenderPresent(renderer);
-}
-
-void  GamePlay::changeMoveTurn(){
-    if(MoveTurn == Piece::BLACK) MoveTurn = Piece::WHITE;
-    else MoveTurn = Piece::BLACK;
 }
 
 void GamePlay::startPos(){
@@ -216,6 +241,146 @@ void GamePlay::startPos(){
         {
             field[x][y] = NULL;
         }
+    }
+}
+
+
+//function of handleEvent
+void GamePlay::holdPiece(){
+    SDL_GetMouseState(&xStart, &yStart);
+    xStart /= 100;
+    yStart /= 100;
+    if (field[xStart][yStart] != NULL && field[xStart][yStart]->getTeam() == MoveTurn)
+    {
+        clickedOn = field[xStart][yStart];
+        field[xStart][yStart]->calcPossibleMoves(field, xStart, yStart);
+    }
+}
+
+void GamePlay::movePiece(){
+    SDL_GetMouseState(&xEnd, &yEnd);
+    xEnd /= 100;
+    yEnd /= 100;
+    if(field[xStart][yStart]->isValidMove( xEnd, yEnd))
+    {
+        field[xStart][yStart]->PieceMove(pair<int, int>(xEnd, yEnd), field);
+        specificMove();
+        if(xStart != xEnd || yStart != yEnd)
+        {
+            Movement = true;
+            clickedOn = NULL;
+        }
+    }else clickedOn = NULL;
+}
+
+void GamePlay::specificMove(){
+    if(clickedOn->getMoveType() == Piece::CASTLE) castle();
+    else if(clickedOn->getMoveType() == Piece::ENPASSANT) enpassant();
+    else if(clickedOn->getMoveType() == Piece::PROMOTE) promote();
+    else if(clickedOn->getMoveType() == Piece::CAPTURE) countMoveToDraw = 0;
+    if(clickedOn->getType() == Piece::PAWN) countMoveToDraw = 0;
+    clickedOn->declineEnpassant(field);
+    sound(clickedOn->getMoveType());
+}
+
+void GamePlay::castle(){
+    if(xEnd == 6)
+    {
+        field[xEnd + 1][yEnd]->PieceMove(pair<int, int>(xEnd - 1,yEnd), field);
+    }
+    if(xEnd == 2)
+    {
+        field[xEnd - 2][yEnd]->PieceMove(pair<int, int>(xEnd + 1,yEnd), field);
+    }
+}
+
+void GamePlay::enpassant(){
+    if(clickedOn->getTeam() == Piece::WHITE && field[xEnd][yEnd + 1] != NULL)
+    {
+        field[xEnd][yEnd + 1]->isDead = true;
+        field[xEnd][yEnd + 1] = NULL;
+    }
+    else if(clickedOn->getTeam() == Piece::BLACK && field[xEnd][yEnd - 1] != NULL)
+    {
+        field[xEnd][yEnd - 1]->isDead = true;
+        field[xEnd][yEnd - 1] = NULL;
+    }
+}
+
+void GamePlay::promote(){
+    if(MoveTurn == Piece::BLACK)
+    {
+        field[xEnd][yEnd] = new Queen(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+        return;
+    }
+    renderText("PICK YOUR PIECE", 3, 100, 250);
+    SDL_Surface *tmpSurface = NULL;
+    if(MoveTurn == Piece::BLACK) tmpSurface = IMG_Load("src/promoteBlack.png");
+    else tmpSurface = IMG_Load("src/promoteWhite.png");
+    SDL_Texture *tmpTexture = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+    SDL_Rect desRect;
+    desRect.x = (WINDOW_WIDTH - 600) / 2;
+    desRect.y = (WINDOW_HEIGHT - 150) / 2;
+    desRect.h = 150;
+    desRect.w = 600;
+    SDL_RenderCopy(renderer, tmpTexture, NULL, &desRect);
+    SDL_FreeSurface(tmpSurface);
+    SDL_RenderPresent(renderer);
+    bool promoteSuccess = false;
+    while(!promoteSuccess)
+    {
+        SDL_WaitEvent(&event);
+        if(event.type == SDL_KEYDOWN)
+        {
+            switch(event.key.keysym.sym)
+            {
+                case SDLK_1:
+                    field[xEnd][yEnd] = new Knight(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+                    promoteSuccess = true;
+                    break;
+                case SDLK_2:
+                    field[xEnd][yEnd] = new Bishop(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+                    promoteSuccess = true;
+                    break;
+                case SDLK_3:
+                    field[xEnd][yEnd] = new Rook(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+                    promoteSuccess = true;
+                    break;
+                case SDLK_4:
+                    field[xEnd][yEnd] = new Queen(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+                    promoteSuccess = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    SDL_DestroyTexture(tmpTexture);
+}
+
+void GamePlay::waitUntilKeyPress(){
+    while(true)
+    {
+        SDL_WaitEvent(&event);
+        if(event.type == SDL_KEYDOWN || event.type == SDL_QUIT || event.type == SDL_MOUSEBUTTONDOWN) return;
+        SDL_Delay(100);
+    }
+}
+
+
+//function Auto Bot
+void GamePlay::manageAutoBot(){
+    mDepth = 5;
+    alphaBetaPrunning(field, mDepth, INT_MIN, INT_MAX, false);
+    //SDL_Delay(300);
+    field[xStart][yStart]->calcPossibleMoves(field, xStart, yStart);
+    if(field[xStart][yStart]->isValidMove(xEnd, yEnd))
+    {
+        clickedOn = field[xStart][yStart];
+        field[xStart][yStart]->PieceMove(pair<int, int>(xEnd, yEnd), field);
+        specificMove();
+        Movement = true;
+        clickedOn = NULL;
     }
 }
 
@@ -282,7 +447,6 @@ int GamePlay::evaluate(Piece *tmpField[8][8]){
                             };
     int score_white = 0;
     int score_black = 0;
-    if(checkEndGame(tmpField, Piece::WHITE)) score_black += 20000;
     for(int x = 0; x < 8; x++)
     {
         for(int y = 0; y < 8; y++)
@@ -439,138 +603,11 @@ int GamePlay::alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int be
     }
 }
 
-void GamePlay::handle(){
-    mDepth = 5;
-    if(MoveTurn == Piece::BLACK)
-    {
-        alphaBetaPrunning(field, mDepth, INT_MIN, INT_MAX, false);
-        field[xStart][yStart]->calcPossibleMoves(field, xStart, yStart);
-        if(field[xStart][yStart]->isValidMove(xEnd, yEnd))
-        {
-            clickedOn = field[xStart][yStart];
-            field[xStart][yStart]->PieceMove(pair<int, int>(xEnd, yEnd), field);
-            specificMove();
-            Movement = true;
-            clickedOn = NULL;
-        }
-    }
-    SDL_WaitEvent(&event);
-    if(event.type == SDL_QUIT)
-    {
-        isRunning = false;
-    }
-        if(event.type == SDL_MOUSEBUTTONDOWN)
-        {
-            SDL_GetMouseState(&xStart, &yStart);
-            xStart /= 100;
-            yStart /= 100;
-            if (field[xStart][yStart] != NULL && field[xStart][yStart]->getTeam() == MoveTurn)
-            {
-                clickedOn = field[xStart][yStart];
-                field[xStart][yStart]->calcPossibleMoves(field, xStart, yStart);
-            }
-        }
-        else if(event.type == SDL_MOUSEBUTTONUP && field[xStart][yStart] != NULL && field[xStart][yStart]->getTeam() == MoveTurn)
-        {
-            SDL_GetMouseState(&xEnd, &yEnd);
-            xEnd /= 100;
-            yEnd /= 100;
-            if(field[xStart][yStart]->isValidMove( xEnd, yEnd))
-            {
-                field[xStart][yStart]->PieceMove(pair<int, int>(xEnd, yEnd), field);
-                specificMove();
-                if(xStart != xEnd || yStart != yEnd)
-                {
-                    Movement = true;
-                    clickedOn = NULL;
-                }
-            }else clickedOn = NULL;
-        }
-}
 
-void GamePlay::specificMove(){
-    if(clickedOn->getMoveType() == Piece::CASTLE) castle();
-    else if(clickedOn->getMoveType() == Piece::ENPASSANT) enpassant();
-    else if(clickedOn->getMoveType() == Piece::PROMOTE) promote();
-    else if(clickedOn->getMoveType() == Piece::CAPTURE) countMoveToDraw = 0;
-    if(clickedOn->getType() == Piece::PAWN) countMoveToDraw = 0;
-    clickedOn->declineEnpassant(field);
-    sound(clickedOn->getMoveType());
-}
-
-void GamePlay::castle(){
-    if(xEnd == 6)
-    {
-        field[xEnd + 1][yEnd]->PieceMove(pair<int, int>(xEnd - 1,yEnd), field);
-    }
-    if(xEnd == 2)
-    {
-        field[xEnd - 2][yEnd]->PieceMove(pair<int, int>(xEnd + 1,yEnd), field);
-    }
-}
-
-void GamePlay::enpassant(){
-    if(clickedOn->getTeam() == Piece::WHITE && field[xEnd][yEnd + 1] != NULL)
-    {
-        field[xEnd][yEnd + 1]->isDead = true;
-        field[xEnd][yEnd + 1] = NULL;
-    }
-    else if(clickedOn->getTeam() == Piece::BLACK && field[xEnd][yEnd - 1] != NULL)
-    {
-        field[xEnd][yEnd - 1]->isDead = true;
-        field[xEnd][yEnd - 1] = NULL;
-    }
-}
-
-void GamePlay::promote(){
-    if(MoveTurn == Piece::BLACK)
-    {
-        field[xEnd][yEnd] = new Queen(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
-        return;
-    }
-    renderText("PICK YOUR PIECE", 3, 100, 250);
-    SDL_Surface *tmpSurface = NULL;
-    if(MoveTurn == Piece::BLACK) tmpSurface = IMG_Load("src/promoteBlack.png");
-    else tmpSurface = IMG_Load("src/promoteWhite.png");
-    SDL_Texture *tmpTexture = SDL_CreateTextureFromSurface(renderer, tmpSurface);
-    SDL_Rect desRect;
-    desRect.x = (WINDOW_WIDTH - 600) / 2;
-    desRect.y = (WINDOW_HEIGHT - 150) / 2;
-    desRect.h = 150;
-    desRect.w = 600;
-    SDL_RenderCopy(renderer, tmpTexture, NULL, &desRect);
-    SDL_FreeSurface(tmpSurface);
-    SDL_RenderPresent(renderer);
-    bool promoteSuccess = false;
-    while(!promoteSuccess)
-    {
-        SDL_WaitEvent(&event);
-        if(event.type == SDL_KEYDOWN)
-        {
-            switch(event.key.keysym.sym)
-            {
-                case SDLK_1:
-                    field[xEnd][yEnd] = new Knight(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
-                    promoteSuccess = true;
-                    break;
-                case SDLK_2:
-                    field[xEnd][yEnd] = new Bishop(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
-                    promoteSuccess = true;
-                    break;
-                case SDLK_3:
-                    field[xEnd][yEnd] = new Rook(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
-                    promoteSuccess = true;
-                    break;
-                case SDLK_4:
-                    field[xEnd][yEnd] = new Queen(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
-                    promoteSuccess = true;
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-    SDL_DestroyTexture(tmpTexture);
+// function of UpdateConditional
+void  GamePlay::changeMoveTurn(){
+    if(MoveTurn == Piece::BLACK) MoveTurn = Piece::WHITE;
+    else MoveTurn = Piece::BLACK;
 }
 
 void GamePlay::printCurrentMove(){
@@ -626,62 +663,86 @@ bool GamePlay::checkEndGame(Piece *tmpPiece[8][8], Piece::Team currentTeam){
     return true;
 }
 
-void GamePlay::sound(Piece::MoveType soundType){
-    if(gameStart)
-    {
-        Mix_PlayChannel(-1, sStartGame, 0);
-        gameStart = false;
-    }
-    if(soundType == Piece::CAPTURE)
-    {
-        Mix_PlayChannel(-1, sCapture, 0);
-    }
-    else if(soundType == Piece::CASTLE)
-    {
-        Mix_PlayChannel(-1, sCastle, 0);
-    }
-    else if(soundType == Piece::NORMAL)
-    {
-        Mix_PlayChannel(-1, sMove, 0);
-    }
-    else if(soundType == Piece::PROMOTE)
-    {
-        Mix_PlayChannel(-1, sCapture, 0);
-    }
-    if(checkEndGame(field, MoveTurn))
-    {
-        Mix_PlayChannel(-1, sNotify, 0);
-        SDL_Delay(1000);
-    }
+bool GamePlay::running(){
+    return isRunning;
 }
 
-void GamePlay::update(){
-    if(Movement)
+
+//function of renderAll
+void GamePlay::renderBoard(){
+    for (int x = 0; x < 8; x++)
     {
-        countMoveToDraw++;
-        printCurrentMove();
-        changeMoveTurn();
+        for (int y = 0; y < 8; y++)
+        {
+            if((x + y) % 2 == 0)
+            {
+                if(clickedOn != NULL && clickedOn->isValidMove( x, y)) SDL_SetRenderDrawColor(renderer, 100, 196, 126, 1);
+                else SDL_SetRenderDrawColor(renderer, 177, 212, 182, 1);
+            }else
+            {
+                if(clickedOn != NULL && clickedOn->isValidMove( x, y)) SDL_SetRenderDrawColor(renderer, 0, 111, 95, 1);
+                else SDL_SetRenderDrawColor(renderer, 74, 118, 103, 1);
+            }
+            SDL_Rect site;
+            site.h = (WINDOW_HEIGHT - 50) / 8;
+            site.w = (WINDOW_WIDTH - 50) / 8;
+            site.x = x * (WINDOW_WIDTH - 50) / 8 + 25;
+            site.y = y * (WINDOW_HEIGHT - 50) / 8 + 25;
+            SDL_RenderFillRect(renderer, &site);
+        }
     }
-    kb->setCheck(field, kb->getPossition().first, kb->getPossition().second, Piece::BLACK);
     kw->setCheck(field, kw->getPossition().first, kw->getPossition().second, Piece::WHITE);
-    if(checkEndGame(field, MoveTurn))
+    kb->setCheck(field, kb->getPossition().first, kb->getPossition().second, Piece::BLACK);
+    if(kw->getCheck())
     {
-        isRunning = false;
-        if(kb->getCheck()) renderText("WHITE WIN", 5);
-        else if(kw->getCheck()) renderText("BLACK WIN", 5);
-        else renderText("DRAW", 4);
-        sound();
+        if((kw->getPossition().first + kw->getPossition().second) % 2 == 0)
+        {
+            SDL_SetRenderDrawColor(renderer, 178, 98, 63, 1);
+        }else SDL_SetRenderDrawColor(renderer, 128, 55, 47, 1);
+        SDL_Rect site;
+        site.h = WINDOW_HEIGHT / 8;
+        site.w = WINDOW_WIDTH / 8;
+        site.x = kw->getPossition().first * WINDOW_WIDTH / 8;
+        site.y = kw->getPossition().second * WINDOW_HEIGHT / 8;
+        SDL_RenderFillRect(renderer, &site);
     }
-    if(countMoveToDraw == 100)
+    if(kb->getCheck())
     {
-        isRunning = false;
-        renderText("DRAW", 5);
-        sound();
+        if((kb->getPossition().first + kb->getPossition().second) % 2 == 0)
+        {
+            SDL_SetRenderDrawColor(renderer, 178, 98, 63, 1);
+        }else SDL_SetRenderDrawColor(renderer, 128, 55, 47, 1);
+        SDL_Rect site;
+        site.h = WINDOW_HEIGHT / 8;
+        site.w = WINDOW_WIDTH / 8;
+        site.x = kb->getPossition().first * WINDOW_WIDTH / 8;
+        site.y = kb->getPossition().second * WINDOW_HEIGHT / 8;
+        SDL_RenderFillRect(renderer, &site);
     }
 }
 
-void GamePlay::render(){
-    renderBoard();
+void GamePlay::renderText(string text, int sizeText = 3, int x = -1, int y = -1){
+    SDL_Surface *tmpSurface = TTF_RenderText_Solid(tFont, text.c_str(), textColor);
+    SDL_Texture *tmpTexture = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+    SDL_Rect desRect;
+    desRect.h = tmpSurface->h * sizeText;
+    desRect.w = tmpSurface->w * sizeText;
+    if(x < 0 && y < 0)
+    {
+        desRect.x = (WINDOW_WIDTH - desRect.w) / 2;
+        desRect.y = (WINDOW_HEIGHT - desRect.h) / 2;
+    }
+    else
+    {
+        desRect.x = x;
+        desRect.y = y;
+    }
+    SDL_RenderCopy(renderer, tmpTexture, NULL, &desRect);
+    SDL_FreeSurface(tmpSurface);
+    SDL_RenderPresent(renderer);
+}
+
+void GamePlay::renderPieces(){
     for(int x = 0; x < 8; x++)
     {
         for(int y = 0; y < 8; y++)
@@ -689,30 +750,5 @@ void GamePlay::render(){
             if(field[x][y] != NULL && !field[x][y]->isDead) field[x][y]->render(renderer);
         }
     }
-    SDL_RenderPresent(renderer);
 }
 
-bool GamePlay::running(){
-    return isRunning;
-}
-
-void GamePlay::waitUntilKeyPress(){
-    while(true)
-    {
-        SDL_WaitEvent(&event);
-        if(event.type == SDL_KEYDOWN || event.type == SDL_QUIT) return;
-        SDL_Delay(100);
-    }
-}
-
-void GamePlay::clean(){
-    Mix_FreeChunk(sMove);
-    Mix_FreeChunk(sCapture);
-    Mix_FreeChunk(sNotify);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    IMG_Quit();
-    Mix_Quit();
-    SDL_Quit();
-    cout << "GAME CLEANED!" << endl;
-}
