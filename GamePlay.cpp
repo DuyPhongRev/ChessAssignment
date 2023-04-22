@@ -3,7 +3,6 @@
 using namespace std;
 
 GamePlay::GamePlay(){
-    isRunning = true;
     xStart = -1;
     yStart = -1;
     xEnd = -1;
@@ -44,10 +43,25 @@ GamePlay::GamePlay(){
     bb1 = new Bishop(Bishop::BLACK, pair<int, int>(2,0));
     bb2 = new Bishop(Bishop::BLACK, pair<int, int>(5,0));
 
+    border = IMG_Load("src/border.png");
+    menu = IMG_Load("src/menu.png");
+    playButton = IMG_Load("src/playbutton.png");
+    musicButton = IMG_Load("src/musicbutton.png");
+    musicButtonOff = IMG_Load("src/musicbuttonoff.png");
+    exitButton = IMG_Load("src/exitbutton.png");
+    playButtonInside = IMG_Load("src/playbuttoninside.png");
+    musicButtonInside = IMG_Load("src/musicbuttoninside.png");
+    exitButtonInside = IMG_Load("src/exitbuttoninside.png");
+    musicButtonOffInside = IMG_Load("src/musicbuttonoffinside.png");
     MoveTurn = Piece::WHITE;
     Movement = false;
     gameStart = true;
+    quitMenu = false;
+    insideExit = false;
+    insideMusic = false;
+    insidePlay = false;
     currentMove = Piece::STATIONARY;
+    quitMenu = false;
 }
 
 GamePlay::~GamePlay(){
@@ -91,11 +105,14 @@ bool GamePlay::initWindow(){
     }
     startPos();
     loadSoundEffect();
+    sBackground = Mix_LoadMUS("sound/back.mp3");
+    Mix_PlayMusic( sBackground, -1 );
+    turnOnMusic = true;
     return true;
 }
 
 void GamePlay::handleEvent(){
-    if(MoveTurn == Piece::BLACK)
+    if(isOnePlayer && MoveTurn == Piece::BLACK)
     {
         manageAutoBot();
     }
@@ -157,15 +174,28 @@ void GamePlay::updateConditional(){
     if(checkEndGame(field, MoveTurn))
     {
         isRunning = false;
-        if(kb->getCheck()) renderText("WHITE WIN", 5, -1, -1);
-        else if(kw->getCheck()) renderText("BLACK WIN", 5, -1, -1);
-        else renderText("DRAW", 4, -1, -1);
+        if(kb->getCheck())
+        {
+            renderText("WHITE WIN", 5, -1, -1);
+            renderText("-Press any key back to menu-", 2, -1, 500);
+        }
+        else if(kw->getCheck())
+        {
+            renderText("BLACK WIN", 5, -1, -1);
+            renderText("-Press any key back to menu-", 2, -1, 500);
+        }
+        else
+        {
+            renderText("DRAW", 4, -1, -1);
+            renderText("-Press any key back to menu-", 2, -1, 500);
+        }
         sound();
     }
     if(countMoveToDraw == 100)
     {
         isRunning = false;
         renderText("DRAW", 5, -1, -1);
+        renderText("-Press any key back to menu-", 2, -1, 500);
         sound();
     }
 }
@@ -175,7 +205,6 @@ void GamePlay::renderAll(){
     renderPieces();
     SDL_RenderPresent(renderer);
 }
-
 
 void GamePlay::clean(){
     Mix_FreeChunk(sMove);
@@ -248,6 +277,8 @@ void GamePlay::startPos(){
 //function of handleEvent
 void GamePlay::holdPiece(){
     SDL_GetMouseState(&xStart, &yStart);
+    xStart -= 40;
+    yStart -= 40;
     xStart /= 100;
     yStart /= 100;
     if (field[xStart][yStart] != NULL && field[xStart][yStart]->getTeam() == MoveTurn)
@@ -259,6 +290,8 @@ void GamePlay::holdPiece(){
 
 void GamePlay::movePiece(){
     SDL_GetMouseState(&xEnd, &yEnd);
+    xEnd -= 40;
+    yEnd -= 40;
     xEnd /= 100;
     yEnd /= 100;
     if(field[xStart][yStart]->isValidMove( xEnd, yEnd))
@@ -297,12 +330,12 @@ void GamePlay::castle(){
 void GamePlay::enpassant(){
     if(clickedOn->getTeam() == Piece::WHITE && field[xEnd][yEnd + 1] != NULL)
     {
-        field[xEnd][yEnd + 1]->isDead = true;
+        field[xEnd][yEnd + 1]->setDeadPiece();
         field[xEnd][yEnd + 1] = NULL;
     }
     else if(clickedOn->getTeam() == Piece::BLACK && field[xEnd][yEnd - 1] != NULL)
     {
-        field[xEnd][yEnd - 1]->isDead = true;
+        field[xEnd][yEnd - 1]->setDeadPiece();
         field[xEnd][yEnd - 1] = NULL;
     }
 }
@@ -363,14 +396,13 @@ void GamePlay::waitUntilKeyPress(){
     {
         SDL_WaitEvent(&event);
         if(event.type == SDL_KEYDOWN || event.type == SDL_QUIT || event.type == SDL_MOUSEBUTTONDOWN) return;
-        SDL_Delay(100);
     }
 }
 
 
 //function Auto Bot
 void GamePlay::manageAutoBot(){
-    mDepth = 5;
+    mDepth = 3;
     alphaBetaPrunning(field, mDepth, INT_MIN, INT_MAX, false);
     //SDL_Delay(300);
     field[xStart][yStart]->calcPossibleMoves(field, xStart, yStart);
@@ -385,6 +417,7 @@ void GamePlay::manageAutoBot(){
 }
 
 int GamePlay::evaluate(Piece *tmpField[8][8]){
+    //if(checkEndGame(tmpField, Piece::WHITE)) return 500000;
     int pawnTable[8][8] =   {
                              60, 60, 60, 60, 60, 60, 60, 60,
                              50, 50, 50, 50, 50, 50, 50, 50,
@@ -443,7 +476,7 @@ int GamePlay::evaluate(Piece *tmpField[8][8]){
                             -20,-30,-30,-40,-40,-30,-30,-20,
                             -10,-20,-20,-20,-20,-20,-20,-10,
                              20, 20,  0,  0,  0,  0, 20, 20,
-                             20, 30, 10,  0,  0, 10, 30, 20
+                             20, 30,  0,  0,  0,  0, 30, 20
                             };
     int score_white = 0;
     int score_black = 0;
@@ -511,9 +544,9 @@ int GamePlay::alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int be
     if(depth == 0) return evaluate(tmpField);
     if(maximizingPlayer)
     {
-        if(checkEndGame(tmpField, Piece::BLACK))
+        if(checkEndGame(tmpField, Piece::WHITE))
         {
-            return 500000;
+            return -500000;
         }
         int maxValue = INT_MIN;
         for(int x = 0; x < 8; x++)
@@ -534,7 +567,7 @@ int GamePlay::alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int be
                         tmpField[x][y] = NULL;
                         int value = alphaBetaPrunning(tmpField, depth-1, alpha, beta, false);
                         maxValue = max(value, maxValue);
-                        alpha = max(maxValue, alpha);
+                        alpha = max(value, alpha);
                         tmpField[x][y] = tmp1;
                         tmpField[get<0>(singleMove)][get<1>(singleMove)] = tmp2;
                     }
@@ -549,9 +582,9 @@ int GamePlay::alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int be
     }
     else
     {
-        if(checkEndGame(tmpField, Piece::WHITE))
+        if(checkEndGame(tmpField, Piece::BLACK))
         {
-            return -500000;
+            return 500000;
         }
         int minValue = INT_MAX;
         for(int y = 0; y < 8; y++)
@@ -588,7 +621,7 @@ int GamePlay::alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int be
                             }
                         }
                         minValue = min(value, minValue);
-                        beta = min(minValue, beta);
+                        beta = min(value, beta);
                         tmpField[x][y] = tmp1;
                         tmpField[get<0>(singleMove)][get<1>(singleMove)] = tmp2;
                     }
@@ -670,6 +703,7 @@ bool GamePlay::running(){
 
 //function of renderAll
 void GamePlay::renderBoard(){
+    loadTexture(border, NULL, NULL);
     for (int x = 0; x < 8; x++)
     {
         for (int y = 0; y < 8; y++)
@@ -684,10 +718,10 @@ void GamePlay::renderBoard(){
                 else SDL_SetRenderDrawColor(renderer, 74, 118, 103, 1);
             }
             SDL_Rect site;
-            site.h = (WINDOW_HEIGHT - 50) / 8;
-            site.w = (WINDOW_WIDTH - 50) / 8;
-            site.x = x * (WINDOW_WIDTH - 50) / 8 + 25;
-            site.y = y * (WINDOW_HEIGHT - 50) / 8 + 25;
+            site.h = 100;
+            site.w = 100;
+            site.x = x * 100 + 40;
+            site.y = y * 100 + 40;
             SDL_RenderFillRect(renderer, &site);
         }
     }
@@ -700,10 +734,10 @@ void GamePlay::renderBoard(){
             SDL_SetRenderDrawColor(renderer, 178, 98, 63, 1);
         }else SDL_SetRenderDrawColor(renderer, 128, 55, 47, 1);
         SDL_Rect site;
-        site.h = WINDOW_HEIGHT / 8;
-        site.w = WINDOW_WIDTH / 8;
-        site.x = kw->getPossition().first * WINDOW_WIDTH / 8;
-        site.y = kw->getPossition().second * WINDOW_HEIGHT / 8;
+        site.h = 100;
+        site.w = 100;
+        site.x = kw->getPossition().first * 100 + 40;
+        site.y = kw->getPossition().second * 100 + 40;
         SDL_RenderFillRect(renderer, &site);
     }
     if(kb->getCheck())
@@ -713,10 +747,10 @@ void GamePlay::renderBoard(){
             SDL_SetRenderDrawColor(renderer, 178, 98, 63, 1);
         }else SDL_SetRenderDrawColor(renderer, 128, 55, 47, 1);
         SDL_Rect site;
-        site.h = WINDOW_HEIGHT / 8;
-        site.w = WINDOW_WIDTH / 8;
-        site.x = kb->getPossition().first * WINDOW_WIDTH / 8;
-        site.y = kb->getPossition().second * WINDOW_HEIGHT / 8;
+        site.h = 100;
+        site.w = 100;
+        site.x = kb->getPossition().first * 100 + 40;
+        site.y = kb->getPossition().second * 100 + 40;
         SDL_RenderFillRect(renderer, &site);
     }
 }
@@ -727,14 +761,21 @@ void GamePlay::renderText(string text, int sizeText = 3, int x = -1, int y = -1)
     SDL_Rect desRect;
     desRect.h = tmpSurface->h * sizeText;
     desRect.w = tmpSurface->w * sizeText;
-    if(x < 0 && y < 0)
+
+    if(x < 0)
     {
         desRect.x = (WINDOW_WIDTH - desRect.w) / 2;
-        desRect.y = (WINDOW_HEIGHT - desRect.h) / 2;
     }
     else
     {
         desRect.x = x;
+    }
+    if(y < 0)
+    {
+        desRect.y = (WINDOW_HEIGHT - desRect.h) / 2;
+    }
+    else
+    {
         desRect.y = y;
     }
     SDL_RenderCopy(renderer, tmpTexture, NULL, &desRect);
@@ -747,8 +788,165 @@ void GamePlay::renderPieces(){
     {
         for(int y = 0; y < 8; y++)
         {
-            if(field[x][y] != NULL && !field[x][y]->isDead) field[x][y]->render(renderer);
+            if(field[x][y] != NULL && !field[x][y]->getDeadPiece()) field[x][y]->render(renderer);
         }
     }
 }
 
+void GamePlay::loadTexture(SDL_Surface *&surface, SDL_Rect *srcRec, SDL_Rect *desRec)
+{
+    SDL_Texture *tmpTexture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_RenderCopy(renderer, tmpTexture, srcRec, desRec);
+    SDL_DestroyTexture(tmpTexture);
+}
+
+void GamePlay::menuGame(){
+    loadTexture(menu, NULL, NULL);
+    SDL_Rect desRect;
+    desRect.w = 100;
+    desRect.h = 100;
+    desRect.x = 390;
+    SDL_GetMouseState(&xStart, &yStart);
+    insidePlay = false;
+    insideMusic = false;
+    insideExit = false;
+    if(yStart > 470 && yStart < 530 && xStart > 390 && xStart < 490)
+    {
+        insidePlay = true;
+    }
+    else if(yStart > 570 && yStart < 630 && xStart > 390 && xStart < 490)
+    {
+        insideMusic = true;
+    }
+    else if(yStart > 670 && yStart < 730 && xStart > 390 && xStart < 490)
+    {
+        insideExit = true;
+    }else
+    {
+        desRect.y = 450;
+        loadTexture(playButton, NULL, &desRect);
+        desRect.y = 550;
+        loadTexture(musicButton, NULL, &desRect);
+        desRect.y = 650;
+        loadTexture(exitButton, NULL, &desRect);
+    }
+    SDL_WaitEvent(&event);
+    switch(event.type)
+    {
+        case SDL_QUIT:
+            isRunning = false;
+            quitMenu = true;
+        case SDL_MOUSEMOTION:
+            desRect.y = 450;
+            if(insidePlay) loadTexture(playButtonInside, NULL, &desRect);
+            else loadTexture(playButton, NULL, &desRect);
+
+            desRect.y = 550;
+            if(insideMusic)
+            {
+                if(turnOnMusic) loadTexture(musicButtonInside, NULL, &desRect);
+                else loadTexture(musicButtonOffInside, NULL, &desRect);
+            }
+            else
+            {
+                if(turnOnMusic) loadTexture(musicButton, NULL, &desRect);
+                else loadTexture(musicButtonOff, NULL, &desRect);
+            }
+
+            desRect.y = 650;
+            if(insideExit) loadTexture(exitButtonInside, NULL, &desRect);
+            else loadTexture(exitButton, NULL, &desRect);
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+            if(insidePlay)
+            {
+                isRunning = true;
+                quitMenu = true;
+            }
+            else if(insideMusic)
+            {
+                if(!Mix_PlayingMusic())
+                    Mix_PlayMusic( sBackground, -1 );
+                else
+                {
+                    if( Mix_PausedMusic())
+                    {
+                        turnOnMusic = true;
+                        Mix_ResumeMusic();
+                    }
+                    else
+                    {
+                        turnOnMusic = false;
+                        Mix_PauseMusic();
+                    }
+                }
+                desRect.y = 450;
+                if(insidePlay) loadTexture(playButtonInside, NULL, &desRect);
+                else loadTexture(playButton, NULL, &desRect);
+
+                desRect.y = 550;
+                if(insideMusic)
+                {
+                    if(turnOnMusic) loadTexture(musicButtonInside, NULL, &desRect);
+                    else loadTexture(musicButtonOffInside, NULL, &desRect);
+                }
+                else
+                {
+                    if(turnOnMusic) loadTexture(musicButton, NULL, &desRect);
+                    else loadTexture(musicButtonOff, NULL, &desRect);
+                }
+
+                desRect.y = 650;
+                if(insideExit) loadTexture(exitButtonInside, NULL, &desRect);
+                else loadTexture(exitButton, NULL, &desRect);
+            }
+            else if(insideExit)
+            {
+                quitMenu = true;
+                isRunning = false;
+            }else
+            {
+                desRect.y = 450;
+                if(insidePlay) loadTexture(playButtonInside, NULL, &desRect);
+                else loadTexture(playButton, NULL, &desRect);
+
+                desRect.y = 550;
+                if(insideMusic)
+                {
+                    if(turnOnMusic) loadTexture(musicButtonInside, NULL, &desRect);
+                    else loadTexture(musicButtonOffInside, NULL, &desRect);
+                }
+                else
+                {
+                    if(turnOnMusic) loadTexture(musicButton, NULL, &desRect);
+                    else loadTexture(musicButtonOff, NULL, &desRect);
+                }
+
+                desRect.y = 650;
+                if(insideExit) loadTexture(exitButtonInside, NULL, &desRect);
+                else loadTexture(exitButton, NULL, &desRect);
+            }
+            break;
+        default:
+            desRect.y = 450;
+            if(insidePlay) loadTexture(playButtonInside, NULL, &desRect);
+            else loadTexture(playButton, NULL, &desRect);
+
+            desRect.y = 550;
+            if(insideMusic)
+            {
+                if(turnOnMusic) loadTexture(musicButtonInside, NULL, &desRect);
+                else loadTexture(musicButtonOffInside, NULL, &desRect);
+            }
+            else
+            {
+                if(turnOnMusic) loadTexture(musicButton, NULL, &desRect);
+                else loadTexture(musicButtonOff, NULL, &desRect);
+            }
+
+            desRect.y = 650;
+            if(insideExit) loadTexture(exitButtonInside, NULL, &desRect);
+            else loadTexture(exitButton, NULL, &desRect);
+    }
+    SDL_RenderPresent(renderer);
+}

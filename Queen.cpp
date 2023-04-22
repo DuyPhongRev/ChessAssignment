@@ -12,8 +12,7 @@ Queen::Queen(Team team, std::pair<int, int> pos)
     }
 }
 
-void Queen::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0)
-{
+void Queen::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0){
     tmpPosX = xPos;
     tmpPosY = yPos;
     vector<tuple<int, int, Piece::MoveType>> moves;

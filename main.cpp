@@ -9,16 +9,20 @@ int main(int argc, char* argv[])
 
     if(chess->initWindow())
     {
+        while(!chess->quitMenu)
+        {
+            chess->menuGame();
+        }
         chess->sound();
-        while(true)
+        while(chess->running())
         {
             chess->handleEvent();
             chess->renderAll();
             chess->updateConditional();
-            if(!chess->running()) break;
         }
+        //chess->waitUntilKeyPress();
+
     }
-    chess->waitUntilKeyPress();
     chess->clean();
     return 0;
 }

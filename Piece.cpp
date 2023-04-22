@@ -13,8 +13,8 @@ Piece::Piece(Team team, PieceType piecetype, std::pair<int, int> pos){
     mPos = pos;
     desRect.h = WINDOW_WIDTH / 8;
     desRect.w = WINDOW_HEIGHT / 8;
-    desRect.x = (pos.first ) * WINDOW_WIDTH / 8 + 25;
-    desRect.y = (pos.second ) * WINDOW_HEIGHT / 8 + 25;
+    desRect.x = pos.first * WINDOW_WIDTH / 8 + 40;
+    desRect.y = pos.second  * WINDOW_HEIGHT / 8 + 40;
     srcRect.x = 0;
     srcRect.y = 0;
     srcRect.h = 50;
@@ -23,6 +23,7 @@ Piece::Piece(Team team, PieceType piecetype, std::pair<int, int> pos){
     mNotMove = true;
     mValidEnpassant = false;
     mMove = STATIONARY;
+    isDead = false;
 }
 
 void Piece::render(SDL_Renderer* renderer){
@@ -32,8 +33,8 @@ void Piece::render(SDL_Renderer* renderer){
 }
 
 void Piece::PieceMove(pair<int, int> pos, Piece *field[8][8]){
-    desRect.x = (pos.first ) * WINDOW_WIDTH / 8 + 25;
-    desRect.y = (pos.second ) * WINDOW_HEIGHT / 8 + 25;
+    desRect.x = (pos.first ) * WINDOW_WIDTH / 8 + 40;
+    desRect.y = (pos.second ) * WINDOW_HEIGHT / 8 + 40;
     if(field[pos.first][pos.second] != NULL && field[pos.first][pos.second]->getTeam() != field[mPos.first][mPos.second]->getTeam())
     {
         field[pos.first][pos.second]->isDead = true;
@@ -63,12 +64,12 @@ void Piece::declineEnpassant(Piece* field[8][8]){
     }
 }
 
-bool Piece::DeadPiece(){
+bool Piece::getDeadPiece(){
     return isDead;
 }
 
-void Piece::cleanUp(){
-    SDL_FreeSurface(mSurface);
+void Piece::setDeadPiece(){
+    isDead = true;
 }
 
 vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, Piece::MoveType>> moveList, tuple<int, int, Piece::MoveType> singleMove, King *king, Piece *field[8][8]){
@@ -93,7 +94,7 @@ vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, 
     {
         moveList.push_back(singleMove);
     }
-    king->getCheck();
+    king->setCheck(tmpField, king->getPossition().first, king->getPossition().second, king->getTeam());
     return moveList;
 }
 
@@ -125,8 +126,7 @@ void Piece::setEnpassant(){
     mValidEnpassant = true;
 }
 
-bool Piece::getEnpassant()
-{
+bool Piece::getEnpassant(){
     return mValidEnpassant;
 }
 
@@ -148,8 +148,7 @@ King* Piece::getOwnKing(Piece *field[8][8]){
     return NULL;
 }
 
-bool Piece::isValidMove(int xEnd, int yEnd)
-{
+bool Piece::isValidMove(int xEnd, int yEnd){
 
     for (int i = 0; i < (int)mPossibleMove.size(); i++)
     {

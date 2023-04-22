@@ -17,8 +17,7 @@ King::King(Team team, std::pair<int, int> pos)
     }
 }
 
-void King::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0)
-{
+void King::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0){
     tmpPosX = xPos;
     tmpPosY = yPos;
     vector<tuple<int, int, Piece::MoveType>> moves;

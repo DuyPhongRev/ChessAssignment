@@ -13,13 +13,11 @@ class King;
 class Piece
 {
 public:
-    bool isDead;
+    enum Team {BLACK, WHITE, NONE};
 
-    enum Team { BLACK, WHITE, NONE};
+	enum PieceType {PAWN, ROOK, KNIGHT, BISHOP, KING, QUEEN, EMPTY };
 
-	enum PieceType { PAWN, ROOK, KNIGHT, BISHOP, KING, QUEEN, EMPTY };
-
-	enum MoveType { NORMAL, CASTLE, ENPASSANT, PROMOTE, CAPTURE, STATIONARY};
+	enum MoveType {NORMAL, CASTLE, ENPASSANT, PROMOTE, CAPTURE, STATIONARY};
 
 	Piece(Team team, PieceType piecetype, pair<int, int> pos);
 
@@ -27,9 +25,9 @@ public:
 
 	void PieceMove(pair<int, int> pos, Piece *field[8][8]);
 
-    bool DeadPiece();
+    bool getDeadPiece();
 
-    void cleanUp();
+    void setDeadPiece();
 
     Team getTeam();
 
@@ -56,8 +54,9 @@ public:
     bool getEnpassant();
 
     void declineEnpassant(Piece* field[8][8]);
-
 protected:
+    bool isDead;
+
     Team mTeam;
 
     PieceType mType;

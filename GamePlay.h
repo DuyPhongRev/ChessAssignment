@@ -80,25 +80,40 @@ public:
     void movePiece();
 
     void loadSoundEffect();
+
+    void loadTexture(SDL_Surface *&surface, SDL_Rect *srcRec, SDL_Rect *desRec);
+
+    void menuGame();
+
+    bool quitMenu;
 private:
-    const int WINDOW_HEIGHT = 850;
-    const int WINDOW_WIDTH = 850;
+    // SDL variable
+    SDL_Texture *boardTexture = NULL;
     SDL_Renderer *renderer = NULL;
     SDL_Window *window = NULL;
     SDL_Event event;
-    bool Movement;
-    Piece::Team MoveTurn;
-    Piece *field[8][8];
-    Piece * clickedOn;
-    Piece::MoveType currentMove;
+    SDL_Color textColor = {255, 255, 255, 255};
+
+    // SDL Mixer variable
     Mix_Chunk *sCapture = NULL;
     Mix_Chunk *sMove = NULL;
     Mix_Chunk *sCastle = NULL;
     Mix_Chunk *sCheck = NULL;
     Mix_Chunk *sStartGame = NULL;
     Mix_Chunk *sNotify = NULL;
+    Mix_Music *sBackground = NULL;
     TTF_Font *tFont = NULL;
-    SDL_Color textColor = {61, 65, 81, 0};
+    bool turnOnMusic;
+
+    // Standard variable
+    const int WINDOW_HEIGHT = 880;
+    const int WINDOW_WIDTH = 880;
+    Piece::Team MoveTurn;
+    Piece *field[8][8];
+    Piece * clickedOn;
+    Piece::MoveType currentMove;
+    int countMoveToDraw = 0;
+    bool Movement;
     bool isRunning;
     int xStart;
     int yStart;
@@ -106,7 +121,24 @@ private:
     int yEnd;
     bool Capture;
     int mDepth;
-    int countMoveToDraw = 0;
+    bool isOnePlayer;
+
+    //menu
+    SDL_Surface *border = NULL;
+    SDL_Surface *menu = NULL;
+    SDL_Surface *playButton;
+    SDL_Surface *playButtonInside;
+    SDL_Surface *musicButton;
+    SDL_Surface *musicButtonInside;
+    SDL_Surface *exitButton;
+    SDL_Surface *exitButtonInside;
+    SDL_Surface *musicButtonOff;
+    SDL_Surface *musicButtonOffInside;
+    bool insidePlay;
+    bool insideMusic;
+    bool insideExit;
+
+    // Piece variable
     Piece *pw1 = NULL;
     Piece *pw2 = NULL;
     Piece *pw3 = NULL;
