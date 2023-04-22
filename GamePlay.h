@@ -86,8 +86,11 @@ public:
     void menuGame();
 
     bool quitMenu;
+
+    void renderButton();
 private:
     // SDL variable
+    SDL_Rect desRect;
     SDL_Texture *boardTexture = NULL;
     SDL_Renderer *renderer = NULL;
     SDL_Window *window = NULL;
@@ -122,7 +125,7 @@ private:
     bool Capture;
     int mDepth;
     bool isOnePlayer;
-
+    bool selectMode;
     //menu
     SDL_Surface *border = NULL;
     SDL_Surface *menu = NULL;
@@ -134,9 +137,18 @@ private:
     SDL_Surface *exitButtonInside;
     SDL_Surface *musicButtonOff;
     SDL_Surface *musicButtonOffInside;
+    SDL_Surface *vsBotButton;
+    SDL_Surface *vsBotButtonInside;
+    SDL_Surface *vsHumanButton;
+    SDL_Surface *vsHumanButtonInside;
+    SDL_Surface *backButton;
+    SDL_Surface *backButtonInside;
     bool insidePlay;
     bool insideMusic;
     bool insideExit;
+    bool insideVsBot;
+    bool insideVsHuman;
+    bool insideBack;
 
     // Piece variable
     Piece *pw1 = NULL;

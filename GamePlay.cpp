@@ -53,15 +53,18 @@ GamePlay::GamePlay(){
     musicButtonInside = IMG_Load("src/musicbuttoninside.png");
     exitButtonInside = IMG_Load("src/exitbuttoninside.png");
     musicButtonOffInside = IMG_Load("src/musicbuttonoffinside.png");
+    vsBotButton = IMG_Load("src/vsbot.png");
+    vsBotButtonInside = IMG_Load("src/vsbotinside.png");
+    vsHumanButton = IMG_Load("src/2player.png");
+    vsHumanButtonInside = IMG_Load("src/2playerinside.png");
+    backButton = IMG_Load("src/backbutton.png");
+    backButtonInside = IMG_Load("src/backbuttoninside.png");
     MoveTurn = Piece::WHITE;
     Movement = false;
     gameStart = true;
     quitMenu = false;
-    insideExit = false;
-    insideMusic = false;
-    insidePlay = false;
-    currentMove = Piece::STATIONARY;
     quitMenu = false;
+    currentMove = Piece::STATIONARY;
 }
 
 GamePlay::~GamePlay(){
@@ -177,17 +180,20 @@ void GamePlay::updateConditional(){
         if(kb->getCheck())
         {
             renderText("WHITE WIN", 5, -1, -1);
-            renderText("-Press any key back to menu-", 2, -1, 500);
+            renderText("-Press any key back to exit-", 2, -1, 500);
+            waitUntilKeyPress();
         }
         else if(kw->getCheck())
         {
             renderText("BLACK WIN", 5, -1, -1);
-            renderText("-Press any key back to menu-", 2, -1, 500);
+            renderText("-Press any key back to exit-", 2, -1, 500);
+            waitUntilKeyPress();
         }
         else
         {
             renderText("DRAW", 4, -1, -1);
-            renderText("-Press any key back to menu-", 2, -1, 500);
+            renderText("-Press any key back to exit-", 2, -1, 500);
+            waitUntilKeyPress();
         }
         sound();
     }
@@ -195,7 +201,8 @@ void GamePlay::updateConditional(){
     {
         isRunning = false;
         renderText("DRAW", 5, -1, -1);
-        renderText("-Press any key back to menu-", 2, -1, 500);
+        renderText("-Press any key back to exit-", 2, -1, 500);
+        waitUntilKeyPress();
         sound();
     }
 }
@@ -793,16 +800,16 @@ void GamePlay::renderPieces(){
     }
 }
 
-void GamePlay::loadTexture(SDL_Surface *&surface, SDL_Rect *srcRec, SDL_Rect *desRec)
-{
+void GamePlay::loadTexture(SDL_Surface *&surface, SDL_Rect *srcRec, SDL_Rect *desRec){
     SDL_Texture *tmpTexture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_RenderCopy(renderer, tmpTexture, srcRec, desRec);
     SDL_DestroyTexture(tmpTexture);
 }
 
+
+//function menu game
 void GamePlay::menuGame(){
     loadTexture(menu, NULL, NULL);
-    SDL_Rect desRect;
     desRect.w = 100;
     desRect.h = 100;
     desRect.x = 390;
@@ -810,25 +817,26 @@ void GamePlay::menuGame(){
     insidePlay = false;
     insideMusic = false;
     insideExit = false;
+    insideVsBot = false;
+    insideVsHuman = false;
+    insideBack = false;
     if(yStart > 470 && yStart < 530 && xStart > 390 && xStart < 490)
     {
-        insidePlay = true;
+        if(selectMode) insideVsBot = true;
+        else insidePlay = true;
     }
     else if(yStart > 570 && yStart < 630 && xStart > 390 && xStart < 490)
     {
-        insideMusic = true;
+        if(selectMode) insideVsHuman = true;
+        else insideMusic = true;
     }
     else if(yStart > 670 && yStart < 730 && xStart > 390 && xStart < 490)
     {
-        insideExit = true;
+        if(selectMode) insideBack = true;
+        else insideExit = true;
     }else
     {
-        desRect.y = 450;
-        loadTexture(playButton, NULL, &desRect);
-        desRect.y = 550;
-        loadTexture(musicButton, NULL, &desRect);
-        desRect.y = 650;
-        loadTexture(exitButton, NULL, &desRect);
+        renderButton();
     }
     SDL_WaitEvent(&event);
     switch(event.type)
@@ -837,36 +845,18 @@ void GamePlay::menuGame(){
             isRunning = false;
             quitMenu = true;
         case SDL_MOUSEMOTION:
-            desRect.y = 450;
-            if(insidePlay) loadTexture(playButtonInside, NULL, &desRect);
-            else loadTexture(playButton, NULL, &desRect);
-
-            desRect.y = 550;
-            if(insideMusic)
-            {
-                if(turnOnMusic) loadTexture(musicButtonInside, NULL, &desRect);
-                else loadTexture(musicButtonOffInside, NULL, &desRect);
-            }
-            else
-            {
-                if(turnOnMusic) loadTexture(musicButton, NULL, &desRect);
-                else loadTexture(musicButtonOff, NULL, &desRect);
-            }
-
-            desRect.y = 650;
-            if(insideExit) loadTexture(exitButtonInside, NULL, &desRect);
-            else loadTexture(exitButton, NULL, &desRect);
+            renderButton();
             break;
         case SDL_MOUSEBUTTONDOWN:
             if(insidePlay)
             {
-                isRunning = true;
-                quitMenu = true;
+                selectMode = true;
+                renderButton();
             }
             else if(insideMusic)
             {
                 if(!Mix_PlayingMusic())
-                    Mix_PlayMusic( sBackground, -1 );
+                    Mix_PlayMusic(sBackground, -1);
                 else
                 {
                     if( Mix_PausedMusic())
@@ -880,73 +870,77 @@ void GamePlay::menuGame(){
                         Mix_PauseMusic();
                     }
                 }
-                desRect.y = 450;
-                if(insidePlay) loadTexture(playButtonInside, NULL, &desRect);
-                else loadTexture(playButton, NULL, &desRect);
-
-                desRect.y = 550;
-                if(insideMusic)
-                {
-                    if(turnOnMusic) loadTexture(musicButtonInside, NULL, &desRect);
-                    else loadTexture(musicButtonOffInside, NULL, &desRect);
-                }
-                else
-                {
-                    if(turnOnMusic) loadTexture(musicButton, NULL, &desRect);
-                    else loadTexture(musicButtonOff, NULL, &desRect);
-                }
-
-                desRect.y = 650;
-                if(insideExit) loadTexture(exitButtonInside, NULL, &desRect);
-                else loadTexture(exitButton, NULL, &desRect);
+                renderButton();
             }
             else if(insideExit)
             {
                 quitMenu = true;
                 isRunning = false;
-            }else
-            {
-                desRect.y = 450;
-                if(insidePlay) loadTexture(playButtonInside, NULL, &desRect);
-                else loadTexture(playButton, NULL, &desRect);
-
-                desRect.y = 550;
-                if(insideMusic)
-                {
-                    if(turnOnMusic) loadTexture(musicButtonInside, NULL, &desRect);
-                    else loadTexture(musicButtonOffInside, NULL, &desRect);
-                }
-                else
-                {
-                    if(turnOnMusic) loadTexture(musicButton, NULL, &desRect);
-                    else loadTexture(musicButtonOff, NULL, &desRect);
-                }
-
-                desRect.y = 650;
-                if(insideExit) loadTexture(exitButtonInside, NULL, &desRect);
-                else loadTexture(exitButton, NULL, &desRect);
             }
-            break;
-        default:
-            desRect.y = 450;
-            if(insidePlay) loadTexture(playButtonInside, NULL, &desRect);
-            else loadTexture(playButton, NULL, &desRect);
-
-            desRect.y = 550;
-            if(insideMusic)
+            else if(insideVsBot)
             {
-                if(turnOnMusic) loadTexture(musicButtonInside, NULL, &desRect);
-                else loadTexture(musicButtonOffInside, NULL, &desRect);
+                isRunning = true;
+                quitMenu = true;
+                isOnePlayer = true;
+            }
+            else if(insideVsHuman)
+            {
+                isRunning = true;
+                quitMenu = true;
+                isOnePlayer = false;
+            }
+            else if(insideBack)
+            {
+                selectMode = false;
+                renderButton();
             }
             else
             {
-                if(turnOnMusic) loadTexture(musicButton, NULL, &desRect);
-                else loadTexture(musicButtonOff, NULL, &desRect);
+                renderButton();
             }
-
-            desRect.y = 650;
-            if(insideExit) loadTexture(exitButtonInside, NULL, &desRect);
-            else loadTexture(exitButton, NULL, &desRect);
+            break;
+        default:
+            renderButton();
+            break;
     }
     SDL_RenderPresent(renderer);
+}
+
+void GamePlay::renderButton(){
+    if(selectMode)
+    {
+        desRect.y = 450;
+        if(insideVsBot) loadTexture(vsBotButtonInside, NULL, &desRect);
+        else loadTexture(vsBotButton, NULL, &desRect);
+
+        desRect.y = 550;
+        if(insideVsHuman) loadTexture(vsHumanButtonInside, NULL, &desRect);
+        else loadTexture(vsHumanButton, NULL, &desRect);
+
+        desRect.y = 650;
+        if(insideBack) loadTexture(backButtonInside, NULL, &desRect);
+        else loadTexture(backButton, NULL, &desRect);
+    }
+    else
+    {
+        desRect.y = 450;
+        if(insidePlay) loadTexture(playButtonInside, NULL, &desRect);
+        else loadTexture(playButton, NULL, &desRect);
+
+        desRect.y = 550;
+        if(insideMusic)
+        {
+            if(turnOnMusic) loadTexture(musicButtonInside, NULL, &desRect);
+            else loadTexture(musicButtonOffInside, NULL, &desRect);
+        }
+        else
+        {
+            if(turnOnMusic) loadTexture(musicButton, NULL, &desRect);
+            else loadTexture(musicButtonOff, NULL, &desRect);
+        }
+
+        desRect.y = 650;
+        if(insideExit) loadTexture(exitButtonInside, NULL, &desRect);
+        else loadTexture(exitButton, NULL, &desRect);
+    }
 }

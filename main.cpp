@@ -20,8 +20,6 @@ int main(int argc, char* argv[])
             chess->renderAll();
             chess->updateConditional();
         }
-        //chess->waitUntilKeyPress();
-
     }
     chess->clean();
     return 0;
