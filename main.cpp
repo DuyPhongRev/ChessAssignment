@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
         {
             chess->menuGame();
         }
-        chess->sound();
+        if(chess->running()) chess->sound();
         while(chess->running())
         {
             chess->handleEvent();

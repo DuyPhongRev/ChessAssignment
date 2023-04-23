@@ -64,14 +64,6 @@ void Piece::declineEnpassant(Piece* field[8][8]){
     }
 }
 
-bool Piece::getDeadPiece(){
-    return isDead;
-}
-
-void Piece::setDeadPiece(){
-    isDead = true;
-}
-
 vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, Piece::MoveType>> moveList, tuple<int, int, Piece::MoveType> singleMove, King *king, Piece *field[8][8]){
     Piece *tmpField[8][8];
     for (int x = 0; x < 8; x++)
@@ -102,32 +94,8 @@ vector<tuple<int, int, Piece::MoveType>> Piece::getPossibleMove(){
     return mPossibleMove;
 }
 
-pair<int, int> Piece::getPossition(){
-    return mPos;
-}
-
-Piece::MoveType Piece::getMoveType(){
-    return mMove;
-}
-
-Piece::PieceType Piece::getType(){
-    return mType;
-}
-
 Piece::Team Piece::getTeam(){
     return mTeam;
-}
-
-bool Piece::getNotMove(){
-    return mNotMove;
-}
-
-void Piece::setEnpassant(){
-    mValidEnpassant = true;
-}
-
-bool Piece::getEnpassant(){
-    return mValidEnpassant;
 }
 
 King* Piece::getOwnKing(Piece *field[8][8]){
@@ -160,4 +128,36 @@ bool Piece::isValidMove(int xEnd, int yEnd){
         }
     }
     return false;
+}
+
+bool Piece::getNotMove(){
+    return mNotMove;
+}
+
+bool Piece::getEnpassant(){
+    return mValidEnpassant;
+}
+
+bool Piece::getDeadPiece(){
+    return isDead;
+}
+
+pair<int, int> Piece::getPossition(){
+    return mPos;
+}
+
+Piece::MoveType Piece::getMoveType(){
+    return mMove;
+}
+
+Piece::PieceType Piece::getType(){
+    return mType;
+}
+
+void Piece::setDeadPiece(){
+    isDead = true;
+}
+
+void Piece::setEnpassant(){
+    mValidEnpassant = true;
 }

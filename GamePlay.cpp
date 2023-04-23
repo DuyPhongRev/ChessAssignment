@@ -60,11 +60,10 @@ GamePlay::GamePlay(){
     backButton = IMG_Load("src/backbutton.png");
     backButtonInside = IMG_Load("src/backbuttoninside.png");
     MoveTurn = Piece::WHITE;
-    Movement = false;
+    mMovement = false;
     gameStart = true;
     quitMenu = false;
     quitMenu = false;
-    currentMove = Piece::STATIONARY;
 }
 
 GamePlay::~GamePlay(){
@@ -115,7 +114,7 @@ bool GamePlay::initWindow(){
 }
 
 void GamePlay::handleEvent(){
-    if(isOnePlayer && MoveTurn == Piece::BLACK)
+    if(mIsOnePlayer && MoveTurn == Piece::BLACK)
     {
         manageAutoBot();
     }
@@ -123,13 +122,13 @@ void GamePlay::handleEvent(){
     switch(event.type)
     {
         case SDL_QUIT:
-            isRunning = false;
+            mRunning = false;
             break;
         case SDL_MOUSEBUTTONDOWN:
             holdPiece();
             break;
         case SDL_MOUSEBUTTONUP:
-            if(clickedOn != NULL && clickedOn->getTeam() == MoveTurn) movePiece();
+            if(mClickedOn != NULL && mClickedOn->getTeam() == MoveTurn) movePiece();
             break;
         default:
             break;
@@ -158,7 +157,7 @@ void GamePlay::sound(Piece::MoveType soundType){
     {
         Mix_PlayChannel(-1, sCapture, 0);
     }
-    if(checkEndGame(field, MoveTurn))
+    if(checkEndGame(mField, MoveTurn))
     {
         Mix_PlayChannel(-1, sNotify, 0);
         SDL_Delay(1000);
@@ -166,42 +165,44 @@ void GamePlay::sound(Piece::MoveType soundType){
 }
 
 void GamePlay::updateConditional(){
-    if(Movement)
+    kb->setCheck(mField, kb->getPossition().first, kb->getPossition().second, Piece::BLACK);
+    kw->setCheck(mField, kw->getPossition().first, kw->getPossition().second, Piece::WHITE);
+    if(mMovement)
     {
-        countMoveToDraw++;
+        mCountMoveToDraw++;
         printCurrentMove();
         changeMoveTurn();
     }
-    kb->setCheck(field, kb->getPossition().first, kb->getPossition().second, Piece::BLACK);
-    kw->setCheck(field, kw->getPossition().first, kw->getPossition().second, Piece::WHITE);
-    if(checkEndGame(field, MoveTurn))
+    if(checkEndGame(mField, MoveTurn))
     {
-        isRunning = false;
+        mRunning = false;
         if(kb->getCheck())
         {
-            renderText("WHITE WIN", 5, -1, -1);
-            renderText("-Press any key back to exit-", 2, -1, 500);
+            if(mIsOnePlayer) renderText("CONGRASTULATION", 4, -1, -1);
+            else renderText("WHITE WIN", 5, -1, -1);
+            renderText("-Press any key to exit-", 2, -1, 500);
             waitUntilKeyPress();
         }
         else if(kw->getCheck())
         {
-            renderText("BLACK WIN", 5, -1, -1);
-            renderText("-Press any key back to exit-", 2, -1, 500);
+            if(mIsOnePlayer) renderText("LOSE CHICKEN", 5, -1, -1);
+            else renderText("BLACK WIN", 5, -1, -1);
+            renderText("-Press any key to exit-", 2, -1, 500);
             waitUntilKeyPress();
         }
         else
         {
             renderText("DRAW", 4, -1, -1);
-            renderText("-Press any key back to exit-", 2, -1, 500);
+            renderText("-Press any key to exit-", 2, -1, 500);
             waitUntilKeyPress();
         }
         sound();
     }
-    if(countMoveToDraw == 100)
+    if(mCountMoveToDraw == 100)
     {
-        isRunning = false;
+        mRunning = false;
         renderText("DRAW", 5, -1, -1);
-        renderText("-Press any key back to exit-", 2, -1, 500);
+        renderText("-Press any key to exit-", 2, -1, 500);
         waitUntilKeyPress();
         sound();
     }
@@ -238,44 +239,44 @@ void GamePlay::loadSoundEffect(){
 }
 
 void GamePlay::startPos(){
-    field[0][1] = pb1;
-    field[1][1] = pb2;
-    field[2][1] = pb3;
-    field[3][1] = pb4;
-    field[4][1] = pb5;
-    field[5][1] = pb6;
-    field[6][1] = pb7;
-    field[7][1] = pb8;
-    field[0][0] = rb1;
-    field[1][0] = kb1;
-    field[2][0] = bb1;
-    field[3][0] = qb;
-    field[4][0] = kb;
-    field[5][0] = bb2;
-    field[6][0] = kb2;
-    field[7][0] = rb2;
-    field[0][6] = pw1;
-    field[1][6] = pw2;
-    field[2][6] = pw3;
-    field[3][6] = pw4;
-    field[4][6] = pw5;
-    field[5][6] = pw6;
-    field[6][6] = pw7;
-    field[7][6] = pw8;
-    field[0][7] = rw1;
-    field[1][7] = kw1;
-    field[2][7] = bw1;
-    field[3][7] = qw;
-    field[4][7] = kw;
-    field[5][7] = bw2;
-    field[6][7] = kw2;
-    field[7][7] = rw2;
+    mField[0][1] = pb1;
+    mField[1][1] = pb2;
+    mField[2][1] = pb3;
+    mField[3][1] = pb4;
+    mField[4][1] = pb5;
+    mField[5][1] = pb6;
+    mField[6][1] = pb7;
+    mField[7][1] = pb8;
+    mField[0][0] = rb1;
+    mField[1][0] = kb1;
+    mField[2][0] = bb1;
+    mField[3][0] = qb;
+    mField[4][0] = kb;
+    mField[5][0] = bb2;
+    mField[6][0] = kb2;
+    mField[7][0] = rb2;
+    mField[0][6] = pw1;
+    mField[1][6] = pw2;
+    mField[2][6] = pw3;
+    mField[3][6] = pw4;
+    mField[4][6] = pw5;
+    mField[5][6] = pw6;
+    mField[6][6] = pw7;
+    mField[7][6] = pw8;
+    mField[0][7] = rw1;
+    mField[1][7] = kw1;
+    mField[2][7] = bw1;
+    mField[3][7] = qw;
+    mField[4][7] = kw;
+    mField[5][7] = bw2;
+    mField[6][7] = kw2;
+    mField[7][7] = rw2;
 
     for (int y = 2; y < 6; y++)
     {
         for (int x = 0; x < 8; x++)
         {
-            field[x][y] = NULL;
+            mField[x][y] = NULL;
         }
     }
 }
@@ -288,10 +289,10 @@ void GamePlay::holdPiece(){
     yStart -= 40;
     xStart /= 100;
     yStart /= 100;
-    if (field[xStart][yStart] != NULL && field[xStart][yStart]->getTeam() == MoveTurn)
+    if (mField[xStart][yStart] != NULL && mField[xStart][yStart]->getTeam() == MoveTurn)
     {
-        clickedOn = field[xStart][yStart];
-        field[xStart][yStart]->calcPossibleMoves(field, xStart, yStart);
+        mClickedOn = mField[xStart][yStart];
+        mField[xStart][yStart]->calcPossibleMoves(mField, xStart, yStart);
     }
 }
 
@@ -301,56 +302,56 @@ void GamePlay::movePiece(){
     yEnd -= 40;
     xEnd /= 100;
     yEnd /= 100;
-    if(field[xStart][yStart]->isValidMove( xEnd, yEnd))
+    if(mField[xStart][yStart]->isValidMove( xEnd, yEnd))
     {
-        field[xStart][yStart]->PieceMove(pair<int, int>(xEnd, yEnd), field);
+        mField[xStart][yStart]->PieceMove(pair<int, int>(xEnd, yEnd), mField);
         specificMove();
         if(xStart != xEnd || yStart != yEnd)
         {
-            Movement = true;
-            clickedOn = NULL;
+            mMovement = true;
+            mClickedOn = NULL;
         }
-    }else clickedOn = NULL;
+    }else mClickedOn = NULL;
 }
 
 void GamePlay::specificMove(){
-    if(clickedOn->getMoveType() == Piece::CASTLE) castle();
-    else if(clickedOn->getMoveType() == Piece::ENPASSANT) enpassant();
-    else if(clickedOn->getMoveType() == Piece::PROMOTE) promote();
-    else if(clickedOn->getMoveType() == Piece::CAPTURE) countMoveToDraw = 0;
-    if(clickedOn->getType() == Piece::PAWN) countMoveToDraw = 0;
-    clickedOn->declineEnpassant(field);
-    sound(clickedOn->getMoveType());
+    if(mClickedOn->getMoveType() == Piece::CASTLE) castle();
+    else if(mClickedOn->getMoveType() == Piece::ENPASSANT) enpassant();
+    else if(mClickedOn->getMoveType() == Piece::PROMOTE) promote();
+    else if(mClickedOn->getMoveType() == Piece::CAPTURE) mCountMoveToDraw = 0;
+    if(mClickedOn->getType() == Piece::PAWN) mCountMoveToDraw = 0;
+    mClickedOn->declineEnpassant(mField);
+    sound(mClickedOn->getMoveType());
 }
 
 void GamePlay::castle(){
     if(xEnd == 6)
     {
-        field[xEnd + 1][yEnd]->PieceMove(pair<int, int>(xEnd - 1,yEnd), field);
+        mField[xEnd + 1][yEnd]->PieceMove(pair<int, int>(xEnd - 1,yEnd), mField);
     }
     if(xEnd == 2)
     {
-        field[xEnd - 2][yEnd]->PieceMove(pair<int, int>(xEnd + 1,yEnd), field);
+        mField[xEnd - 2][yEnd]->PieceMove(pair<int, int>(xEnd + 1,yEnd), mField);
     }
 }
 
 void GamePlay::enpassant(){
-    if(clickedOn->getTeam() == Piece::WHITE && field[xEnd][yEnd + 1] != NULL)
+    if(mClickedOn->getTeam() == Piece::WHITE && mField[xEnd][yEnd + 1] != NULL)
     {
-        field[xEnd][yEnd + 1]->setDeadPiece();
-        field[xEnd][yEnd + 1] = NULL;
+        mField[xEnd][yEnd + 1]->setDeadPiece();
+        mField[xEnd][yEnd + 1] = NULL;
     }
-    else if(clickedOn->getTeam() == Piece::BLACK && field[xEnd][yEnd - 1] != NULL)
+    else if(mClickedOn->getTeam() == Piece::BLACK && mField[xEnd][yEnd - 1] != NULL)
     {
-        field[xEnd][yEnd - 1]->setDeadPiece();
-        field[xEnd][yEnd - 1] = NULL;
+        mField[xEnd][yEnd - 1]->setDeadPiece();
+        mField[xEnd][yEnd - 1] = NULL;
     }
 }
 
 void GamePlay::promote(){
     if(MoveTurn == Piece::BLACK)
     {
-        field[xEnd][yEnd] = new Queen(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+        mField[xEnd][yEnd] = new Queen(mField[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
         return;
     }
     renderText("PICK YOUR PIECE", 3, 100, 250);
@@ -375,19 +376,19 @@ void GamePlay::promote(){
             switch(event.key.keysym.sym)
             {
                 case SDLK_1:
-                    field[xEnd][yEnd] = new Knight(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+                    mField[xEnd][yEnd] = new Knight(mField[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
                     promoteSuccess = true;
                     break;
                 case SDLK_2:
-                    field[xEnd][yEnd] = new Bishop(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+                    mField[xEnd][yEnd] = new Bishop(mField[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
                     promoteSuccess = true;
                     break;
                 case SDLK_3:
-                    field[xEnd][yEnd] = new Rook(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+                    mField[xEnd][yEnd] = new Rook(mField[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
                     promoteSuccess = true;
                     break;
                 case SDLK_4:
-                    field[xEnd][yEnd] = new Queen(field[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
+                    mField[xEnd][yEnd] = new Queen(mField[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
                     promoteSuccess = true;
                     break;
                 default:
@@ -410,16 +411,16 @@ void GamePlay::waitUntilKeyPress(){
 //function Auto Bot
 void GamePlay::manageAutoBot(){
     mDepth = 3;
-    alphaBetaPrunning(field, mDepth, INT_MIN, INT_MAX, false);
+    alphaBetaPrunning(mField, mDepth, INT_MIN, INT_MAX, false);
     //SDL_Delay(300);
-    field[xStart][yStart]->calcPossibleMoves(field, xStart, yStart);
-    if(field[xStart][yStart]->isValidMove(xEnd, yEnd))
+    mField[xStart][yStart]->calcPossibleMoves(mField, xStart, yStart);
+    if(mField[xStart][yStart]->isValidMove(xEnd, yEnd))
     {
-        clickedOn = field[xStart][yStart];
-        field[xStart][yStart]->PieceMove(pair<int, int>(xEnd, yEnd), field);
+        mClickedOn = mField[xStart][yStart];
+        mField[xStart][yStart]->PieceMove(pair<int, int>(xEnd, yEnd), mField);
         specificMove();
-        Movement = true;
-        clickedOn = NULL;
+        mMovement = true;
+        mClickedOn = NULL;
     }
 }
 
@@ -566,8 +567,8 @@ int GamePlay::alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int be
                     vector<tuple<int, int, Piece::MoveType>> tmpPossibleMove = tmpField[x][y]->getPossibleMove();
                     for(tuple<int, int, Piece::MoveType> singleMove : tmpPossibleMove)
                     {
-                        Piece *tmp1 = field[x][y];
-                        Piece *tmp2 = field[get<0>(singleMove)][get<1>(singleMove)];
+                        Piece *tmp1 = tmpField[x][y];
+                        Piece *tmp2 = tmpField[get<0>(singleMove)][get<1>(singleMove)];
 
                         if(tmp2 != NULL && tmp2->getType() == Piece::KING) continue;
                         tmpField[get<0>(singleMove)][get<1>(singleMove)] = tmpField[x][y];
@@ -604,8 +605,8 @@ int GamePlay::alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int be
                     vector<tuple<int, int, Piece::MoveType>> tmpPossibleMove = tmpField[x][y]->getPossibleMove();
                     for(tuple<int, int, Piece::MoveType> singleMove : tmpPossibleMove)
                     {
-                        Piece *tmp1 = field[x][y];
-                        Piece *tmp2 = field[get<0>(singleMove)][get<1>(singleMove)];
+                        Piece *tmp1 = tmpField[x][y];
+                        Piece *tmp2 = tmpField[get<0>(singleMove)][get<1>(singleMove)];
                         if(tmp2 != NULL && tmp2->getType() == Piece::KING) continue;
                         tmpField[get<0>(singleMove)][get<1>(singleMove)] = tmpField[x][y];
                         tmpField[x][y] = NULL;
@@ -619,7 +620,7 @@ int GamePlay::alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int be
                                 xEnd = get<0>(singleMove);
                                 yEnd = get<1>(singleMove);
                             }
-                            else if((rand() % 10)% 2 == 0)
+                            else if(rand()% 2)
                             {
                                 xStart = x;
                                 yStart = y;
@@ -651,35 +652,73 @@ void  GamePlay::changeMoveTurn(){
 }
 
 void GamePlay::printCurrentMove(){
-    switch(xEnd)
+    if(mField[xEnd][yEnd]->getMoveType() == Piece::CASTLE)
     {
-        case 0:
-            cout << " A-" << 8 - yEnd << "   ";
-            break;
-        case 1:
-            cout << " B-" << 8 - yEnd << "   ";
-            break;
-        case 2:
-            cout << " C-" << 8 - yEnd << "   ";
-            break;
-        case 3:
-            cout << " D-" << 8 - yEnd << "   ";
-            break;
-        case 4:
-            cout << " E-" << 8 - yEnd << "   ";
-            break;
-        case 5:
-            cout << " F-" << 8 - yEnd << "   ";
-            break;
-        case 6:
-            cout << " G-" << 8 - yEnd << "   ";
-            break;
-        case 7:
-            cout << " H-" << 8 - yEnd << "   ";
-            break;
+        if(xEnd == 2) cout << "O-O-O";
+        else cout << "O-O";
     }
-    if (MoveTurn == Piece::BLACK) cout << endl;
-    Movement = false;
+    else
+    {
+        switch(mField[xEnd][yEnd]->getType())
+        {
+            case 0:
+                cout << "";
+                break;
+            case 1:
+                cout << "N";
+                break;
+            case 2:
+                cout << "B";
+                break;
+            case 3:
+                cout << "R";
+                break;
+            case 4:
+                cout << "Q";
+                break;
+            case 5:
+                cout << "K";
+                break;
+        }
+        if(mField[xEnd][yEnd]->getMoveType() == Piece::CAPTURE) cout << "x";
+        switch(xEnd)
+        {
+            case 0:
+                cout << "a" << 8 - yEnd;
+                break;
+            case 1:
+                cout << "b" << 8 - yEnd;
+                break;
+            case 2:
+                cout << "c" << 8 - yEnd;
+                break;
+            case 3:
+                cout << "d" << 8 - yEnd;
+                break;
+            case 4:
+                cout << "e" << 8 - yEnd;
+                break;
+            case 5:
+                cout << "f" << 8 - yEnd;
+                break;
+            case 6:
+                cout << "g" << 8 - yEnd;
+                break;
+            case 7:
+                cout << "h" << 8 - yEnd;
+                break;
+        }
+    }
+    if (MoveTurn == Piece::BLACK)
+    {
+        if(kw->getCheck()) cout << "#";
+        cout << endl;
+    }else
+    {
+        if(kb->getCheck()) cout << "#";
+        cout << "\t|      ";
+    }
+    mMovement = false;
 }
 
 bool GamePlay::checkEndGame(Piece *tmpPiece[8][8], Piece::Team currentTeam){
@@ -704,7 +743,7 @@ bool GamePlay::checkEndGame(Piece *tmpPiece[8][8], Piece::Team currentTeam){
 }
 
 bool GamePlay::running(){
-    return isRunning;
+    return mRunning;
 }
 
 
@@ -717,11 +756,11 @@ void GamePlay::renderBoard(){
         {
             if((x + y) % 2 == 0)
             {
-                if(clickedOn != NULL && clickedOn->isValidMove( x, y)) SDL_SetRenderDrawColor(renderer, 100, 196, 126, 1);
+                if(mClickedOn != NULL && mClickedOn->isValidMove( x, y)) SDL_SetRenderDrawColor(renderer, 100, 196, 126, 1);
                 else SDL_SetRenderDrawColor(renderer, 177, 212, 182, 1);
             }else
             {
-                if(clickedOn != NULL && clickedOn->isValidMove( x, y)) SDL_SetRenderDrawColor(renderer, 0, 111, 95, 1);
+                if(mClickedOn != NULL && mClickedOn->isValidMove( x, y)) SDL_SetRenderDrawColor(renderer, 0, 111, 95, 1);
                 else SDL_SetRenderDrawColor(renderer, 74, 118, 103, 1);
             }
             SDL_Rect site;
@@ -732,8 +771,8 @@ void GamePlay::renderBoard(){
             SDL_RenderFillRect(renderer, &site);
         }
     }
-    kw->setCheck(field, kw->getPossition().first, kw->getPossition().second, Piece::WHITE);
-    kb->setCheck(field, kb->getPossition().first, kb->getPossition().second, Piece::BLACK);
+    kw->setCheck(mField, kw->getPossition().first, kw->getPossition().second, Piece::WHITE);
+    kb->setCheck(mField, kb->getPossition().first, kb->getPossition().second, Piece::BLACK);
     if(kw->getCheck())
     {
         if((kw->getPossition().first + kw->getPossition().second) % 2 == 0)
@@ -763,12 +802,11 @@ void GamePlay::renderBoard(){
 }
 
 void GamePlay::renderText(string text, int sizeText = 3, int x = -1, int y = -1){
-    SDL_Surface *tmpSurface = TTF_RenderText_Solid(tFont, text.c_str(), textColor);
+    SDL_Surface *tmpSurface = TTF_RenderText_Solid(tFont, text.c_str(), mTextColor);
     SDL_Texture *tmpTexture = SDL_CreateTextureFromSurface(renderer, tmpSurface);
     SDL_Rect desRect;
     desRect.h = tmpSurface->h * sizeText;
     desRect.w = tmpSurface->w * sizeText;
-
     if(x < 0)
     {
         desRect.x = (WINDOW_WIDTH - desRect.w) / 2;
@@ -795,7 +833,7 @@ void GamePlay::renderPieces(){
     {
         for(int y = 0; y < 8; y++)
         {
-            if(field[x][y] != NULL && !field[x][y]->getDeadPiece()) field[x][y]->render(renderer);
+            if(mField[x][y] != NULL && !mField[x][y]->getDeadPiece()) mField[x][y]->render(renderer);
         }
     }
 }
@@ -806,6 +844,12 @@ void GamePlay::loadTexture(SDL_Surface *&surface, SDL_Rect *srcRec, SDL_Rect *de
     SDL_DestroyTexture(tmpTexture);
 }
 
+void GamePlay::setTextColor(int r, int g, int b, int a){
+    mTextColor.r = r;
+    mTextColor.g = g;
+    mTextColor.b = b;
+    mTextColor.a = a;
+}
 
 //function menu game
 void GamePlay::menuGame(){
@@ -814,26 +858,26 @@ void GamePlay::menuGame(){
     desRect.h = 100;
     desRect.x = 390;
     SDL_GetMouseState(&xStart, &yStart);
-    insidePlay = false;
-    insideMusic = false;
-    insideExit = false;
-    insideVsBot = false;
-    insideVsHuman = false;
-    insideBack = false;
+    mInsidePlay = false;
+    mInsideMusic = false;
+    mInsideExit = false;
+    mInsideVsBot = false;
+    mInsideVsHuman = false;
+    mInsideBack = false;
     if(yStart > 470 && yStart < 530 && xStart > 390 && xStart < 490)
     {
-        if(selectMode) insideVsBot = true;
-        else insidePlay = true;
+        if(mSelectMode) mInsideVsBot = true;
+        else mInsidePlay = true;
     }
     else if(yStart > 570 && yStart < 630 && xStart > 390 && xStart < 490)
     {
-        if(selectMode) insideVsHuman = true;
-        else insideMusic = true;
+        if(mSelectMode) mInsideVsHuman = true;
+        else mInsideMusic = true;
     }
     else if(yStart > 670 && yStart < 730 && xStart > 390 && xStart < 490)
     {
-        if(selectMode) insideBack = true;
-        else insideExit = true;
+        if(mSelectMode) mInsideBack = true;
+        else mInsideExit = true;
     }else
     {
         renderButton();
@@ -842,18 +886,18 @@ void GamePlay::menuGame(){
     switch(event.type)
     {
         case SDL_QUIT:
-            isRunning = false;
+            mRunning = false;
             quitMenu = true;
         case SDL_MOUSEMOTION:
             renderButton();
             break;
         case SDL_MOUSEBUTTONDOWN:
-            if(insidePlay)
+            if(mInsidePlay)
             {
-                selectMode = true;
+                mSelectMode = true;
                 renderButton();
             }
-            else if(insideMusic)
+            else if(mInsideMusic)
             {
                 if(!Mix_PlayingMusic())
                     Mix_PlayMusic(sBackground, -1);
@@ -872,26 +916,30 @@ void GamePlay::menuGame(){
                 }
                 renderButton();
             }
-            else if(insideExit)
+            else if(mInsideExit)
             {
                 quitMenu = true;
-                isRunning = false;
+                mRunning = false;
             }
-            else if(insideVsBot)
+            else if(mInsideVsBot)
             {
-                isRunning = true;
+                mRunning = true;
                 quitMenu = true;
-                isOnePlayer = true;
+                mIsOnePlayer = true;
+                Mix_PauseMusic();
+                cleanMenu();
             }
-            else if(insideVsHuman)
+            else if(mInsideVsHuman)
             {
-                isRunning = true;
+                mRunning = true;
                 quitMenu = true;
-                isOnePlayer = false;
+                mIsOnePlayer = false;
+                Mix_PauseMusic();
+                cleanMenu();
             }
-            else if(insideBack)
+            else if(mInsideBack)
             {
-                selectMode = false;
+                mSelectMode = false;
                 renderButton();
             }
             else
@@ -903,32 +951,50 @@ void GamePlay::menuGame(){
             renderButton();
             break;
     }
-    SDL_RenderPresent(renderer);
+    renderText("CHESS GAME", 6, -1, 100);
+}
+
+void GamePlay::cleanMenu(){
+    SDL_FreeSurface(menu);
+    SDL_FreeSurface(playButton);
+    SDL_FreeSurface(playButtonInside);
+    SDL_FreeSurface(musicButton);
+    SDL_FreeSurface(musicButtonInside);
+    SDL_FreeSurface(exitButton);
+    SDL_FreeSurface(exitButtonInside);
+    SDL_FreeSurface(musicButtonOff);
+    SDL_FreeSurface(musicButtonOffInside);
+    SDL_FreeSurface(vsBotButton);
+    SDL_FreeSurface(vsBotButtonInside);
+    SDL_FreeSurface(vsHumanButton);
+    SDL_FreeSurface(vsHumanButtonInside);
+    SDL_FreeSurface(backButton);
+    SDL_FreeSurface(backButtonInside);
 }
 
 void GamePlay::renderButton(){
-    if(selectMode)
+    if(mSelectMode)
     {
         desRect.y = 450;
-        if(insideVsBot) loadTexture(vsBotButtonInside, NULL, &desRect);
+        if(mInsideVsBot) loadTexture(vsBotButtonInside, NULL, &desRect);
         else loadTexture(vsBotButton, NULL, &desRect);
 
         desRect.y = 550;
-        if(insideVsHuman) loadTexture(vsHumanButtonInside, NULL, &desRect);
+        if(mInsideVsHuman) loadTexture(vsHumanButtonInside, NULL, &desRect);
         else loadTexture(vsHumanButton, NULL, &desRect);
 
         desRect.y = 650;
-        if(insideBack) loadTexture(backButtonInside, NULL, &desRect);
+        if(mInsideBack) loadTexture(backButtonInside, NULL, &desRect);
         else loadTexture(backButton, NULL, &desRect);
     }
     else
     {
         desRect.y = 450;
-        if(insidePlay) loadTexture(playButtonInside, NULL, &desRect);
+        if(mInsidePlay) loadTexture(playButtonInside, NULL, &desRect);
         else loadTexture(playButton, NULL, &desRect);
 
         desRect.y = 550;
-        if(insideMusic)
+        if(mInsideMusic)
         {
             if(turnOnMusic) loadTexture(musicButtonInside, NULL, &desRect);
             else loadTexture(musicButtonOffInside, NULL, &desRect);
@@ -940,7 +1006,7 @@ void GamePlay::renderButton(){
         }
 
         desRect.y = 650;
-        if(insideExit) loadTexture(exitButtonInside, NULL, &desRect);
+        if(mInsideExit) loadTexture(exitButtonInside, NULL, &desRect);
         else loadTexture(exitButton, NULL, &desRect);
     }
 }

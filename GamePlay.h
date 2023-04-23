@@ -88,16 +88,18 @@ public:
     bool quitMenu;
 
     void renderButton();
+
+    void cleanMenu();
+
+    void setTextColor(int r, int g, int b, int a);
 private:
-    // SDL variable
     SDL_Rect desRect;
     SDL_Texture *boardTexture = NULL;
     SDL_Renderer *renderer = NULL;
     SDL_Window *window = NULL;
     SDL_Event event;
-    SDL_Color textColor = {255, 255, 255, 255};
+    SDL_Color mTextColor = {255, 255, 255, 255};
 
-    // SDL Mixer variable
     Mix_Chunk *sCapture = NULL;
     Mix_Chunk *sMove = NULL;
     Mix_Chunk *sCastle = NULL;
@@ -112,43 +114,41 @@ private:
     const int WINDOW_HEIGHT = 880;
     const int WINDOW_WIDTH = 880;
     Piece::Team MoveTurn;
-    Piece *field[8][8];
-    Piece * clickedOn;
-    Piece::MoveType currentMove;
-    int countMoveToDraw = 0;
-    bool Movement;
-    bool isRunning;
+    Piece *mField[8][8];
+    Piece * mClickedOn;
+    int mCountMoveToDraw = 0;
+    bool mMovement;
+    bool mRunning;
     int xStart;
     int yStart;
     int xEnd;
     int yEnd;
-    bool Capture;
     int mDepth;
-    bool isOnePlayer;
-    bool selectMode;
+    bool mIsOnePlayer;
     //menu
     SDL_Surface *border = NULL;
     SDL_Surface *menu = NULL;
-    SDL_Surface *playButton;
-    SDL_Surface *playButtonInside;
-    SDL_Surface *musicButton;
-    SDL_Surface *musicButtonInside;
-    SDL_Surface *exitButton;
-    SDL_Surface *exitButtonInside;
-    SDL_Surface *musicButtonOff;
-    SDL_Surface *musicButtonOffInside;
-    SDL_Surface *vsBotButton;
-    SDL_Surface *vsBotButtonInside;
-    SDL_Surface *vsHumanButton;
-    SDL_Surface *vsHumanButtonInside;
-    SDL_Surface *backButton;
-    SDL_Surface *backButtonInside;
-    bool insidePlay;
-    bool insideMusic;
-    bool insideExit;
-    bool insideVsBot;
-    bool insideVsHuman;
-    bool insideBack;
+    SDL_Surface *playButton= NULL;
+    SDL_Surface *playButtonInside= NULL;
+    SDL_Surface *musicButton= NULL;
+    SDL_Surface *musicButtonInside= NULL;
+    SDL_Surface *exitButton= NULL;
+    SDL_Surface *exitButtonInside= NULL;
+    SDL_Surface *musicButtonOff= NULL;
+    SDL_Surface *musicButtonOffInside= NULL;
+    SDL_Surface *vsBotButton= NULL;
+    SDL_Surface *vsBotButtonInside= NULL;
+    SDL_Surface *vsHumanButton= NULL;
+    SDL_Surface *vsHumanButtonInside= NULL;
+    SDL_Surface *backButton= NULL;
+    SDL_Surface *backButtonInside= NULL;
+    bool mInsidePlay;
+    bool mInsideMusic;
+    bool mInsideExit;
+    bool mInsideVsBot;
+    bool mInsideVsHuman;
+    bool mInsideBack;
+    bool mSelectMode;
 
     // Piece variable
     Piece *pw1 = NULL;

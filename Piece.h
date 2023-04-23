@@ -15,7 +15,7 @@ class Piece
 public:
     enum Team {BLACK, WHITE, NONE};
 
-	enum PieceType {PAWN, ROOK, KNIGHT, BISHOP, KING, QUEEN, EMPTY };
+	enum PieceType {PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING};
 
 	enum MoveType {NORMAL, CASTLE, ENPASSANT, PROMOTE, CAPTURE, STATIONARY};
 
