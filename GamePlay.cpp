@@ -402,7 +402,7 @@ void GamePlay::promote(){
         mField[xEnd][yEnd] = new Queen(mField[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
         return;
     }
-    renderText("PICK YOUR PIECE", 3, 100, 250);
+    renderText("PICK YOUR PIECE", 3, -1, 250);
     SDL_Surface *tmpSurface = NULL;
     if(MoveTurn == Piece::BLACK) tmpSurface = IMG_Load("src/promoteBlack.png");
     else tmpSurface = IMG_Load("src/promoteWhite.png");
@@ -458,9 +458,8 @@ void GamePlay::waitUntilKeyPress(){
 
 //function Auto Bot
 void GamePlay::manageAutoBot(){
-    mDepth = 3;
+    mDepth = 5;
     alphaBetaPrunning(mField, mDepth, INT_MIN, INT_MAX, false);
-    SDL_Delay(200);
     mField[xStart][yStart]->calcPossibleMoves(mField, xStart, yStart);
     if(mField[xStart][yStart]->isValidMove(xEnd, yEnd))
     {

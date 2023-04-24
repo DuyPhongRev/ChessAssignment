@@ -10,7 +10,6 @@ int main(int argc, char* argv[])
     {
         while(chess->getRunning())
         {
-            chess->setNewGame();
             while(!chess->getQuitMenu())
             {
                 chess->menuGame();

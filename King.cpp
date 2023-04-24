@@ -59,6 +59,11 @@ void King::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0){
 }
 
 void King::setCheck(Piece *field[8][8], int xKing, int yKing, Team team){
+    if(field[xKing][yKing] == NULL)
+    {
+        mCheck = true;
+        return;
+    }
     bool check = false;
     for(int dx = 1; dx < 8; dx++)
     {
