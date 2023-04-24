@@ -14,7 +14,7 @@
 - Sound effect: [Chess.com](https://www.chess.com/)
 - The resources inspire from a spirit online shop but I have no money so I repainted it (I used Piskel if you want to know, definitely it's free)
 - Chess's original rule was completely remained.
-- Elo of my AI is about 1100 (play with online from chess.com or lichess.org)
+- Elo of my AI is about 1100 (play with online bot from chess.com or lichess.org)
 
 # Features
 #### 1. MAIN MENU GAME
