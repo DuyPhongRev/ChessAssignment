@@ -258,47 +258,47 @@
 	<utility>
 	<cmath>
 
-1681442359 source:c:\chess\assignment\bishop.cpp
+1682326033 source:c:\chess\assignment\bishop.cpp
 	"Bishop.h"
 
-1681441637 c:\chess\assignment\bishop.h
+1682311662 c:\chess\assignment\bishop.h
 	"Piece.h"
 
-1682246946 c:\chess\assignment\piece.h
+1682332683 c:\chess\assignment\piece.h
 	"SDL.h"
 	"SDL_image.h"
 	<utility>
 	<vector>
 	<tuple>
 
-1682073141 source:c:\chess\assignment\king.cpp
+1682326033 source:c:\chess\assignment\king.cpp
 	"King.h"
 	<iostream>
 	"Rook.h"
 
-1681726126 c:\chess\assignment\king.h
+1682311662 c:\chess\assignment\king.h
 	"Piece.h"
 	<utility>
 	<cmath>
 
-1681441637 c:\chess\assignment\rook.h
+1682311662 c:\chess\assignment\rook.h
 	"Piece.h"
 
-1681442359 source:c:\chess\assignment\knight.cpp
+1682326033 source:c:\chess\assignment\knight.cpp
 	"Knight.h"
 	<tuple>
 	<iostream>
 	<vector>
 
-1681441637 c:\chess\assignment\knight.h
+1682311662 c:\chess\assignment\knight.h
 	"Piece.h"
 	<tuple>
 
-1682180154 source:c:\chess\assignment\main.cpp
+1682331660 source:c:\chess\assignment\main.cpp
 	<iostream>
 	"GamePlay.h"
 
-1682245921 c:\chess\assignment\gameplay.h
+1682332280 c:\chess\assignment\gameplay.h
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -314,33 +314,38 @@
 	"Queen.h"
 	"King.h"
 
-1681441637 c:\chess\assignment\pawn.h
+1682311662 c:\chess\assignment\pawn.h
 	"Piece.h"
 
-1681441637 c:\chess\assignment\queen.h
+1682315499 c:\chess\assignment\queen.h
 	"Piece.h"
 
-1682045285 source:c:\chess\assignment\pawn.cpp
+1682326033 source:c:\chess\assignment\pawn.cpp
 	"Pawn.h"
 	<iostream>
 
-1682244476 source:c:\chess\assignment\piece.cpp
+1682332823 source:c:\chess\assignment\piece.cpp
 	"Piece.h"
 	<iostream>
 	"King.h"
 
-1682073141 source:c:\chess\assignment\queen.cpp
+1682326033 source:c:\chess\assignment\queen.cpp
 	"Queen.h"
 
-1681442359 source:c:\chess\assignment\rook.cpp
+1682326033 source:c:\chess\assignment\rook.cpp
 	"Rook.h"
 	<iostream>
 
-1682250484 source:c:\chess\assignment\gameplay.cpp
+1682332534 source:c:\chess\assignment\gameplay.cpp
 	"GamePlay.h"
 
 1682130026 c:\chess\assignment\button.h
 
 1682129701 source:c:\chess\assignment\button.cpp
 	"Button.h"
+
+1682312378 source:c:\chess\assignment\menu.cpp
+	"menu.h"
+
+1682312447 c:\chess\assignment\menu.h
 

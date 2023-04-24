@@ -6,19 +6,22 @@ using namespace std;
 int main(int argc, char* argv[])
 {
     GamePlay *chess = new GamePlay;
-
-    if(chess->initWindow())
+    if(chess->initGameData())
     {
-        while(!chess->quitMenu)
+        while(chess->getRunning())
         {
-            chess->menuGame();
-        }
-        if(chess->running()) chess->sound();
-        while(chess->running())
-        {
-            chess->handleEvent();
-            chess->renderAll();
-            chess->updateConditional();
+            chess->setNewGame();
+            while(!chess->getQuitMenu())
+            {
+                chess->menuGame();
+            }
+            if(!chess->getQuitGame()) chess->setNewGame();
+            while(!chess->getQuitGame())
+            {
+                chess->handleEventInGame();
+                chess->renderManage();
+                chess->updateGameStatus();
+            }
         }
     }
     chess->clean();

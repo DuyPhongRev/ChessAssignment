@@ -15,6 +15,8 @@ King::King(Team team, std::pair<int, int> pos)
     {
         Piece::mSurface = IMG_Load("src/kgb.png");
     }
+    originPos.first = pos.first;
+    originPos.second = pos.second;
 }
 
 void King::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0){

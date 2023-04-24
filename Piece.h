@@ -54,6 +54,8 @@ public:
     bool getEnpassant();
 
     void declineEnpassant(Piece* field[8][8]);
+
+    void setOriginPosition();
 protected:
     bool isDead;
 
@@ -64,6 +66,8 @@ protected:
     MoveType mMove;
 
     pair<int, int> mPos;
+
+    pair<int, int> originPos;
 
     SDL_Rect srcRect;
 

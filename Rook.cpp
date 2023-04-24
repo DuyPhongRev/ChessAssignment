@@ -11,6 +11,8 @@ Rook::Rook(Team team, std::pair<int, int> pos)
     {
         Piece::mSurface = IMG_Load("src/rb.png");
     }
+    originPos.first = pos.first;
+    originPos.second = pos.second;
 }
 
 void Rook::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0)

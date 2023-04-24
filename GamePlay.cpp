@@ -3,10 +3,47 @@
 using namespace std;
 
 GamePlay::GamePlay(){
-    xStart = -1;
-    yStart = -1;
-    xEnd = -1;
-    yEnd = -1;
+    mRunning = true;
+}
+
+GamePlay::~GamePlay(){
+}
+
+
+//main function of GamePlay
+bool GamePlay::initGameData(){
+    if(SDL_Init(SDL_INIT_EVERYTHING) != 0)
+    {
+        cerr << "SDL INIT FAIL! ERROR LOG: " << SDL_GetError() << endl;
+        return false;
+    }
+    else
+    {
+        window = SDL_CreateWindow("CHESS GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+         if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+        {
+            cerr << "MIXER CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
+            return false;
+        }
+        if (TTF_Init() < 0)
+        {
+            cerr << "TTF CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
+            return false;
+        }
+        if(window == NULL)
+        {
+            cerr << "WINDOW CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
+            return false;
+        }else
+        {
+            renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+            if(renderer == NULL)
+            {
+                cerr << "RENDERER CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
+                return false;
+            }
+        }
+    }
     pw1 = new Pawn(Pawn::WHITE, pair<int, int>(0,6));
     pw2 = new Pawn(Pawn::WHITE, pair<int, int>(1,6));
     pw3 = new Pawn(Pawn::WHITE, pair<int, int>(2,6));
@@ -43,6 +80,15 @@ GamePlay::GamePlay(){
     bb1 = new Bishop(Bishop::BLACK, pair<int, int>(2,0));
     bb2 = new Bishop(Bishop::BLACK, pair<int, int>(5,0));
 
+    tFont = TTF_OpenFont("font/Silkscreen-Regular.ttf", 20);
+
+    sMove = Mix_LoadWAV("sound/Move.mp3");
+    sCapture = Mix_LoadWAV("sound/Capture.mp3");
+    sNotify = Mix_LoadWAV("sound/Notify.mp3");
+    sStartGame = Mix_LoadWAV("sound/StartGame.mp3");
+    sCastle = Mix_LoadWAV("sound/Castle.mp3");
+    sCheck = Mix_LoadWAV("sound/Check.mp3");
+
     border = IMG_Load("src/border.png");
     menu = IMG_Load("src/menu.png");
     playButton = IMG_Load("src/playbutton.png");
@@ -59,186 +105,53 @@ GamePlay::GamePlay(){
     vsHumanButtonInside = IMG_Load("src/2playerinside.png");
     backButton = IMG_Load("src/backbutton.png");
     backButtonInside = IMG_Load("src/backbuttoninside.png");
-    MoveTurn = Piece::WHITE;
-    mMovement = false;
-    gameStart = true;
-    quitMenu = false;
-    quitMenu = false;
-}
-
-GamePlay::~GamePlay(){
-    //dtor
-}
-
-
-//main function of GamePlay
-bool GamePlay::initWindow(){
-    if(SDL_Init(SDL_INIT_EVERYTHING) != 0)
-    {
-        cerr << "SDL INIT FAIL! ERROR LOG: " << SDL_GetError() << endl;
-        return false;
-    }
-    else
-    {
-        window = SDL_CreateWindow("CHESS GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
-         if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
-        {
-            cerr << "MIXER CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
-            return false;
-        }
-        if (TTF_Init() < 0)
-        {
-            cerr << "TTF CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
-            return false;
-        }
-        if(window == NULL)
-        {
-            cerr << "WINDOW CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
-            return false;
-        }else
-        {
-            renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-            if(renderer == NULL)
-            {
-                cerr << "RENDERER CREATE FAIL! ERROR LOG: " << SDL_GetError() << endl;
-                return false;
-            }
-        }
-    }
-    startPos();
-    loadSoundEffect();
     sBackground = Mix_LoadMUS("sound/back.mp3");
-    Mix_PlayMusic( sBackground, -1 );
-    turnOnMusic = true;
     return true;
 }
 
-void GamePlay::handleEvent(){
-    if(mIsOnePlayer && MoveTurn == Piece::BLACK)
-    {
-        manageAutoBot();
-    }
-    SDL_WaitEvent(&event);
-    switch(event.type)
-    {
-        case SDL_QUIT:
-            mRunning = false;
-            break;
-        case SDL_MOUSEBUTTONDOWN:
-            holdPiece();
-            break;
-        case SDL_MOUSEBUTTONUP:
-            if(mClickedOn != NULL && mClickedOn->getTeam() == MoveTurn) movePiece();
-            break;
-        default:
-            break;
-    }
-}
 
-void GamePlay::sound(Piece::MoveType soundType){
-    if(gameStart)
-    {
-        Mix_PlayChannel(-1, sStartGame, 0);
-        gameStart = false;
-    }
-    if(soundType == Piece::CAPTURE)
-    {
-        Mix_PlayChannel(-1, sCapture, 0);
-    }
-    else if(soundType == Piece::CASTLE)
-    {
-        Mix_PlayChannel(-1, sCastle, 0);
-    }
-    else if(soundType == Piece::NORMAL)
-    {
-        Mix_PlayChannel(-1, sMove, 0);
-    }
-    else if(soundType == Piece::PROMOTE)
-    {
-        Mix_PlayChannel(-1, sCapture, 0);
-    }
-    if(checkEndGame(mField, MoveTurn))
-    {
-        Mix_PlayChannel(-1, sNotify, 0);
-        SDL_Delay(1000);
-    }
-}
+void GamePlay::setNewGame(){
+    cerr << "NEW GAME" << endl;
+    xStart = -1;
+    yStart = -1;
+    xEnd = -1;
+    yEnd = -1;
+    pw1->setOriginPosition();
+    pw2->setOriginPosition();
+    pw3->setOriginPosition();
+    pw4->setOriginPosition();
+    pw5->setOriginPosition();
+    pw6->setOriginPosition();
+    pw7->setOriginPosition();
+    pw8->setOriginPosition();
 
-void GamePlay::updateConditional(){
-    kb->setCheck(mField, kb->getPossition().first, kb->getPossition().second, Piece::BLACK);
-    kw->setCheck(mField, kw->getPossition().first, kw->getPossition().second, Piece::WHITE);
-    if(mMovement)
-    {
-        mCountMoveToDraw++;
-        printCurrentMove();
-        changeMoveTurn();
-    }
-    if(checkEndGame(mField, MoveTurn))
-    {
-        mRunning = false;
-        if(kb->getCheck())
-        {
-            if(mIsOnePlayer) renderText("CONGRASTULATION", 4, -1, -1);
-            else renderText("WHITE WIN", 5, -1, -1);
-            renderText("-Press any key to exit-", 2, -1, 500);
-            waitUntilKeyPress();
-        }
-        else if(kw->getCheck())
-        {
-            if(mIsOnePlayer) renderText("LOSE CHICKEN", 5, -1, -1);
-            else renderText("BLACK WIN", 5, -1, -1);
-            renderText("-Press any key to exit-", 2, -1, 500);
-            waitUntilKeyPress();
-        }
-        else
-        {
-            renderText("DRAW", 4, -1, -1);
-            renderText("-Press any key to exit-", 2, -1, 500);
-            waitUntilKeyPress();
-        }
-        sound();
-    }
-    if(mCountMoveToDraw == 100)
-    {
-        mRunning = false;
-        renderText("DRAW", 5, -1, -1);
-        renderText("-Press any key to exit-", 2, -1, 500);
-        waitUntilKeyPress();
-        sound();
-    }
-}
+    rw1->setOriginPosition();
+    rw2->setOriginPosition();
+    kw->setOriginPosition();
+    qw->setOriginPosition();
+    kw1->setOriginPosition();
+    kw2->setOriginPosition();
+    bw1->setOriginPosition();
+    bw2->setOriginPosition();
 
-void GamePlay::renderAll(){
-    renderBoard();
-    renderPieces();
-    SDL_RenderPresent(renderer);
-}
+    pb1->setOriginPosition();
+    pb2->setOriginPosition();
+    pb3->setOriginPosition();
+    pb4->setOriginPosition();
+    pb5->setOriginPosition();
+    pb6->setOriginPosition();
+    pb7->setOriginPosition();
+    pb8->setOriginPosition();
 
-void GamePlay::clean(){
-    Mix_FreeChunk(sMove);
-    Mix_FreeChunk(sCapture);
-    Mix_FreeChunk(sNotify);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    IMG_Quit();
-    Mix_Quit();
-    SDL_Quit();
-    cout << "GAME CLEANED!" << endl;
-}
+    rb1->setOriginPosition();
+    rb2->setOriginPosition();
+    kb->setOriginPosition();
+    qb->setOriginPosition();
+    kb1->setOriginPosition();
+    kb2->setOriginPosition();
+    bb1->setOriginPosition();
+    bb2->setOriginPosition();
 
-
-// function of initWindow
-void GamePlay::loadSoundEffect(){
-    sMove = Mix_LoadWAV("sound/Move.mp3");
-    sCapture = Mix_LoadWAV("sound/Capture.mp3");
-    sNotify = Mix_LoadWAV("sound/Notify.mp3");
-    sStartGame = Mix_LoadWAV("sound/StartGame.mp3");
-    sCastle = Mix_LoadWAV("sound/Castle.mp3");
-    sCheck = Mix_LoadWAV("sound/Check.mp3");
-    tFont = TTF_OpenFont("font/Silkscreen-Regular.ttf", 20);
-}
-
-void GamePlay::startPos(){
     mField[0][1] = pb1;
     mField[1][1] = pb2;
     mField[2][1] = pb3;
@@ -279,6 +192,141 @@ void GamePlay::startPos(){
             mField[x][y] = NULL;
         }
     }
+
+    MoveTurn = Piece::WHITE;
+    mMovement = false;
+    quitMenu = false;
+    mCountMoveToDraw = 0;
+}
+
+void GamePlay::handleEventInGame(){
+    if(mIsOnePlayer && MoveTurn == Piece::BLACK)
+    {
+        manageAutoBot();
+    }
+    SDL_WaitEvent(&event);
+    switch(event.type)
+    {
+        case SDL_QUIT:
+            quitGame = true;
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+            holdPiece();
+            break;
+        case SDL_MOUSEBUTTONUP:
+            if(mClickedOn != NULL && mClickedOn->getTeam() == MoveTurn) movePiece();
+            break;
+        default:
+            break;
+    }
+}
+
+void GamePlay::soundEffect(Piece::MoveType soundType){
+    if(soundType == Piece::CAPTURE)
+    {
+        Mix_PlayChannel(-1, sCapture, 0);
+    }
+    else if(soundType == Piece::CASTLE)
+    {
+        Mix_PlayChannel(-1, sCastle, 0);
+    }
+    else if(soundType == Piece::NORMAL)
+    {
+        Mix_PlayChannel(-1, sMove, 0);
+    }
+    else if(soundType == Piece::PROMOTE)
+    {
+        Mix_PlayChannel(-1, sCapture, 0);
+    }
+    if(checkEndGame(mField, MoveTurn))
+    {
+        Mix_PlayChannel(-1, sNotify, 0);
+        SDL_Delay(1000);
+    }
+}
+
+void GamePlay::updateGameStatus(){
+    setTextColor(230,230, 250, 255);
+    kb->setCheck(mField, kb->getPossition().first, kb->getPossition().second, Piece::BLACK);
+    kw->setCheck(mField, kw->getPossition().first, kw->getPossition().second, Piece::WHITE);
+    if(mMovement)
+    {
+        mCountMoveToDraw++;
+        printCurrentMove();
+        changeMoveTurn();
+    }
+    if(checkEndGame(mField, MoveTurn))
+    {
+        quitGame = true;
+        if(kb->getCheck())
+        {
+            if(mIsOnePlayer) renderText("CONGRASTULATION", 4, -1, -1);
+            else renderText("WHITE WIN", 5, -1, -1);
+            renderText("-Press any key to exit-", 2, -1, 500);
+            waitUntilKeyPress();
+        }
+        else if(kw->getCheck())
+        {
+            if(mIsOnePlayer) renderText("LOSE CHICKEN", 5, -1, -1);
+            else renderText("BLACK WIN", 5, -1, -1);
+            renderText("-Press any key to exit-", 2, -1, 500);
+            waitUntilKeyPress();
+        }
+        else
+        {
+            renderText("DRAW", 5, -1, -1);
+            renderText("-Press any key to exit-", 2, -1, 500);
+            waitUntilKeyPress();
+        }
+        soundEffect();
+    }
+    if(mCountMoveToDraw == 100)
+    {
+        quitGame = true;
+        renderText("DRAW", 5, -1, -1);
+        renderText("-Press any key to exit-", 2, -1, 500);
+        waitUntilKeyPress();
+        soundEffect();
+    }
+}
+
+void GamePlay::renderManage(){
+    renderChessTable();
+    renderPieces();
+    SDL_RenderPresent(renderer);
+}
+
+void GamePlay::clean(){
+    SDL_FreeSurface(border);
+    SDL_FreeSurface(menu);
+    SDL_FreeSurface(playButton);
+    SDL_FreeSurface(playButtonInside);
+    SDL_FreeSurface(musicButton);
+    SDL_FreeSurface(musicButtonInside);
+    SDL_FreeSurface(exitButton);
+    SDL_FreeSurface(exitButtonInside);
+    SDL_FreeSurface(musicButtonOff);
+    SDL_FreeSurface(musicButtonOffInside);
+    SDL_FreeSurface(vsBotButton);
+    SDL_FreeSurface(vsBotButtonInside);
+    SDL_FreeSurface(vsHumanButton);
+    SDL_FreeSurface(vsHumanButtonInside);
+    SDL_FreeSurface(backButton);
+    SDL_FreeSurface(backButtonInside);
+
+    Mix_FreeChunk(sMove);
+    Mix_FreeChunk(sCapture);
+    Mix_FreeChunk(sNotify);
+    Mix_FreeChunk(sCastle);
+    Mix_FreeChunk(sCheck);
+    Mix_FreeChunk(sStartGame);
+    Mix_FreeMusic(sBackground);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    IMG_Quit();
+    Mix_Quit();
+    SDL_Quit();
+    cout << "GAME CLEANED!" << endl;
 }
 
 
@@ -321,7 +369,7 @@ void GamePlay::specificMove(){
     else if(mClickedOn->getMoveType() == Piece::CAPTURE) mCountMoveToDraw = 0;
     if(mClickedOn->getType() == Piece::PAWN) mCountMoveToDraw = 0;
     mClickedOn->declineEnpassant(mField);
-    sound(mClickedOn->getMoveType());
+    soundEffect(mClickedOn->getMoveType());
 }
 
 void GamePlay::castle(){
@@ -412,7 +460,7 @@ void GamePlay::waitUntilKeyPress(){
 void GamePlay::manageAutoBot(){
     mDepth = 3;
     alphaBetaPrunning(mField, mDepth, INT_MIN, INT_MAX, false);
-    //SDL_Delay(300);
+    SDL_Delay(200);
     mField[xStart][yStart]->calcPossibleMoves(mField, xStart, yStart);
     if(mField[xStart][yStart]->isValidMove(xEnd, yEnd))
     {
@@ -425,7 +473,6 @@ void GamePlay::manageAutoBot(){
 }
 
 int GamePlay::evaluate(Piece *tmpField[8][8]){
-    //if(checkEndGame(tmpField, Piece::WHITE)) return 500000;
     int pawnTable[8][8] =   {
                              60, 60, 60, 60, 60, 60, 60, 60,
                              50, 50, 50, 50, 50, 50, 50, 50,
@@ -645,7 +692,7 @@ int GamePlay::alphaBetaPrunning(Piece *field[8][8], int depth, int alpha, int be
 }
 
 
-// function of UpdateConditional
+// function of updateGameStatus
 void  GamePlay::changeMoveTurn(){
     if(MoveTurn == Piece::BLACK) MoveTurn = Piece::WHITE;
     else MoveTurn = Piece::BLACK;
@@ -742,13 +789,16 @@ bool GamePlay::checkEndGame(Piece *tmpPiece[8][8], Piece::Team currentTeam){
     return true;
 }
 
-bool GamePlay::running(){
+bool GamePlay::getQuitGame(){
+    return quitGame;
+}
+
+bool GamePlay::getRunning(){
     return mRunning;
 }
 
-
-//function of renderAll
-void GamePlay::renderBoard(){
+//function of renderManage
+void GamePlay::renderChessTable(){
     loadTexture(border, NULL, NULL);
     for (int x = 0; x < 8; x++)
     {
@@ -804,7 +854,6 @@ void GamePlay::renderBoard(){
 void GamePlay::renderText(string text, int sizeText = 3, int x = -1, int y = -1){
     SDL_Surface *tmpSurface = TTF_RenderText_Solid(tFont, text.c_str(), mTextColor);
     SDL_Texture *tmpTexture = SDL_CreateTextureFromSurface(renderer, tmpSurface);
-    SDL_Rect desRect;
     desRect.h = tmpSurface->h * sizeText;
     desRect.w = tmpSurface->w * sizeText;
     if(x < 0)
@@ -824,8 +873,9 @@ void GamePlay::renderText(string text, int sizeText = 3, int x = -1, int y = -1)
         desRect.y = y;
     }
     SDL_RenderCopy(renderer, tmpTexture, NULL, &desRect);
-    SDL_FreeSurface(tmpSurface);
     SDL_RenderPresent(renderer);
+    SDL_FreeSurface(tmpSurface);
+    SDL_DestroyTexture(tmpTexture);
 }
 
 void GamePlay::renderPieces(){
@@ -886,8 +936,9 @@ void GamePlay::menuGame(){
     switch(event.type)
     {
         case SDL_QUIT:
-            mRunning = false;
+            quitGame = true;
             quitMenu = true;
+            mRunning = false;
         case SDL_MOUSEMOTION:
             renderButton();
             break;
@@ -905,12 +956,10 @@ void GamePlay::menuGame(){
                 {
                     if( Mix_PausedMusic())
                     {
-                        turnOnMusic = true;
                         Mix_ResumeMusic();
                     }
                     else
                     {
-                        turnOnMusic = false;
                         Mix_PauseMusic();
                     }
                 }
@@ -919,23 +968,27 @@ void GamePlay::menuGame(){
             else if(mInsideExit)
             {
                 quitMenu = true;
+                quitGame = true;
                 mRunning = false;
             }
             else if(mInsideVsBot)
             {
-                mRunning = true;
+                quitGame = false;
                 quitMenu = true;
                 mIsOnePlayer = true;
+                mSelectMode = false;
                 Mix_PauseMusic();
-                cleanMenu();
+                Mix_PlayChannel(-1, sStartGame, 0);
             }
             else if(mInsideVsHuman)
             {
-                mRunning = true;
+                quitGame = false;
                 quitMenu = true;
                 mIsOnePlayer = false;
+                mSelectMode = false;
                 Mix_PauseMusic();
-                cleanMenu();
+                Mix_PlayChannel(-1, sStartGame, 0);
+
             }
             else if(mInsideBack)
             {
@@ -952,24 +1005,6 @@ void GamePlay::menuGame(){
             break;
     }
     renderText("CHESS GAME", 6, -1, 100);
-}
-
-void GamePlay::cleanMenu(){
-    SDL_FreeSurface(menu);
-    SDL_FreeSurface(playButton);
-    SDL_FreeSurface(playButtonInside);
-    SDL_FreeSurface(musicButton);
-    SDL_FreeSurface(musicButtonInside);
-    SDL_FreeSurface(exitButton);
-    SDL_FreeSurface(exitButtonInside);
-    SDL_FreeSurface(musicButtonOff);
-    SDL_FreeSurface(musicButtonOffInside);
-    SDL_FreeSurface(vsBotButton);
-    SDL_FreeSurface(vsBotButtonInside);
-    SDL_FreeSurface(vsHumanButton);
-    SDL_FreeSurface(vsHumanButtonInside);
-    SDL_FreeSurface(backButton);
-    SDL_FreeSurface(backButtonInside);
 }
 
 void GamePlay::renderButton(){
@@ -996,12 +1031,12 @@ void GamePlay::renderButton(){
         desRect.y = 550;
         if(mInsideMusic)
         {
-            if(turnOnMusic) loadTexture(musicButtonInside, NULL, &desRect);
+            if(Mix_PlayingMusic() && !Mix_PausedMusic()) loadTexture(musicButtonInside, NULL, &desRect);
             else loadTexture(musicButtonOffInside, NULL, &desRect);
         }
         else
         {
-            if(turnOnMusic) loadTexture(musicButton, NULL, &desRect);
+            if(Mix_PlayingMusic() && !Mix_PausedMusic()) loadTexture(musicButton, NULL, &desRect);
             else loadTexture(musicButtonOff, NULL, &desRect);
         }
 
@@ -1009,4 +1044,8 @@ void GamePlay::renderButton(){
         if(mInsideExit) loadTexture(exitButtonInside, NULL, &desRect);
         else loadTexture(exitButton, NULL, &desRect);
     }
+}
+
+bool GamePlay::getQuitMenu(){
+    return quitMenu;
 }

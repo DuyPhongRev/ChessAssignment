@@ -13,6 +13,8 @@ Pawn::Pawn(Team team, std::pair<int, int> pos)
         Piece::mSurface = IMG_Load("src/pb.png");
         dy = + 1;
     }
+    originPos.first = pos.first;
+    originPos.second = pos.second;
 }
 
 void Pawn::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0)

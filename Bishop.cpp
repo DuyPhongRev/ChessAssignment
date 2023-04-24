@@ -10,6 +10,8 @@ Bishop::Bishop(Team team, std::pair<int, int> pos)
     {
         Piece::mSurface = IMG_Load("src/bb.png");
     }
+    originPos.first = pos.first;
+    originPos.second = pos.second;
 }
 
 void Bishop::calcPossibleMoves(Piece* field[8][8], int xPos = 0, int yPos = 0)

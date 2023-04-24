@@ -90,30 +90,9 @@ vector<tuple<int, int, Piece::MoveType>> Piece::pushMove(vector<tuple<int, int, 
     return moveList;
 }
 
-vector<tuple<int, int, Piece::MoveType>> Piece::getPossibleMove(){
-    return mPossibleMove;
-}
 
 Piece::Team Piece::getTeam(){
     return mTeam;
-}
-
-King* Piece::getOwnKing(Piece *field[8][8]){
-    for(int x = 0; x < 8; x++)
-    {
-        for (int y = 0; y < 8; y++)
-        {
-            if(field[x][y] != NULL)
-            {
-                if(field[x][y]->getType() == KING && field[x][y]->getTeam() == mTeam)
-                {
-                    King *king = static_cast<King*>(field[x][y]);
-                    return king;
-                }
-            }
-        }
-    }
-    return NULL;
 }
 
 bool Piece::isValidMove(int xEnd, int yEnd){
@@ -142,6 +121,28 @@ bool Piece::getDeadPiece(){
     return isDead;
 }
 
+King* Piece::getOwnKing(Piece *field[8][8]){
+    for(int x = 0; x < 8; x++)
+    {
+        for (int y = 0; y < 8; y++)
+        {
+            if(field[x][y] != NULL)
+            {
+                if(field[x][y]->getType() == KING && field[x][y]->getTeam() == mTeam)
+                {
+                    King *king = static_cast<King*>(field[x][y]);
+                    return king;
+                }
+            }
+        }
+    }
+    return NULL;
+}
+
+vector<tuple<int, int, Piece::MoveType>> Piece::getPossibleMove(){
+    return mPossibleMove;
+}
+
 pair<int, int> Piece::getPossition(){
     return mPos;
 }
@@ -160,4 +161,16 @@ void Piece::setDeadPiece(){
 
 void Piece::setEnpassant(){
     mValidEnpassant = true;
+}
+
+void Piece::setOriginPosition(){
+    mPos.first = originPos.first;
+    mPos.second = originPos.second;
+    desRect.x = mPos.first * WINDOW_WIDTH / 8 + 40;
+    desRect.y = mPos.second  * WINDOW_HEIGHT / 8 + 40;
+    isDead = false;
+    mNotMove = true;
+    mValidEnpassant = false;
+    mMove = STATIONARY;
+    isDead = false;
 }

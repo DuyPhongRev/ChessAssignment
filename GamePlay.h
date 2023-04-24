@@ -21,25 +21,23 @@ public:
     GamePlay();
     ~GamePlay();
 
-    bool initWindow();
+    bool initGameData();
 
-    void renderBoard();
+    void setNewGame();
+
+    void renderChessTable();
 
     void renderText(string text, int sizeText, int x, int y);
 
-    void handleEvent();
+    void renderPieces();
 
-    void updateConditional();
+    void handleEventInGame();
 
-    void renderAll();
+    void updateGameStatus();
+
+    void renderManage();
 
     void clean();
-
-    void generatePiece();
-
-    void startPos();
-
-    void initMoveTurn();
 
     void getMoveturn();
 
@@ -49,13 +47,9 @@ public:
 
     bool checkEndGame(Piece *tmpPiece[8][8], Piece::Team currentTeam);
 
-    void sound(Piece::MoveType soundType = Piece::STATIONARY);
-
-    bool gameStart;
+    void soundEffect(Piece::MoveType soundType = Piece::STATIONARY);
 
     void botPlay();
-
-    bool running();
 
     void specificMove();
 
@@ -71,27 +65,25 @@ public:
 
     void waitUntilKeyPress();
 
-    void renderPieces();
-
     void manageAutoBot();
 
     void holdPiece();
 
     void movePiece();
 
-    void loadSoundEffect();
-
     void loadTexture(SDL_Surface *&surface, SDL_Rect *srcRec, SDL_Rect *desRec);
 
     void menuGame();
 
-    bool quitMenu;
-
     void renderButton();
 
-    void cleanMenu();
-
     void setTextColor(int r, int g, int b, int a);
+
+    bool getQuitGame();
+
+    bool getQuitMenu();
+
+    bool getRunning();
 private:
     SDL_Rect desRect;
     SDL_Texture *boardTexture = NULL;
@@ -108,7 +100,6 @@ private:
     Mix_Chunk *sNotify = NULL;
     Mix_Music *sBackground = NULL;
     TTF_Font *tFont = NULL;
-    bool turnOnMusic;
 
     // Standard variable
     const int WINDOW_HEIGHT = 880;
@@ -116,32 +107,35 @@ private:
     Piece::Team MoveTurn;
     Piece *mField[8][8];
     Piece * mClickedOn;
-    int mCountMoveToDraw = 0;
+    int mCountMoveToDraw;
     bool mMovement;
-    bool mRunning;
+    bool quitGame;
+    bool quitMenu;
+    bool isRunning;
     int xStart;
     int yStart;
     int xEnd;
     int yEnd;
     int mDepth;
     bool mIsOnePlayer;
+    bool mRunning;
     //menu
     SDL_Surface *border = NULL;
     SDL_Surface *menu = NULL;
-    SDL_Surface *playButton= NULL;
-    SDL_Surface *playButtonInside= NULL;
-    SDL_Surface *musicButton= NULL;
-    SDL_Surface *musicButtonInside= NULL;
-    SDL_Surface *exitButton= NULL;
-    SDL_Surface *exitButtonInside= NULL;
-    SDL_Surface *musicButtonOff= NULL;
-    SDL_Surface *musicButtonOffInside= NULL;
-    SDL_Surface *vsBotButton= NULL;
-    SDL_Surface *vsBotButtonInside= NULL;
-    SDL_Surface *vsHumanButton= NULL;
-    SDL_Surface *vsHumanButtonInside= NULL;
-    SDL_Surface *backButton= NULL;
-    SDL_Surface *backButtonInside= NULL;
+    SDL_Surface *playButton = NULL;
+    SDL_Surface *playButtonInside = NULL;
+    SDL_Surface *musicButton = NULL;
+    SDL_Surface *musicButtonInside = NULL;
+    SDL_Surface *exitButton = NULL;
+    SDL_Surface *exitButtonInside = NULL;
+    SDL_Surface *musicButtonOff = NULL;
+    SDL_Surface *musicButtonOffInside = NULL;
+    SDL_Surface *vsBotButton = NULL;
+    SDL_Surface *vsBotButtonInside = NULL;
+    SDL_Surface *vsHumanButton = NULL;
+    SDL_Surface *vsHumanButtonInside = NULL;
+    SDL_Surface *backButton = NULL;
+    SDL_Surface *backButtonInside = NULL;
     bool mInsidePlay;
     bool mInsideMusic;
     bool mInsideExit;
