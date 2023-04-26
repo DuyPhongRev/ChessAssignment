@@ -47,3 +47,9 @@
 - Click 1 -> 4 to promote pawn.
 
 ![App Screenshot](https://scontent.fhan15-1.fna.fbcdn.net/v/t1.15752-9/342497857_609224671256835_2722590434123825710_n.png?_nc_cat=108&ccb=1-7&_nc_sid=ae9488&_nc_ohc=F2oiETCIB68AX9yL_zP&_nc_ht=scontent.fhan15-1.fna&oh=03_AdTFmZ6_oIh5SJEFcIt_wxzKJ_HHzUYWoLTjAtDgGAPA-Q&oe=646DDBA6)
+
+- Press M to Muted/Unmuted
+
+![App Screenshot](https://scontent.fhan15-2.fna.fbcdn.net/v/t1.15752-9/342565136_892500351820673_1998521600449763733_n.png?_nc_cat=111&ccb=1-7&_nc_sid=ae9488&_nc_ohc=CYjpCSKFaxkAX_9aQPw&_nc_ht=scontent.fhan15-2.fna&oh=03_AdTvapdv6bpOg7c0NrM9BY-AcJa6apGRza3lvEQ_4PdU7w&oe=64702E98)
+
+- Press Esc to back main menu
