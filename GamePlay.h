@@ -119,6 +119,7 @@ private:
     int mDepth;
     bool mIsOnePlayer;
     bool mRunning;
+    bool mMute;
     //menu
     SDL_Surface *border = NULL;
     SDL_Surface *menu = NULL;

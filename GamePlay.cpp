@@ -109,9 +109,11 @@ bool GamePlay::initGameData(){
     return true;
 }
 
-
 void GamePlay::setNewGame(){
-    cerr << "NEW GAME" << endl;
+    cerr << endl << "NEW GAME" << endl;
+    if (mIsOnePlayer) cerr << "MODE: 1 Player" << endl;
+    else cerr << "MODE: 2 Players" << endl;
+    cerr << "_________________" << endl;
     xStart = -1;
     yStart = -1;
     xEnd = -1;
@@ -196,6 +198,7 @@ void GamePlay::setNewGame(){
     MoveTurn = Piece::WHITE;
     mMovement = false;
     quitMenu = false;
+    mMute = false;
     mCountMoveToDraw = 0;
 }
 
@@ -216,32 +219,57 @@ void GamePlay::handleEventInGame(){
         case SDL_MOUSEBUTTONUP:
             if(mClickedOn != NULL && mClickedOn->getTeam() == MoveTurn) movePiece();
             break;
+        case SDL_KEYDOWN:
+            switch(event.key.keysym.sym)
+            {
+                case SDLK_m:
+                    if(mMute)
+                    {
+                        mMute = false;
+                        renderText("Sound is unmuted", 3, -1, -1);
+                        SDL_Delay(500);
+                    }
+                    else
+                    {
+                        mMute = true;
+                        renderText("Sound is muted", 3, -1, -1);
+                        SDL_Delay(500);
+                    }
+                    break;
+                case SDLK_ESCAPE:
+                    quitGame = true;
+                    break;
+            }
+            break;
         default:
             break;
     }
 }
 
 void GamePlay::soundEffect(Piece::MoveType soundType){
-    if(soundType == Piece::CAPTURE)
+    if(!mMute)
     {
-        Mix_PlayChannel(-1, sCapture, 0);
-    }
-    else if(soundType == Piece::CASTLE)
-    {
-        Mix_PlayChannel(-1, sCastle, 0);
-    }
-    else if(soundType == Piece::NORMAL)
-    {
-        Mix_PlayChannel(-1, sMove, 0);
-    }
-    else if(soundType == Piece::PROMOTE)
-    {
-        Mix_PlayChannel(-1, sCapture, 0);
-    }
-    if(checkEndGame(mField, MoveTurn))
-    {
-        Mix_PlayChannel(-1, sNotify, 0);
-        SDL_Delay(1000);
+        if(soundType == Piece::CAPTURE)
+        {
+            Mix_PlayChannel(-1, sCapture, 0);
+        }
+        else if(soundType == Piece::CASTLE)
+        {
+            Mix_PlayChannel(-1, sCastle, 0);
+        }
+        else if(soundType == Piece::NORMAL)
+        {
+            Mix_PlayChannel(-1, sMove, 0);
+        }
+        else if(soundType == Piece::PROMOTE)
+        {
+            Mix_PlayChannel(-1, sCapture, 0);
+        }
+        if(checkEndGame(mField, MoveTurn))
+        {
+            Mix_PlayChannel(-1, sNotify, 0);
+            SDL_Delay(1000);
+        }
     }
 }
 
@@ -326,7 +354,7 @@ void GamePlay::clean(){
     IMG_Quit();
     Mix_Quit();
     SDL_Quit();
-    cout << "GAME CLEANED!" << endl;
+    cerr << "GAME CLEANED!" << endl;
 }
 
 
@@ -397,7 +425,7 @@ void GamePlay::enpassant(){
 }
 
 void GamePlay::promote(){
-    if(MoveTurn == Piece::BLACK)
+    if(MoveTurn == Piece::BLACK && mIsOnePlayer)
     {
         mField[xEnd][yEnd] = new Queen(mField[xEnd][yEnd]->getTeam(), pair<int, int>(xEnd, yEnd));
         return;
@@ -451,7 +479,7 @@ void GamePlay::waitUntilKeyPress(){
     while(true)
     {
         SDL_WaitEvent(&event);
-        if(event.type == SDL_KEYDOWN || event.type == SDL_QUIT || event.type == SDL_MOUSEBUTTONDOWN) return;
+        if(event.type == SDL_KEYDOWN || event.type == SDL_QUIT) return;
     }
 }
 
@@ -473,14 +501,14 @@ void GamePlay::manageAutoBot(){
 
 int GamePlay::evaluate(Piece *tmpField[8][8]){
     int pawnTable[8][8] =   {
-                             60, 60, 60, 60, 60, 60, 60, 60,
-                             50, 50, 50, 50, 50, 50, 50, 50,
-                             10, 10, 20, 30, 30, 20, 10, 10,
-                              5,  5, 10, 25, 25, 10,  5,  5,
-                              0,  0,  0, 20, 20,  0,  0,  0,
-                              5, -5,-10,  0,  0,-10, -5,  5,
-                              5, 10, 10,-20,-20, 10, 10,  5,
-                              0,  0,  0,  0,  0,  0,  0,  0
+                             100,100,100,100,100,100,100,100,
+                              50, 50, 50, 50, 50, 50, 50, 50,
+                              10, 10, 20, 30, 30, 20, 10, 10,
+                               5,  5, 10, 25, 25, 10,  5,  5,
+                               0,  0,  0, 20, 20,  0,  0,  0,
+                               5, -5,-10,  0,  0,-10, -5,  5,
+                               5, 10, 10,-20,-20, 10, 10,  5,
+                               0,  0,  0,  0,  0,  0,  0,  0
                             };
     int knightTable[8][8] = {
                             -50,-40,-30,-30,-30,-30,-40,-50,
@@ -698,71 +726,73 @@ void  GamePlay::changeMoveTurn(){
 }
 
 void GamePlay::printCurrentMove(){
+    if (MoveTurn == Piece::WHITE) cerr << "|";
     if(mField[xEnd][yEnd]->getMoveType() == Piece::CASTLE)
     {
-        if(xEnd == 2) cout << "O-O-O";
-        else cout << "O-O";
+        if(xEnd == 2) cerr << "O-O-O";
+        else cerr << "O-O";
     }
     else
     {
         switch(mField[xEnd][yEnd]->getType())
         {
             case 0:
-                cout << "";
+                cerr << "";
                 break;
             case 1:
-                cout << "N";
+                cerr << "N";
                 break;
             case 2:
-                cout << "B";
+                cerr << "B";
                 break;
             case 3:
-                cout << "R";
+                cerr << "R";
                 break;
             case 4:
-                cout << "Q";
+                cerr << "Q";
                 break;
             case 5:
-                cout << "K";
+                cerr << "K";
                 break;
         }
-        if(mField[xEnd][yEnd]->getMoveType() == Piece::CAPTURE) cout << "x";
+        if(mField[xEnd][yEnd]->getMoveType() == Piece::CAPTURE) cerr << "x";
         switch(xEnd)
         {
             case 0:
-                cout << "a" << 8 - yEnd;
+                cerr << "a" << 8 - yEnd;
                 break;
             case 1:
-                cout << "b" << 8 - yEnd;
+                cerr << "b" << 8 - yEnd;
                 break;
             case 2:
-                cout << "c" << 8 - yEnd;
+                cerr << "c" << 8 - yEnd;
                 break;
             case 3:
-                cout << "d" << 8 - yEnd;
+                cerr << "d" << 8 - yEnd;
                 break;
             case 4:
-                cout << "e" << 8 - yEnd;
+                cerr << "e" << 8 - yEnd;
                 break;
             case 5:
-                cout << "f" << 8 - yEnd;
+                cerr << "f" << 8 - yEnd;
                 break;
             case 6:
-                cout << "g" << 8 - yEnd;
+                cerr << "g" << 8 - yEnd;
                 break;
             case 7:
-                cout << "h" << 8 - yEnd;
+                cerr << "h" << 8 - yEnd;
                 break;
         }
     }
     if (MoveTurn == Piece::BLACK)
     {
-        if(kw->getCheck()) cout << "#";
-        cout << endl;
+        if(kw->getCheck()) cerr << "#";
+        cerr << "\t|";
+        cerr << endl;
     }else
     {
-        if(kb->getCheck()) cout << "#";
-        cout << "\t|      ";
+        if(kb->getCheck()) cerr << "#";
+        cerr << "\t|";
     }
     mMovement = false;
 }
